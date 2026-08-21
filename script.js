@@ -141,6 +141,10 @@ anotherButton.addEventListener(
 // TOPIC FILTERS
 // -----------------------------------------
 
+// -----------------------------------------
+// TOPIC FILTERS
+// -----------------------------------------
+
 const categoryFilters =
   document.querySelectorAll(".filter");
 
@@ -164,6 +168,44 @@ categoryFilters.forEach(filter => {
   });
 
 });
+
+
+// -----------------------------------------
+// WORKING AS FILTERS
+// -----------------------------------------
+
+const workingFilters =
+  document.querySelectorAll(".working-filter");
+
+workingFilters.forEach(filter => {
+
+  filter.addEventListener("click", () => {
+
+    workingFilters.forEach(button => {
+      button.classList.remove("active");
+    });
+
+    filter.classList.add("active");
+
+    selectedWorkingAs =
+      filter.dataset.workingAs;
+
+    displayArchive();
+
+    showRandomInsight();
+
+  });
+
+});
+
+
+// -----------------------------------------
+// INITIALISE
+// -----------------------------------------
+
+displayArchive();
+
+showRandomInsight();
 
 
 // -----------------------------------------

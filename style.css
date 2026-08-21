@@ -1,0 +1,417 @@
+/* =========================================
+   THE THINGS WE WISH WE'D KNOWN
+   Visual identity & layout
+   ========================================= */
+
+:root {
+  --background: #f3f0e8;
+  --text: #171717;
+  --accent: #e85d3f;
+  --muted: #68645d;
+  --line: #bdb8ad;
+  --white: #fffdf7;
+
+  --font-main: Arial, Helvetica, sans-serif;
+
+  --page-padding: 4vw;
+}
+
+
+/* -----------------------------------------
+   GENERAL
+   ----------------------------------------- */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--text);
+  font-family: var(--font-main);
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+}
+
+
+/* -----------------------------------------
+   HEADER
+   ----------------------------------------- */
+
+.site-header {
+  min-height: 90vh;
+  padding: var(--page-padding);
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 6vw;
+  align-items: end;
+  border-bottom: 1px solid var(--line);
+}
+
+.site-title {
+  font-size: clamp(4rem, 10vw, 11rem);
+  font-weight: 700;
+  line-height: 0.82;
+  letter-spacing: -0.075em;
+}
+
+.site-intro {
+  max-width: 480px;
+  padding-bottom: 1vw;
+  font-size: 1.25rem;
+}
+
+.site-intro p {
+  margin: 0 0 1rem;
+}
+
+
+/* -----------------------------------------
+   BUTTONS
+   ----------------------------------------- */
+
+.header-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 2rem;
+}
+
+.button {
+  display: inline-block;
+  padding: 14px 18px;
+  border: 1px solid var(--text);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  transition: all 0.2s ease;
+}
+
+.button-dark {
+  background: var(--text);
+  color: var(--background);
+}
+
+.button-dark:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.button-outline {
+  background: transparent;
+}
+
+.button-outline:hover {
+  background: var(--text);
+  color: var(--background);
+}
+
+
+/* -----------------------------------------
+   SHARED LABEL
+   ----------------------------------------- */
+
+.section-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+
+/* -----------------------------------------
+   FEATURED INSIGHT
+   ----------------------------------------- */
+
+.featured-section {
+  padding: 8vw var(--page-padding);
+  border-bottom: 1px solid var(--line);
+  min-height: 80vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.featured-insight {
+  max-width: 1000px;
+  margin: 5vw 0;
+}
+
+.quote {
+  margin: 0;
+  font-size: clamp(2.5rem, 6vw, 7rem);
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+  font-weight: 700;
+}
+
+.meta {
+  margin-top: 3rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.another-button {
+  align-self: flex-start;
+  border: 0;
+  border-bottom: 2px solid var(--text);
+  background: transparent;
+  padding: 0 0 5px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.another-button:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+
+/* -----------------------------------------
+   ARCHIVE
+   ----------------------------------------- */
+
+.archive-section {
+  padding: 8vw var(--page-padding);
+}
+
+.archive-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6vw;
+  align-items: end;
+  padding-bottom: 4vw;
+  border-bottom: 1px solid var(--line);
+}
+
+.archive-header h1 {
+  margin: 1rem 0 0;
+  font-size: clamp(3rem, 7vw, 8rem);
+  line-height: 0.85;
+  letter-spacing: -0.06em;
+}
+
+.archive-description {
+  max-width: 420px;
+  font-size: 1.1rem;
+}
+
+
+/* -----------------------------------------
+   FILTERS
+   ----------------------------------------- */
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 2rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.filter {
+  background: transparent;
+  border: 1px solid var(--text);
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.filter:hover,
+.filter.active {
+  background: var(--text);
+  color: var(--background);
+}
+
+
+/* -----------------------------------------
+   ARCHIVE CARDS
+   ----------------------------------------- */
+
+.archive-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.insight-card {
+  min-height: 360px;
+  padding: 2rem;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  transition: background 0.2s ease;
+}
+
+.insight-card:hover {
+  background: var(--white);
+}
+
+.card-number {
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+.card-advice {
+  margin: 3rem 0;
+  font-size: 1.7rem;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+.card-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.card-role {
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.card-experience {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.card-category {
+  margin-top: 10px;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+
+
+/* -----------------------------------------
+   CONTRIBUTION
+   ----------------------------------------- */
+
+.contribute-section {
+  min-height: 80vh;
+  padding: 8vw var(--page-padding);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  background: var(--accent);
+}
+
+.contribute-section h2 {
+  margin: 4vw 0;
+  font-size: clamp(3rem, 8vw, 9rem);
+  line-height: 0.88;
+  letter-spacing: -0.07em;
+}
+
+
+/* -----------------------------------------
+   FOOTER
+   ----------------------------------------- */
+
+footer {
+  padding: 2rem var(--page-padding);
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  border-top: 1px solid var(--line);
+}
+
+
+/* -----------------------------------------
+   MOBILE
+   ----------------------------------------- */
+
+@media (max-width: 800px) {
+
+  :root {
+    --page-padding: 6vw;
+  }
+
+  .site-header {
+    min-height: auto;
+    padding-top: 20vw;
+    padding-bottom: 15vw;
+
+    display: block;
+  }
+
+  .site-title {
+    font-size: clamp(3.8rem, 17vw, 8rem);
+    margin-bottom: 15vw;
+  }
+
+  .site-intro {
+    font-size: 1.1rem;
+  }
+
+  .featured-section {
+    min-height: 75vh;
+    padding-top: 15vw;
+    padding-bottom: 15vw;
+  }
+
+  .quote {
+    font-size: clamp(2.5rem, 11vw, 5rem);
+  }
+
+  .archive-header {
+    display: block;
+  }
+
+  .archive-description {
+    margin-top: 2rem;
+  }
+
+  .archive-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .insight-card {
+    min-height: 320px;
+    border-right: 0;
+  }
+
+  .filters {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 1.5rem;
+  }
+
+  .filter {
+    white-space: nowrap;
+  }
+
+  .contribute-section {
+    min-height: 70vh;
+  }
+
+  footer {
+    flex-direction: column;
+  }
+}

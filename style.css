@@ -248,7 +248,27 @@ button {
   background: var(--text);
   color: var(--background);
 }
+.filter-area {
+  padding: 2rem 0;
+  border-bottom: 1px solid var(--line);
+}
 
+.filter-group + .filter-group {
+  margin-top: 1.5rem;
+}
+
+.filter-heading {
+  margin-bottom: 0.8rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.filter-group .filters {
+  padding: 0;
+  border-bottom: 0;
+}
 
 /* -----------------------------------------
    ARCHIVE CARDS

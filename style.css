@@ -167,6 +167,14 @@ button {
   font-size: 0.85rem;
 }
 
+.featured-category {
+  margin-top: 1rem;
+  color: var(--accent);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
 .another-button {
   align-self: flex-start;
   border: 0;

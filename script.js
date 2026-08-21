@@ -119,8 +119,12 @@ function showRandomInsight() {
     </p>
 
     <p class="meta">
-      ${insight.role} · ${insight.workingAs} · ${insight.experience} in practice
-    </p>
+  ${insight.role} · ${insight.workingAs} · ${insight.experience} in practice
+  </p>
+
+  <p class="featured-category">
+  ${insight.category}
+  </p>
 
   `;
 

@@ -1,4 +1,5 @@
-let currentCategory = "ALL";
+let selectedCategory = "ALL";
+let selectedWorkingAs = "ALL";
 
 const archiveGrid = document.getElementById("archive-grid");
 const insightCount = document.getElementById("insight-count");
@@ -7,20 +8,35 @@ const anotherButton = document.getElementById("another-button");
 
 
 // -----------------------------------------
+// FILTER ARCHIVE
+// -----------------------------------------
+
+function getFilteredInsights() {
+
+  return insights.filter(insight => {
+
+    const categoryMatches =
+      selectedCategory === "ALL" ||
+      insight.category === selectedCategory;
+
+    const workingAsMatches =
+      selectedWorkingAs === "ALL" ||
+      insight.workingAs === selectedWorkingAs;
+
+    return categoryMatches && workingAsMatches;
+
+  });
+
+}
+
+
+// -----------------------------------------
 // DISPLAY ARCHIVE
 // -----------------------------------------
 
-function displayArchive(category = "ALL") {
+function displayArchive() {
 
-  currentCategory = category;
-
-  let filteredInsights = insights;
-
-  if (category !== "ALL") {
-    filteredInsights = insights.filter(
-      insight => insight.category === category
-    );
-  }
+  const filteredInsights = getFilteredInsights();
 
   archiveGrid.innerHTML = "";
 
@@ -33,6 +49,7 @@ function displayArchive(category = "ALL") {
     card.className = "insight-card";
 
     card.innerHTML = `
+
       <div class="card-number">
         ${String(index + 1).padStart(3, "0")}
       </div>
@@ -42,47 +59,71 @@ function displayArchive(category = "ALL") {
       </div>
 
       <div class="card-footer">
+
         <div class="card-role">
           ${insight.role}
         </div>
 
         <div class="card-experience">
-          ${insight.experience} in practice
+          ${insight.workingAs} · ${insight.experience} in practice
         </div>
 
         <div class="card-category">
           ${insight.category}
         </div>
+
       </div>
+
     `;
 
     archiveGrid.appendChild(card);
 
   });
+
 }
 
 
 // -----------------------------------------
-// FEATURED INSIGHT
+// RANDOM FEATURED INSIGHT
 // -----------------------------------------
 
 function showRandomInsight() {
 
+  const availableInsights = getFilteredInsights();
+
+  if (availableInsights.length === 0) {
+
+    featuredInsight.innerHTML = `
+      <p class="quote">
+        No insights found for this combination yet.
+      </p>
+
+      <p class="meta">
+        Try another filter.
+      </p>
+    `;
+
+    return;
+  }
+
   const randomIndex = Math.floor(
-    Math.random() * insights.length
+    Math.random() * availableInsights.length
   );
 
-  const insight = insights[randomIndex];
+  const insight = availableInsights[randomIndex];
 
   featuredInsight.innerHTML = `
+
     <p class="quote">
       “${insight.advice}”
     </p>
 
     <p class="meta">
-      ${insight.role} · ${insight.experience} in practice
+      ${insight.role} · ${insight.workingAs} · ${insight.experience} in practice
     </p>
+
   `;
+
 }
 
 
@@ -93,24 +134,28 @@ anotherButton.addEventListener(
 
 
 // -----------------------------------------
-// FILTERS
+// TOPIC FILTERS
 // -----------------------------------------
 
-const filters = document.querySelectorAll(".filter");
+const categoryFilters =
+  document.querySelectorAll(".filter");
 
-filters.forEach(filter => {
+categoryFilters.forEach(filter => {
 
   filter.addEventListener("click", () => {
 
-    filters.forEach(button => {
+    categoryFilters.forEach(button => {
       button.classList.remove("active");
     });
 
     filter.classList.add("active");
 
-    const category = filter.dataset.category;
+    selectedCategory =
+      filter.dataset.category;
 
-    displayArchive(category);
+    displayArchive();
+
+    showRandomInsight();
 
   });
 

@@ -1,11 +1,20 @@
 const DATA_URL =
   "https://script.google.com/macros/s/AKfycbyFlLkBNRFMKwncTpH4TU0q7mD5oiNlS57fu4vx4jE6Cf1wEIYFLuR_a3jYDe5YQI4sw/exec";
 
+
+/* -----------------------------------------
+   DATA
+----------------------------------------- */
+
 let insights = [];
 
 let selectedCategory = "ALL";
 let selectedWorkingAs = "ALL";
 
+
+/* -----------------------------------------
+   DOM ELEMENTS
+----------------------------------------- */
 
 const archiveGrid =
   document.getElementById("archive-grid");
@@ -36,35 +45,100 @@ const clearFilters =
 
 
 /* -----------------------------------------
-   LOAD DATA
+   LOAD DATA FROM GOOGLE SHEETS
 ----------------------------------------- */
 
 async function loadInsights() {
 
+  console.log("Loading archive...");
+
   try {
 
     const response =
-      await fetch(DATA_URL);
+      await fetch(
+        DATA_URL + "?t=" + Date.now(),
+        {
+          method: "GET",
+          cache: "no-store"
+        }
+      );
+
+
+    console.log(
+      "Response status:",
+      response.status
+    );
+
 
     if (!response.ok) {
+
       throw new Error(
-        "Could not load archive data."
+        "Could not load archive data. Status: " +
+        response.status
       );
+
     }
 
 
-    const data =
-      await response.json();
+    const text =
+      await response.text();
+
+
+    console.log(
+      "Raw archive response:",
+      text
+    );
+
+
+    let data;
+
+
+    try {
+
+      data =
+        JSON.parse(text);
+
+    } catch (parseError) {
+
+      console.error(
+        "JSON parsing error:",
+        parseError
+      );
+
+      throw new Error(
+        "Google returned something that is not valid JSON."
+      );
+
+    }
 
 
     if (!Array.isArray(data)) {
+
       throw new Error(
         "Archive data is not an array."
       );
+
     }
 
 
-    insights = data;
+    console.log(
+      "Archive entries loaded:",
+      data.length
+    );
+
+
+    insights =
+      data.filter(
+        insight =>
+          insight &&
+          insight.advice
+      );
+
+
+    console.log(
+      "Valid archive entries:",
+      insights.length
+    );
 
 
     initialiseArchive();
@@ -83,7 +157,9 @@ async function loadInsights() {
       archiveGrid.innerHTML = `
 
         <div class="empty-state">
+
           The archive is temporarily unavailable.
+
         </div>
 
       `;
@@ -92,18 +168,23 @@ async function loadInsights() {
 
 
     if (insightCount) {
-      insightCount.textContent = "0";
+
+      insightCount.textContent =
+        "0";
+
     }
 
 
     if (introCount) {
-      introCount.textContent = "0";
+
+      introCount.textContent =
+        "0";
+
     }
 
   }
 
 }
-
 
 
 /* -----------------------------------------
@@ -114,14 +195,20 @@ function getAvailableCategories() {
 
   return [
     ...new Set(
+
       insights
-        .map(insight => insight.category)
+
+        .map(
+          insight =>
+            insight.category
+        )
+
         .filter(Boolean)
+
     )
   ];
 
 }
-
 
 
 /* -----------------------------------------
@@ -132,14 +219,20 @@ function getAvailableWorkingTypes() {
 
   return [
     ...new Set(
+
       insights
-        .map(insight => insight.workingAs)
+
+        .map(
+          insight =>
+            insight.workingAs
+        )
+
         .filter(Boolean)
+
     )
   ];
 
 }
-
 
 
 /* -----------------------------------------
@@ -157,7 +250,8 @@ function createCategoryFilters() {
     getAvailableCategories();
 
 
-  categoryFilters.innerHTML = "";
+  categoryFilters.innerHTML =
+    "";
 
 
   createFilterButton(
@@ -168,19 +262,20 @@ function createCategoryFilters() {
   );
 
 
-  categories.forEach(category => {
+  categories.forEach(
+    category => {
 
-    createFilterButton(
-      categoryFilters,
-      category,
-      category,
-      "category"
-    );
+      createFilterButton(
+        categoryFilters,
+        category,
+        category,
+        "category"
+      );
 
-  });
+    }
+  );
 
 }
-
 
 
 /* -----------------------------------------
@@ -203,23 +298,26 @@ function createWorkingFilters() {
     getAvailableWorkingTypes();
 
 
-  if (workingTypes.length === 0) {
+  if (
+    workingTypes.length === 0
+  ) {
 
-    workingFilterArea.classList.add(
-      "hidden"
-    );
+    workingFilterArea
+      .classList
+      .add("hidden");
 
     return;
 
   }
 
 
-  workingFilterArea.classList.remove(
-    "hidden"
-  );
+  workingFilterArea
+    .classList
+    .remove("hidden");
 
 
-  workingFilters.innerHTML = "";
+  workingFilters.innerHTML =
+    "";
 
 
   createFilterButton(
@@ -230,19 +328,20 @@ function createWorkingFilters() {
   );
 
 
-  workingTypes.forEach(type => {
+  workingTypes.forEach(
+    type => {
 
-    createFilterButton(
-      workingFilters,
-      type,
-      type,
-      "working"
-    );
+      createFilterButton(
+        workingFilters,
+        type,
+        type,
+        "working"
+      );
 
-  });
+    }
+  );
 
 }
-
 
 
 /* -----------------------------------------
@@ -256,8 +355,15 @@ function createFilterButton(
   type
 ) {
 
+  if (!container) {
+    return;
+  }
+
+
   const button =
-    document.createElement("button");
+    document.createElement(
+      "button"
+    );
 
 
   button.className =
@@ -265,14 +371,24 @@ function createFilterButton(
 
 
   if (
-    (type === "category" &&
-      value === selectedCategory) ||
 
-    (type === "working" &&
-      value === selectedWorkingAs)
+    (
+      type === "category" &&
+      value === selectedCategory
+    )
+
+    ||
+
+    (
+      type === "working" &&
+      value === selectedWorkingAs
+    )
+
   ) {
 
-    button.classList.add("active");
+    button.classList.add(
+      "active"
+    );
 
   }
 
@@ -285,7 +401,9 @@ function createFilterButton(
     "click",
     () => {
 
-      if (type === "category") {
+      if (
+        type === "category"
+      ) {
 
         selectedCategory =
           value;
@@ -294,24 +412,34 @@ function createFilterButton(
         if (categoryFilters) {
 
           categoryFilters
-            .querySelectorAll(".filter")
-            .forEach(button =>
-              button.classList.remove(
-                "active"
-              )
+
+            .querySelectorAll(
+              ".filter"
+            )
+
+            .forEach(
+              filterButton => {
+
+                filterButton
+                  .classList
+                  .remove("active");
+
+              }
             );
 
         }
 
 
-        button.classList.add(
-          "active"
-        );
+        button
+          .classList
+          .add("active");
 
       }
 
 
-      if (type === "working") {
+      if (
+        type === "working"
+      ) {
 
         selectedWorkingAs =
           value;
@@ -320,19 +448,27 @@ function createFilterButton(
         if (workingFilters) {
 
           workingFilters
-            .querySelectorAll(".filter")
-            .forEach(button =>
-              button.classList.remove(
-                "active"
-              )
+
+            .querySelectorAll(
+              ".filter"
+            )
+
+            .forEach(
+              filterButton => {
+
+                filterButton
+                  .classList
+                  .remove("active");
+
+              }
             );
 
         }
 
 
-        button.classList.add(
-          "active"
-        );
+        button
+          .classList
+          .add("active");
 
       }
 
@@ -345,10 +481,11 @@ function createFilterButton(
   );
 
 
-  container.appendChild(button);
+  container.appendChild(
+    button
+  );
 
 }
-
 
 
 /* -----------------------------------------
@@ -357,27 +494,38 @@ function createFilterButton(
 
 function getFilteredInsights() {
 
-  return insights.filter(insight => {
+  return insights.filter(
+    insight => {
 
-    const categoryMatches =
-      selectedCategory === "ALL" ||
-      insight.category === selectedCategory;
+      const categoryMatches =
+
+        selectedCategory === "ALL"
+
+        ||
+
+        insight.category ===
+          selectedCategory;
 
 
-    const workingMatches =
-      selectedWorkingAs === "ALL" ||
-      insight.workingAs === selectedWorkingAs;
+      const workingMatches =
+
+        selectedWorkingAs === "ALL"
+
+        ||
+
+        insight.workingAs ===
+          selectedWorkingAs;
 
 
-    return (
-      categoryMatches &&
-      workingMatches
-    );
+      return (
+        categoryMatches &&
+        workingMatches
+      );
 
-  });
+    }
+  );
 
 }
-
 
 
 /* -----------------------------------------
@@ -395,7 +543,8 @@ function displayArchive() {
     getFilteredInsights();
 
 
-  archiveGrid.innerHTML = "";
+  archiveGrid.innerHTML =
+    "";
 
 
   if (insightCount) {
@@ -421,7 +570,9 @@ function displayArchive() {
     archiveGrid.innerHTML = `
 
       <div class="empty-state">
+
         Nothing here yet.
+
       </div>
 
     `;
@@ -433,6 +584,7 @@ function displayArchive() {
 
   filteredInsights.forEach(
     (insight, index) => {
+
 
       const card =
         document.createElement(
@@ -446,38 +598,68 @@ function displayArchive() {
 
       const salaryHTML =
         insight.salary
+
           ? `
+
             <div class="card-salary">
-              ${insight.salary}
+
+              ${escapeHTML(
+                insight.salary
+              )}
+
             </div>
+
           `
+
           : "";
 
 
       card.innerHTML = `
 
         <div class="card-number">
-          ${String(index + 1).padStart(3, "0")}
+
+          ${String(
+            index + 1
+          ).padStart(3, "0")}
+
         </div>
 
 
         <div class="card-advice">
-          “${insight.advice}”
+
+          “${escapeHTML(
+            insight.advice
+          )}”
+
         </div>
 
 
         <div class="card-footer">
 
+
           <div class="card-role">
-            ${insight.role}
+
+            ${escapeHTML(
+              insight.role
+            )}
+
           </div>
 
 
           <div class="card-experience">
-            ${insight.workingAs}
+
+            ${escapeHTML(
+              insight.workingAs
+            )}
+
             ·
-            ${insight.experience}
+
+            ${escapeHTML(
+              insight.experience
+            )}
+
             in practice
+
           </div>
 
 
@@ -485,21 +667,27 @@ function displayArchive() {
 
 
           <div class="card-category">
-            ${insight.category}
+
+            ${escapeHTML(
+              insight.category
+            )}
+
           </div>
+
 
         </div>
 
       `;
 
 
-      archiveGrid.appendChild(card);
+      archiveGrid.appendChild(
+        card
+      );
 
     }
   );
 
 }
-
 
 
 /* -----------------------------------------
@@ -524,11 +712,16 @@ function showRandomInsight() {
     featuredInsight.innerHTML = `
 
       <p class="quote">
+
         Nothing here yet.
+
       </p>
 
+
       <p class="meta">
+
         Try another filter.
+
       </p>
 
     `;
@@ -540,8 +733,10 @@ function showRandomInsight() {
 
   const randomIndex =
     Math.floor(
+
       Math.random() *
       availableInsights.length
+
     );
 
 
@@ -551,37 +746,61 @@ function showRandomInsight() {
     ];
 
 
+  const salary =
+    insight.salary
+      ? ` · ${escapeHTML(
+          insight.salary
+        )}`
+      : "";
+
+
   featuredInsight.innerHTML = `
 
     <p class="quote">
-      “${insight.advice}”
+
+      “${escapeHTML(
+        insight.advice
+      )}”
+
     </p>
 
 
     <p class="meta">
-      ${insight.role}
+
+      ${escapeHTML(
+        insight.role
+      )}
+
       ·
-      ${insight.workingAs}
+
+      ${escapeHTML(
+        insight.workingAs
+      )}
+
       ·
-      ${insight.experience}
+
+      ${escapeHTML(
+        insight.experience
+      )}
+
       in practice
 
-      ${
-        insight.salary
-          ? ` · ${insight.salary}`
-          : ""
-      }
+      ${salary}
+
     </p>
 
 
     <div class="featured-category">
-      ${insight.category}
+
+      ${escapeHTML(
+        insight.category
+      )}
+
     </div>
 
   `;
 
 }
-
 
 
 /* -----------------------------------------
@@ -594,19 +813,25 @@ if (clearFilters) {
     "click",
     () => {
 
-      selectedCategory = "ALL";
-      selectedWorkingAs = "ALL";
+      selectedCategory =
+        "ALL";
+
+      selectedWorkingAs =
+        "ALL";
+
 
       createCategoryFilters();
+
       createWorkingFilters();
+
       displayArchive();
+
       showRandomInsight();
 
     }
   );
 
 }
-
 
 
 /* -----------------------------------------
@@ -617,11 +842,60 @@ if (anotherButton) {
 
   anotherButton.addEventListener(
     "click",
-    showRandomInsight
+    () => {
+
+      showRandomInsight();
+
+    }
   );
 
 }
 
+
+/* -----------------------------------------
+   ESCAPE HTML
+----------------------------------------- */
+
+function escapeHTML(value) {
+
+  if (
+    value === null ||
+    value === undefined
+  ) {
+
+    return "";
+
+  }
+
+
+  return String(value)
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
 
 
 /* -----------------------------------------
@@ -629,6 +903,13 @@ if (anotherButton) {
 ----------------------------------------- */
 
 function initialiseArchive() {
+
+  console.log(
+    "Initialising archive with",
+    insights.length,
+    "entries."
+  );
+
 
   createCategoryFilters();
 
@@ -639,7 +920,6 @@ function initialiseArchive() {
   showRandomInsight();
 
 }
-
 
 
 /* -----------------------------------------

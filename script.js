@@ -1,7 +1,6 @@
 const DATA_URL =
   "https://script.google.com/macros/s/AKfycbyFlLkBNRFMKwncTpH4TU0q7mD5oiNlS57fu4vx4jE6Cf1wEIYFLuR_a3jYDe5YQI4sw/exec";
 
-
 let insights = [];
 
 let selectedCategory = "ALL";

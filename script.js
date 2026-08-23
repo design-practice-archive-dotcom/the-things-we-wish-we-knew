@@ -594,19 +594,12 @@ if (clearFilters) {
     "click",
     () => {
 
-      selectedCategory =
-        "ALL";
-
-      selectedWorkingAs =
-        "ALL";
-
+      selectedCategory = "ALL";
+      selectedWorkingAs = "ALL";
 
       createCategoryFilters();
-
       createWorkingFilters();
-
       displayArchive();
-
       showRandomInsight();
 
     }

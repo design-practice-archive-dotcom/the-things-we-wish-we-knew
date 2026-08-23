@@ -1,5 +1,6 @@
 const DATA_URL =
-  "https://script.googleusercontent.com/macros/echo?user_content_key=AUkAhnShpUsp2RtGRopUjIoDY4Wn0_paVtD0BjSRuKe_hg7a9YkXq6ZSnqohNDiVHCUjzBkblnjskCxA8EZ6X1sYvyPks4qv4kf0Yzx2-anPbe0mWzL4ev9qcYOFxtNv-CPoPHKp4iqdyglUgh_Ivx99NM9psa6VWhmgPOi0oKuw3wHm6uSnDYwUWQ8qss4umfCX6jx55sNBgRcByKO7HZ_OXxOqruvqUECMlYWG1rbIH0ysaYvUSYLjzJgR0xiHCV16bBLco1Mvoikvyb3OKtHNAjAjCRxFSw&lib=M0imuRZ62TBvdMD8fLTVESj5tjDwTGjhW";
+  "https://script.google.com/macros/s/AKfycbyFlLkBNRFMKwncTpH4TU0q7mD5oiNlS57fu4vx4jE6Cf1wEIYFLuR_a3jYJDe5YQI4sw/exec";
+
 
 let insights = [];
 
@@ -56,8 +57,20 @@ async function loadInsights() {
     }
 
 
-    insights =
+    const data =
       await response.json();
+
+
+    if (!Array.isArray(data)) {
+
+      throw new Error(
+        "Archive data is not an array."
+      );
+
+    }
+
+
+    insights = data;
 
 
     initialiseArchive();
@@ -74,14 +87,14 @@ async function loadInsights() {
     archiveGrid.innerHTML = `
 
       <div class="empty-state">
-
         The archive is temporarily unavailable.
-
       </div>
 
     `;
 
+
     insightCount.textContent = "0";
+
     introCount.textContent = "0";
 
   }
@@ -134,6 +147,7 @@ function createCategoryFilters() {
 
   const categories =
     getAvailableCategories();
+
 
   categoryFilters.innerHTML = "";
 
@@ -222,6 +236,7 @@ function createFilterButton(
   const button =
     document.createElement("button");
 
+
   button.className = "filter";
 
 
@@ -249,11 +264,13 @@ function createFilterButton(
 
         selectedCategory = value;
 
+
         categoryFilters
           .querySelectorAll(".filter")
           .forEach(button =>
             button.classList.remove("active")
           );
+
 
         button.classList.add("active");
 
@@ -264,11 +281,13 @@ function createFilterButton(
 
         selectedWorkingAs = value;
 
+
         workingFilters
           .querySelectorAll(".filter")
           .forEach(button =>
             button.classList.remove("active")
           );
+
 
         button.classList.add("active");
 
@@ -508,6 +527,7 @@ clearFilters.addEventListener(
 
     selectedWorkingAs = "ALL";
 
+
     createCategoryFilters();
 
     createWorkingFilters();
@@ -547,6 +567,7 @@ function initialiseArchive() {
   showRandomInsight();
 
 }
+
 
 
 /* -----------------------------------------

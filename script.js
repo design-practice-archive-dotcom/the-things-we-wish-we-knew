@@ -1,6 +1,5 @@
 const DATA_URL =
-  "https://script.google.com/macros/s/AKfycbyFlLkBNRFMKwncTpH4TU0q7mD5oiNlS57fu4vx4jE6Cf1wEIYFLuR_a3jYJDe5YQI4sw/exec";
-
+  "https://script.googleusercontent.com/macros/echo?user_content_key=AUkAhnShpUsp2RtGRopUjIoDY4Wn0_paVtD0BjSRuKe_hg7a9YkXq6ZSnqohNDiVHCUjzBkblnjskCxA8EZ6X1sYvyPks4qv4kf0Yzx2-anPbe0mWzL4ev9qcYOFxtNv-CPoPHKp4iqdyglUgh_Ivx99NM9psa6VWhmgPOi0oKuw3wHm6uSnDYwUWQ8qss4umfCX6jx55sNBgRcByKO7HZ_OXxOqruvqUECMlYWG1rbIH0ysaYvUSYLjzJgR0xiHCV16bBLco1Mvoikvyb3OKtHNAjAjCRxFSw&lib=M0imuRZ62TBvdMD8fLTVESj5tjDwTGjhW";
 
 let insights = [];
 

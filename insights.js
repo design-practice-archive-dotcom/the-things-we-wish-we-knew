@@ -16,7 +16,7 @@ const insights = [
     workingAs: "Freelance / Independent",
     experience: "10+ years",
     category: "MONEY",
-    salary: "€55,000–65,000/year",
+    salary: "",
     advice: "Learn to talk about money before you talk about the work."
   },
 

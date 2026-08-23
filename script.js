@@ -1,6 +1,7 @@
 let selectedCategory = "ALL";
 let selectedWorkingAs = "ALL";
 
+
 const archiveGrid =
   document.getElementById("archive-grid");
 
@@ -13,9 +14,15 @@ const featuredInsight =
 const anotherButton =
   document.getElementById("another-button");
 
+const categoryFilters =
+  document.getElementById("category-filters");
+
+const workingFilters =
+  document.getElementById("working-filters");
+
 
 // =========================================
-// FILTER ARCHIVE
+// GET FILTERED INSIGHTS
 // =========================================
 
 function getFilteredInsights() {
@@ -38,6 +45,180 @@ function getFilteredInsights() {
 
 
 // =========================================
+// CREATE FILTER BUTTONS
+// =========================================
+
+function createFilters() {
+
+  categoryFilters.innerHTML = "";
+  workingFilters.innerHTML = "";
+
+
+  // -----------------------------------------
+  // CATEGORIES
+  // -----------------------------------------
+
+  const categories = [
+    ...new Set(
+      insights
+        .map(insight => insight.category)
+        .filter(Boolean)
+    )
+  ];
+
+
+  createFilterButton(
+    categoryFilters,
+    "ALL",
+    "ALL",
+    "filter"
+  );
+
+
+  categories.forEach(category => {
+
+    createFilterButton(
+      categoryFilters,
+      category,
+      category,
+      "filter"
+    );
+
+  });
+
+
+  // -----------------------------------------
+  // WORKING AS
+  // -----------------------------------------
+
+  const workingTypes = [
+    ...new Set(
+      insights
+        .map(insight => insight.workingAs)
+        .filter(Boolean)
+    )
+  ];
+
+
+  createFilterButton(
+    workingFilters,
+    "ALL",
+    "EVERYONE",
+    "working-filter"
+  );
+
+
+  workingTypes.forEach(type => {
+
+    let label = type;
+
+
+    if (type === "Freelance / Independent") {
+      label = "INDEPENDENT";
+    }
+
+    if (type === "Founder / Own studio") {
+      label = "FOUNDER / STUDIO";
+    }
+
+    if (type === "Academic / Research") {
+      label = "ACADEMIC / RESEARCH";
+    }
+
+
+    createFilterButton(
+      workingFilters,
+      type,
+      label,
+      "working-filter"
+    );
+
+  });
+
+}
+
+
+// =========================================
+// CREATE INDIVIDUAL FILTER
+// =========================================
+
+function createFilterButton(
+  container,
+  value,
+  label,
+  className
+) {
+
+  const button =
+    document.createElement("button");
+
+  button.className =
+    `filter ${className}`;
+
+  button.textContent =
+    label;
+
+  if (value === "ALL") {
+    button.classList.add("active");
+  }
+
+
+  if (className === "filter") {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        document
+          .querySelectorAll(".filter")
+          .forEach(button => {
+            button.classList.remove("active");
+          });
+
+        button.classList.add("active");
+
+        selectedCategory = value;
+
+        displayArchive();
+        showRandomInsight();
+
+      }
+    );
+
+  }
+
+
+  if (className === "working-filter") {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        document
+          .querySelectorAll(".working-filter")
+          .forEach(button => {
+            button.classList.remove("active");
+          });
+
+        button.classList.add("active");
+
+        selectedWorkingAs = value;
+
+        displayArchive();
+        showRandomInsight();
+
+      }
+    );
+
+  }
+
+
+  container.appendChild(button);
+
+}
+
+
+// =========================================
 // DISPLAY ARCHIVE
 // =========================================
 
@@ -46,67 +227,85 @@ function displayArchive() {
   const filteredInsights =
     getFilteredInsights();
 
+
   archiveGrid.innerHTML = "";
+
 
   insightCount.textContent =
     filteredInsights.length;
 
 
-  filteredInsights.forEach((insight, index) => {
+  filteredInsights.forEach(
+    (insight, index) => {
 
-    const card =
-      document.createElement("article");
-
-    card.className =
-      "insight-card";
+      const card =
+        document.createElement("article");
 
 
-    const salaryHTML =
-      insight.salary
-        ? `<div class="card-salary">${insight.salary}</div>`
-        : "";
+      card.className =
+        "insight-card";
 
 
-    card.innerHTML = `
+      let salaryHTML = "";
 
-      <div class="card-top">
+
+      if (
+        insight.salary &&
+        insight.salary.trim() !== ""
+      ) {
+
+        salaryHTML = `
+          <div class="card-salary">
+            Salary: ${insight.salary}
+          </div>
+        `;
+
+      }
+
+
+      card.innerHTML = `
 
         <div class="card-number">
           ${String(index + 1).padStart(3, "0")}
         </div>
 
-        <div class="card-category">
-          ${insight.category}
+
+        <div class="card-advice">
+          “${insight.advice}”
         </div>
 
-      </div>
+
+        <div class="card-footer">
+
+          <div class="card-role">
+            ${insight.role}
+          </div>
 
 
-      <div class="card-advice">
-        “${insight.advice}”
-      </div>
+          <div class="card-experience">
+            ${insight.workingAs}
+            ·
+            ${insight.experience}
+            in practice
+          </div>
 
 
-      <div class="card-footer">
+          ${salaryHTML}
 
-        <div class="card-role">
-          ${insight.role}
+
+          <div class="card-category">
+            ${insight.category}
+          </div>
+
         </div>
 
-        <div class="card-experience">
-          ${insight.workingAs} · ${insight.experience} in practice
-        </div>
-
-        ${salaryHTML}
-
-      </div>
-
-    `;
+      `;
 
 
-    archiveGrid.appendChild(card);
+      archiveGrid.appendChild(card);
 
-  });
+    }
+  );
 
 }
 
@@ -121,7 +320,9 @@ function showRandomInsight() {
     getFilteredInsights();
 
 
-  if (availableInsights.length === 0) {
+  if (
+    availableInsights.length === 0
+  ) {
 
     featuredInsight.innerHTML = `
 
@@ -136,6 +337,7 @@ function showRandomInsight() {
     `;
 
     return;
+
   }
 
 
@@ -156,11 +358,16 @@ function showRandomInsight() {
       “${insight.advice}”
     </p>
 
+
     <p class="meta">
-      ${insight.role} ·
-      ${insight.workingAs} ·
-      ${insight.experience} in practice
+      ${insight.role}
+      ·
+      ${insight.workingAs}
+      ·
+      ${insight.experience}
+      in practice
     </p>
+
 
     <p class="featured-category">
       ${insight.category}
@@ -182,86 +389,10 @@ anotherButton.addEventListener(
 
 
 // =========================================
-// TOPIC FILTERS
-// =========================================
-
-const categoryFilters =
-  document.querySelectorAll(".filter");
-
-
-categoryFilters.forEach(filter => {
-
-  filter.addEventListener(
-    "click",
-    () => {
-
-      categoryFilters.forEach(button => {
-
-        button.classList.remove("active");
-
-      });
-
-
-      filter.classList.add("active");
-
-
-      selectedCategory =
-        filter.dataset.category;
-
-
-      displayArchive();
-
-      showRandomInsight();
-
-    }
-  );
-
-});
-
-
-// =========================================
-// WORKING-AS FILTERS
-// =========================================
-
-const workingFilters =
-  document.querySelectorAll(
-    ".working-filter"
-  );
-
-
-workingFilters.forEach(filter => {
-
-  filter.addEventListener(
-    "click",
-    () => {
-
-      workingFilters.forEach(button => {
-
-        button.classList.remove("active");
-
-      });
-
-
-      filter.classList.add("active");
-
-
-      selectedWorkingAs =
-        filter.dataset.workingAs;
-
-
-      displayArchive();
-
-      showRandomInsight();
-
-    }
-  );
-
-});
-
-
-// =========================================
 // INITIALISE
 // =========================================
+
+createFilters();
 
 displayArchive();
 

@@ -1,5 +1,5 @@
 const DATA_URL =
-  "https://script.google.com/macros/s/AKfycbyFlLkBNRFMKwncTpH4TU0q7mD5oiNlS57fu4vx4jE6Cf1wEIYFLuR_a3jYJDe5YQI4sw/exec";
+  "https://script.google.com/macros/s/AKfycbyFlLkBNRFMKwncTpH4TU0q7mD5oiNlS57fu4vx4jE6Cf1wEIYFLuR_a3jYDe5YQI4sw/exec";
 
 
 let insights = [];
@@ -36,71 +36,50 @@ const clearFilters =
   document.getElementById("clear-filters");
 
 
-
 /* -----------------------------------------
-   LOAD DATA FROM GOOGLE SHEETS
+   LOAD DATA
 ----------------------------------------- */
 
-function loadInsights() {
+async function loadInsights() {
 
-  const callbackName =
-    "archiveCallback_" +
-    Date.now();
+  try {
 
+    const response =
+      await fetch(DATA_URL);
 
-  window[callbackName] =
-    function(data) {
-
-      try {
-
-        if (!Array.isArray(data)) {
-
-          throw new Error(
-            "Archive data is not an array."
-          );
-
-        }
-
-
-        insights = data;
-
-
-        initialiseArchive();
-
-
-      } catch (error) {
-
-        console.error(
-          "Archive data error:",
-          error
-        );
-
-      }
-
-
-      delete window[callbackName];
-
-      script.remove();
-
-    };
-
-
-  const script =
-    document.createElement("script");
-
-
-  script.src =
-    DATA_URL +
-    "?callback=" +
-    callbackName;
-
-
-  script.onerror =
-    function() {
-
-      console.error(
+    if (!response.ok) {
+      throw new Error(
         "Could not load archive data."
       );
+    }
+
+
+    const data =
+      await response.json();
+
+
+    if (!Array.isArray(data)) {
+      throw new Error(
+        "Archive data is not an array."
+      );
+    }
+
+
+    insights = data;
+
+
+    initialiseArchive();
+
+
+  } catch (error) {
+
+    console.error(
+      "Archive loading error:",
+      error
+    );
+
+
+    if (archiveGrid) {
 
       archiveGrid.innerHTML = `
 
@@ -110,19 +89,19 @@ function loadInsights() {
 
       `;
 
+    }
+
+
+    if (insightCount) {
       insightCount.textContent = "0";
+    }
 
+
+    if (introCount) {
       introCount.textContent = "0";
+    }
 
-
-      delete window[callbackName];
-
-      script.remove();
-
-    };
-
-
-  document.body.appendChild(script);
+  }
 
 }
 
@@ -170,6 +149,11 @@ function getAvailableWorkingTypes() {
 
 function createCategoryFilters() {
 
+  if (!categoryFilters) {
+    return;
+  }
+
+
   const categories =
     getAvailableCategories();
 
@@ -206,20 +190,35 @@ function createCategoryFilters() {
 
 function createWorkingFilters() {
 
-  const workingTypes =
-    getAvailableWorkingTypes();
-
-
-  if (workingTypes.length === 0) {
-
-    workingFilterArea.classList.add("hidden");
+  if (
+    !workingFilters ||
+    !workingFilterArea
+  ) {
 
     return;
 
   }
 
 
-  workingFilterArea.classList.remove("hidden");
+  const workingTypes =
+    getAvailableWorkingTypes();
+
+
+  if (workingTypes.length === 0) {
+
+    workingFilterArea.classList.add(
+      "hidden"
+    );
+
+    return;
+
+  }
+
+
+  workingFilterArea.classList.remove(
+    "hidden"
+  );
+
 
   workingFilters.innerHTML = "";
 
@@ -262,7 +261,8 @@ function createFilterButton(
     document.createElement("button");
 
 
-  button.className = "filter";
+  button.className =
+    "filter";
 
 
   if (
@@ -278,7 +278,8 @@ function createFilterButton(
   }
 
 
-  button.textContent = label;
+  button.textContent =
+    label;
 
 
   button.addEventListener(
@@ -287,34 +288,52 @@ function createFilterButton(
 
       if (type === "category") {
 
-        selectedCategory = value;
+        selectedCategory =
+          value;
 
 
-        categoryFilters
-          .querySelectorAll(".filter")
-          .forEach(button =>
-            button.classList.remove("active")
-          );
+        if (categoryFilters) {
+
+          categoryFilters
+            .querySelectorAll(".filter")
+            .forEach(button =>
+              button.classList.remove(
+                "active"
+              )
+            );
+
+        }
 
 
-        button.classList.add("active");
+        button.classList.add(
+          "active"
+        );
 
       }
 
 
       if (type === "working") {
 
-        selectedWorkingAs = value;
+        selectedWorkingAs =
+          value;
 
 
-        workingFilters
-          .querySelectorAll(".filter")
-          .forEach(button =>
-            button.classList.remove("active")
-          );
+        if (workingFilters) {
+
+          workingFilters
+            .querySelectorAll(".filter")
+            .forEach(button =>
+              button.classList.remove(
+                "active"
+              )
+            );
+
+        }
 
 
-        button.classList.add("active");
+        button.classList.add(
+          "active"
+        );
 
       }
 
@@ -368,6 +387,11 @@ function getFilteredInsights() {
 
 function displayArchive() {
 
+  if (!archiveGrid) {
+    return;
+  }
+
+
   const filteredInsights =
     getFilteredInsights();
 
@@ -375,15 +399,25 @@ function displayArchive() {
   archiveGrid.innerHTML = "";
 
 
-  insightCount.textContent =
-    filteredInsights.length;
+  if (insightCount) {
+
+    insightCount.textContent =
+      filteredInsights.length;
+
+  }
 
 
-  introCount.textContent =
-    insights.length;
+  if (introCount) {
+
+    introCount.textContent =
+      insights.length;
+
+  }
 
 
-  if (filteredInsights.length === 0) {
+  if (
+    filteredInsights.length === 0
+  ) {
 
     archiveGrid.innerHTML = `
 
@@ -402,7 +436,9 @@ function displayArchive() {
     (insight, index) => {
 
       const card =
-        document.createElement("article");
+        document.createElement(
+          "article"
+        );
 
 
       card.className =
@@ -441,7 +477,8 @@ function displayArchive() {
           <div class="card-experience">
             ${insight.workingAs}
             ·
-            ${insight.experience} in practice
+            ${insight.experience}
+            in practice
           </div>
 
 
@@ -472,11 +509,18 @@ function displayArchive() {
 
 function showRandomInsight() {
 
+  if (!featuredInsight) {
+    return;
+  }
+
+
   const availableInsights =
     getFilteredInsights();
 
 
-  if (availableInsights.length === 0) {
+  if (
+    availableInsights.length === 0
+  ) {
 
     featuredInsight.innerHTML = `
 
@@ -503,7 +547,9 @@ function showRandomInsight() {
 
 
   const insight =
-    availableInsights[randomIndex];
+    availableInsights[
+      randomIndex
+    ];
 
 
   featuredInsight.innerHTML = `
@@ -514,19 +560,18 @@ function showRandomInsight() {
 
 
     <p class="meta">
-
       ${insight.role}
       ·
       ${insight.workingAs}
       ·
-      ${insight.experience} in practice
+      ${insight.experience}
+      in practice
 
       ${
         insight.salary
           ? ` · ${insight.salary}`
           : ""
       }
-
     </p>
 
 
@@ -544,25 +589,31 @@ function showRandomInsight() {
    CLEAR FILTERS
 ----------------------------------------- */
 
-clearFilters.addEventListener(
-  "click",
-  () => {
+if (clearFilters) {
 
-    selectedCategory = "ALL";
+  clearFilters.addEventListener(
+    "click",
+    () => {
 
-    selectedWorkingAs = "ALL";
+      selectedCategory =
+        "ALL";
+
+      selectedWorkingAs =
+        "ALL";
 
 
-    createCategoryFilters();
+      createCategoryFilters();
 
-    createWorkingFilters();
+      createWorkingFilters();
 
-    displayArchive();
+      displayArchive();
 
-    showRandomInsight();
+      showRandomInsight();
 
-  }
-);
+    }
+  );
+
+}
 
 
 
@@ -570,10 +621,14 @@ clearFilters.addEventListener(
    ANOTHER BUTTON
 ----------------------------------------- */
 
-anotherButton.addEventListener(
-  "click",
-  showRandomInsight
-);
+if (anotherButton) {
+
+  anotherButton.addEventListener(
+    "click",
+    showRandomInsight
+  );
+
+}
 
 
 

@@ -1,25 +1,29 @@
-/* =========================================
-   THE THINGS WE WISH WE'D KNOWN
-   Visual identity & layout
-   ========================================= */
-
 :root {
-  --background: #f3f0e8;
-  --text: #171717;
-  --accent: #e85d3f;
-  --muted: #68645d;
-  --line: #bdb8ad;
-  --white: #fffdf7;
 
-  --font-main: Arial, Helvetica, sans-serif;
+  --paper: #f2efe7;
+  --paper-light: #faf8f2;
+  --ink: #202020;
+  --blue: #234b7a;
+  --muted: #706e68;
+  --line: #c8c4bb;
 
-  --page-padding: 4vw;
+  --serif:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  --mono:
+    "Courier New",
+    Courier,
+    monospace;
+
+  --padding: 5vw;
 }
 
 
 /* -----------------------------------------
    GENERAL
-   ----------------------------------------- */
+----------------------------------------- */
 
 * {
   box-sizing: border-box;
@@ -31,11 +35,19 @@ html {
 
 body {
   margin: 0;
-  background: var(--background);
-  color: var(--text);
-  font-family: var(--font-main);
-  font-size: 16px;
-  line-height: 1.4;
+
+  background: var(--paper);
+  color: var(--ink);
+
+  font-family: var(--serif);
+
+  font-size: 18px;
+  line-height: 1.45;
+}
+
+button,
+a {
+  font-family: var(--mono);
 }
 
 a {
@@ -43,403 +55,725 @@ a {
   text-decoration: none;
 }
 
-button {
-  font: inherit;
-}
-
 
 /* -----------------------------------------
-   HEADER
-   ----------------------------------------- */
+   INTRO
+----------------------------------------- */
 
-.site-header {
-  min-height: 90vh;
-  padding: var(--page-padding);
+.intro {
+
+  min-height: 92vh;
+
+  padding:
+    5vw
+    var(--padding)
+    7vw;
+
   display: grid;
-  grid-template-columns: 1.5fr 1fr;
-  gap: 6vw;
+
+  grid-template-columns:
+    1.35fr
+    0.65fr;
+
+  gap: 8vw;
+
   align-items: end;
-  border-bottom: 1px solid var(--line);
+
+  border-bottom:
+    1px solid var(--line);
 }
 
-.site-title {
-  font-size: clamp(4rem, 10vw, 11rem);
-  font-weight: 700;
+
+.intro h1 {
+
+  margin: 0;
+
+  font-family: var(--serif);
+
+  font-size:
+    clamp(4.5rem, 10vw, 11rem);
+
+  font-weight: 400;
+
   line-height: 0.82;
-  letter-spacing: -0.075em;
+
+  letter-spacing: -0.065em;
 }
 
-.site-intro {
-  max-width: 480px;
+
+.intro-text {
+
+  max-width: 420px;
+
   padding-bottom: 1vw;
-  font-size: 1.25rem;
 }
 
-.site-intro p {
-  margin: 0 0 1rem;
+
+.intro-description {
+
+  margin:
+    0 0 2rem;
+
+  font-size: 1.35rem;
+
+  line-height: 1.25;
+}
+
+
+.intro-question {
+
+  margin:
+    0 0 2.5rem;
+
+  font-style: italic;
+
+  font-size: 1.2rem;
 }
 
 
 /* -----------------------------------------
    BUTTONS
-   ----------------------------------------- */
-
-.header-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 2rem;
-}
+----------------------------------------- */
 
 .button {
+
   display: inline-block;
-  padding: 14px 18px;
-  border: 1px solid var(--text);
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  transition: all 0.2s ease;
-}
 
-.button-dark {
-  background: var(--text);
-  color: var(--background);
-}
+  padding:
+    12px
+    16px;
 
-.button-dark:hover {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--text);
-}
+  border:
+    1px solid var(--ink);
 
-.button-outline {
-  background: transparent;
-}
+  font-family: var(--mono);
 
-.button-outline:hover {
-  background: var(--text);
-  color: var(--background);
-}
-
-
-/* -----------------------------------------
-   SHARED LABEL
-   ----------------------------------------- */
-
-.section-label {
   font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+
+  letter-spacing: 0.02em;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+
+.button-primary {
+
+  background: var(--ink);
+
+  color: var(--paper);
+}
+
+
+.button-primary:hover {
+
+  background: var(--blue);
+
+  border-color: var(--blue);
+}
+
+
+.button-light {
+
+  background: var(--paper);
+
+  color: var(--ink);
+
+  border-color: var(--paper);
+}
+
+
+.button-light:hover {
+
+  background: var(--blue);
+
+  color: var(--paper);
+
+  border-color: var(--blue);
 }
 
 
 /* -----------------------------------------
    FEATURED INSIGHT
-   ----------------------------------------- */
+----------------------------------------- */
 
 .featured-section {
-  padding: 8vw var(--page-padding);
-  border-bottom: 1px solid var(--line);
-  min-height: 80vh;
+
+  min-height: 85vh;
+
+  padding:
+    10vw
+    var(--padding);
 
   display: flex;
+
   flex-direction: column;
+
   justify-content: center;
+
+  border-bottom:
+    1px solid var(--line);
 }
+
 
 .featured-insight {
-  max-width: 1000px;
-  margin: 5vw 0;
+
+  max-width: 1050px;
+
+  margin:
+    0 0 4rem;
 }
+
 
 .quote {
+
   margin: 0;
-  font-size: clamp(2.5rem, 6vw, 7rem);
-  line-height: 0.98;
-  letter-spacing: -0.055em;
-  font-weight: 700;
+
+  font-family: var(--serif);
+
+  font-size:
+    clamp(3rem, 6.5vw, 7.5rem);
+
+  font-weight: 400;
+
+  line-height: 0.96;
+
+  letter-spacing: -0.045em;
 }
+
 
 .meta {
-  margin-top: 3rem;
+
+  margin:
+    3rem 0 0;
+
+  font-family: var(--mono);
+
+  font-size: 0.72rem;
+
   color: var(--muted);
-  font-size: 0.85rem;
+
+  line-height: 1.6;
 }
+
 
 .featured-category {
-  margin-top: 1rem;
-  color: var(--accent);
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+
+  margin:
+    1rem 0 0;
+
+  font-family: var(--mono);
+
+  color: var(--blue);
+
+  font-size: 0.68rem;
+
+  letter-spacing: 0.08em;
 }
+
 
 .another-button {
+
   align-self: flex-start;
+
+  padding:
+    0 0 5px;
+
   border: 0;
-  border-bottom: 2px solid var(--text);
+
+  border-bottom:
+    1px solid var(--ink);
+
   background: transparent;
-  padding: 0 0 5px;
+
+  color: var(--ink);
+
   cursor: pointer;
-  font-weight: 700;
+
+  font-size: 0.72rem;
+
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
 }
 
+
 .another-button:hover {
-  color: var(--accent);
-  border-color: var(--accent);
+
+  color: var(--blue);
+
+  border-color: var(--blue);
 }
 
 
 /* -----------------------------------------
-   ARCHIVE
-   ----------------------------------------- */
+   ARCHIVE INTRO
+----------------------------------------- */
 
 .archive-section {
-  padding: 8vw var(--page-padding);
+
+  padding:
+    8vw
+    var(--padding);
 }
 
-.archive-header {
+
+.archive-intro {
+
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6vw;
+
+  grid-template-columns:
+    1fr
+    1fr;
+
+  gap: 8vw;
+
   align-items: end;
-  padding-bottom: 4vw;
-  border-bottom: 1px solid var(--line);
+
+  padding-bottom:
+    4vw;
+
+  border-bottom:
+    1px solid var(--line);
 }
 
-.archive-header h1 {
-  margin: 1rem 0 0;
-  font-size: clamp(3rem, 7vw, 8rem);
+
+.eyebrow {
+
+  margin: 0 0 1rem;
+
+  font-family: var(--mono);
+
+  font-size: 0.68rem;
+
+  color: var(--muted);
+
+  letter-spacing: 0.06em;
+}
+
+
+.archive-intro h2 {
+
+  margin: 0;
+
+  font-family: var(--serif);
+
+  font-size:
+    clamp(3.5rem, 7vw, 8rem);
+
+  font-weight: 400;
+
   line-height: 0.85;
+
   letter-spacing: -0.06em;
 }
 
+
 .archive-description {
-  max-width: 420px;
-  font-size: 1.1rem;
+
+  max-width: 450px;
+
+  margin: 0;
+
+  font-size: 1.15rem;
 }
 
 
 /* -----------------------------------------
    FILTERS
-   ----------------------------------------- */
+----------------------------------------- */
 
-.filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 2rem 0;
-  border-bottom: 1px solid var(--line);
+.filter-section {
+
+  padding:
+    1.8rem 0;
+
+  border-bottom:
+    1px solid var(--line);
 }
 
-.filter {
-  background: transparent;
-  border: 1px solid var(--text);
-  padding: 8px 12px;
-  cursor: pointer;
-  font-size: 0.72rem;
-  font-weight: 700;
+
+.filter-heading {
+
+  margin:
+    0 0 0.8rem;
+
+  font-family: var(--mono);
+
+  font-size: 0.65rem;
+
+  color: var(--muted);
+
   letter-spacing: 0.04em;
 }
 
-.filter:hover,
-.filter.active {
-  background: var(--text);
-  color: var(--background);
-}
-.filter-area {
-  padding: 2rem 0;
-  border-bottom: 1px solid var(--line);
+
+.filters {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 7px;
 }
 
-.filter-group + .filter-group {
-  margin-top: 1.5rem;
-}
 
-.filter-heading {
-  margin-bottom: 0.8rem;
+.filter {
+
+  padding:
+    7px
+    10px;
+
+  border:
+    1px solid var(--line);
+
+  background: transparent;
+
+  color: var(--ink);
+
+  cursor: pointer;
+
   font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  color: var(--muted);
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
 }
 
-.filter-group .filters {
-  padding: 0;
-  border-bottom: 0;
+
+.filter:hover {
+
+  border-color: var(--blue);
+
+  color: var(--blue);
 }
+
+
+.filter.active {
+
+  background: var(--blue);
+
+  border-color: var(--blue);
+
+  color: var(--paper);
+}
+
 
 /* -----------------------------------------
-   ARCHIVE CARDS
-   ----------------------------------------- */
+   ARCHIVE GRID
+----------------------------------------- */
 
 .archive-grid {
+
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+
+  grid-template-columns:
+    repeat(3, 1fr);
 }
+
 
 .insight-card {
-  min-height: 360px;
+
+  min-height: 390px;
+
   padding: 2rem;
-  border-right: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+
+  border-right:
+    1px solid var(--line);
+
+  border-bottom:
+    1px solid var(--line);
 
   display: flex;
+
   flex-direction: column;
+
   justify-content: space-between;
 
-  transition: background 0.2s ease;
+  transition:
+    background 0.25s ease;
 }
+
 
 .insight-card:hover {
-  background: var(--white);
+
+  background: var(--paper-light);
 }
+
 
 .card-number {
-  font-size: 0.7rem;
+
+  font-family: var(--mono);
+
+  font-size: 0.65rem;
+
   color: var(--muted);
 }
+
 
 .card-advice {
-  margin: 3rem 0;
-  font-size: 1.7rem;
-  line-height: 1.05;
-  letter-spacing: -0.025em;
+
+  margin:
+    2rem 0;
+
+  font-family: var(--serif);
+
+  font-size: 1.65rem;
+
+  line-height: 1.08;
+
+  letter-spacing: -0.02em;
 }
+
 
 .card-footer {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+
+  font-family: var(--mono);
+
+  font-size: 0.68rem;
+
+  line-height: 1.5;
 }
+
 
 .card-role {
-  font-size: 0.8rem;
-  font-weight: 700;
+
+  font-family: var(--serif);
+
+  font-size: 1rem;
 }
 
+
 .card-experience {
-  font-size: 0.72rem;
+
   color: var(--muted);
 }
 
+
 .card-category {
-  margin-top: 10px;
-  font-size: 0.65rem;
-  letter-spacing: 0.08em;
-  color: var(--accent);
+
+  margin-top: 0.6rem;
+
+  color: var(--blue);
+
+  letter-spacing: 0.06em;
+}
+
+
+/* -----------------------------------------
+   EMPTY STATE
+----------------------------------------- */
+
+.empty-state {
+
+  grid-column: 1 / -1;
+
+  padding:
+    8vw 2rem;
+
+  text-align: center;
+
+  font-family: var(--serif);
+
+  font-size: 1.5rem;
+
+  font-style: italic;
 }
 
 
 /* -----------------------------------------
    CONTRIBUTION
-   ----------------------------------------- */
+----------------------------------------- */
 
 .contribute-section {
-  min-height: 80vh;
-  padding: 8vw var(--page-padding);
+
+  min-height: 75vh;
+
+  padding:
+    9vw
+    var(--padding);
 
   display: flex;
+
   flex-direction: column;
+
   justify-content: center;
 
-  background: var(--accent);
+  background: var(--blue);
+
+  color: var(--paper);
 }
 
+
+.contribute-section .eyebrow {
+
+  color: var(--paper);
+  opacity: 0.7;
+}
+
+
 .contribute-section h2 {
-  margin: 4vw 0;
-  font-size: clamp(3rem, 8vw, 9rem);
-  line-height: 0.88;
-  letter-spacing: -0.07em;
+
+  max-width: 1000px;
+
+  margin:
+    2rem 0;
+
+  font-family: var(--serif);
+
+  font-size:
+    clamp(3rem, 7vw, 8rem);
+
+  font-weight: 400;
+
+  line-height: 0.9;
+
+  letter-spacing: -0.06em;
+}
+
+
+.contribute-text {
+
+  max-width: 420px;
+
+  margin:
+    0 0 2.5rem;
+
+  font-size: 1.2rem;
 }
 
 
 /* -----------------------------------------
    FOOTER
-   ----------------------------------------- */
+----------------------------------------- */
 
 footer {
-  padding: 2rem var(--page-padding);
+
+  padding:
+    2rem
+    var(--padding);
+
   display: flex;
+
   justify-content: space-between;
+
   gap: 2rem;
 
-  font-size: 0.65rem;
-  letter-spacing: 0.08em;
-  border-top: 1px solid var(--line);
+  font-family: var(--mono);
+
+  font-size: 0.62rem;
+
+  line-height: 1.5;
+
+  color: var(--muted);
 }
 
 
 /* -----------------------------------------
    MOBILE
-   ----------------------------------------- */
+----------------------------------------- */
 
 @media (max-width: 800px) {
 
-  :root {
-    --page-padding: 6vw;
-  }
+  .intro {
 
-  .site-header {
     min-height: auto;
+
     padding-top: 20vw;
-    padding-bottom: 15vw;
+
+    padding-bottom: 18vw;
 
     display: block;
   }
 
-  .site-title {
-    font-size: clamp(3.8rem, 17vw, 8rem);
-    margin-bottom: 15vw;
+
+  .intro h1 {
+
+    font-size:
+      clamp(4rem, 17vw, 8rem);
+
+    margin-bottom: 18vw;
   }
 
-  .site-intro {
-    font-size: 1.1rem;
+
+  .intro-description {
+
+    font-size: 1.2rem;
   }
+
 
   .featured-section {
+
     min-height: 75vh;
-    padding-top: 15vw;
-    padding-bottom: 15vw;
+
+    padding-top: 18vw;
+
+    padding-bottom: 18vw;
   }
+
 
   .quote {
-    font-size: clamp(2.5rem, 11vw, 5rem);
+
+    font-size:
+      clamp(2.7rem, 11vw, 5rem);
   }
 
-  .archive-header {
+
+  .archive-intro {
+
     display: block;
   }
 
+
   .archive-description {
+
     margin-top: 2rem;
   }
 
+
   .archive-grid {
+
     grid-template-columns: 1fr;
   }
 
+
   .insight-card {
-    min-height: 320px;
+
+    min-height: 330px;
+
     border-right: 0;
   }
 
+
   .filters {
+
     overflow-x: auto;
+
     flex-wrap: nowrap;
-    padding-bottom: 1.5rem;
+
+    padding-bottom: 5px;
   }
 
+
   .filter {
+
+    flex: 0 0 auto;
+
     white-space: nowrap;
   }
 
+
   .contribute-section {
+
     min-height: 70vh;
   }
 
+
   footer {
+
     flex-direction: column;
   }
+
 }

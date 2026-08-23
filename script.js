@@ -3,6 +3,10 @@ let selectedCategory = "ALL";
 let selectedWorkingAs = "ALL";
 
 
+/* -----------------------------------------
+   ELEMENTS
+----------------------------------------- */
+
 const archiveGrid =
   document.getElementById("archive-grid");
 
@@ -109,6 +113,11 @@ function createWorkingFilters() {
     getAvailableWorkingTypes();
 
 
+  /*
+    Only show this filter section when
+    working-status information exists.
+  */
+
   if (workingTypes.length === 0) {
 
     workingFilterArea.classList.add("hidden");
@@ -146,7 +155,7 @@ function createWorkingFilters() {
 
 
 /* -----------------------------------------
-   CREATE FILTER BUTTON
+   CREATE INDIVIDUAL FILTER BUTTON
 ----------------------------------------- */
 
 function createFilterButton(
@@ -159,8 +168,13 @@ function createFilterButton(
   const button =
     document.createElement("button");
 
+
   button.className = "filter";
 
+
+  /*
+    Mark the currently selected filter.
+  */
 
   if (
     (type === "category" &&
@@ -181,30 +195,43 @@ function createFilterButton(
     "click",
     () => {
 
+
+      /* CATEGORY FILTER */
+
       if (type === "category") {
 
         selectedCategory = value;
 
+
         categoryFilters
           .querySelectorAll(".filter")
-          .forEach(filter =>
-            filter.classList.remove("active")
-          );
+          .forEach(filter => {
+
+            filter.classList.remove("active");
+
+          });
+
 
         button.classList.add("active");
 
       }
 
 
+      /* WORKING STATUS FILTER */
+
       if (type === "working") {
 
         selectedWorkingAs = value;
 
+
         workingFilters
           .querySelectorAll(".filter")
-          .forEach(filter =>
-            filter.classList.remove("active")
-          );
+          .forEach(filter => {
+
+            filter.classList.remove("active");
+
+          });
+
 
         button.classList.add("active");
 
@@ -231,6 +258,7 @@ function createFilterButton(
 function getFilteredInsights() {
 
   return insights.filter(insight => {
+
 
     const categoryMatches =
       selectedCategory === "ALL" ||
@@ -265,13 +293,25 @@ function displayArchive() {
   archiveGrid.innerHTML = "";
 
 
+  /*
+    Number of results currently visible.
+  */
+
   insightCount.textContent =
     filteredInsights.length;
 
 
+  /*
+    Total number of insights in the archive.
+  */
+
   introCount.textContent =
     insights.length;
 
+
+  /*
+    Empty state.
+  */
 
   if (filteredInsights.length === 0) {
 
@@ -288,7 +328,28 @@ function displayArchive() {
   }
 
 
+  /*
+    Create each archive card.
+
+    IMPORTANT:
+    We use insight.id here rather than the
+    position in the filtered list.
+
+    This means archive numbers remain stable.
+
+    Example:
+
+    Original archive:
+    001
+    002
+    003
+
+    If someone filters to 002,
+    it still displays as 002.
+  */
+
   filteredInsights.forEach(insight => {
+
 
     const card =
       document.createElement("article");
@@ -297,6 +358,12 @@ function displayArchive() {
     card.className =
       "insight-card";
 
+
+    /*
+      Salary is optional.
+      If there is no salary information,
+      nothing is displayed.
+    */
 
     const salaryHTML =
       insight.salary
@@ -363,6 +430,11 @@ function showRandomInsight() {
     getFilteredInsights();
 
 
+  /*
+    Nothing available for the
+    current filter combination.
+  */
+
   if (availableInsights.length === 0) {
 
     featuredInsight.innerHTML = `
@@ -382,6 +454,10 @@ function showRandomInsight() {
   }
 
 
+  /*
+    Pick a random insight.
+  */
+
   const randomIndex =
     Math.floor(
       Math.random() *
@@ -393,6 +469,10 @@ function showRandomInsight() {
     availableInsights[randomIndex];
 
 
+  /*
+    Display the featured insight.
+  */
+
   featuredInsight.innerHTML = `
 
     <p class="quote">
@@ -401,6 +481,7 @@ function showRandomInsight() {
 
 
     <p class="meta">
+
       ${insight.role}
       ·
       ${insight.workingAs}
@@ -412,6 +493,7 @@ function showRandomInsight() {
           ? ` · ${insight.salary}`
           : ""
       }
+
     </p>
 
 
@@ -436,6 +518,7 @@ clearFilters.addEventListener(
 
     selectedWorkingAs = "ALL";
 
+
     createCategoryFilters();
 
     createWorkingFilters();
@@ -459,7 +542,7 @@ anotherButton.addEventListener(
 
 
 /* -----------------------------------------
-   INITIALISE
+   INITIALISE ARCHIVE
 ----------------------------------------- */
 
 createCategoryFilters();

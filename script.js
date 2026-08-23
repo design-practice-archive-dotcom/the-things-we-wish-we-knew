@@ -1,3 +1,4 @@
+```javascript
 let selectedCategory = "ALL";
 let selectedWorkingAs = "ALL";
 
@@ -30,7 +31,6 @@ const clearFilters =
   document.getElementById("clear-filters");
 
 
-
 /* -----------------------------------------
    AVAILABLE CATEGORIES
 ----------------------------------------- */
@@ -48,7 +48,6 @@ function getAvailableCategories() {
 }
 
 
-
 /* -----------------------------------------
    AVAILABLE WORKING TYPES
 ----------------------------------------- */
@@ -64,7 +63,6 @@ function getAvailableWorkingTypes() {
   ];
 
 }
-
 
 
 /* -----------------------------------------
@@ -101,7 +99,6 @@ function createCategoryFilters() {
 }
 
 
-
 /* -----------------------------------------
    CREATE WORKING FILTERS
 ----------------------------------------- */
@@ -111,11 +108,6 @@ function createWorkingFilters() {
   const workingTypes =
     getAvailableWorkingTypes();
 
-
-  /*
-    Only show the entire row if there is
-    actually working-as information.
-  */
 
   if (workingTypes.length === 0) {
 
@@ -153,9 +145,8 @@ function createWorkingFilters() {
 }
 
 
-
 /* -----------------------------------------
-   CREATE INDIVIDUAL FILTER BUTTON
+   CREATE FILTER BUTTON
 ----------------------------------------- */
 
 function createFilterButton(
@@ -169,6 +160,7 @@ function createFilterButton(
     document.createElement("button");
 
   button.className = "filter";
+
 
   if (
     (type === "category" &&
@@ -195,8 +187,8 @@ function createFilterButton(
 
         categoryFilters
           .querySelectorAll(".filter")
-          .forEach(button =>
-            button.classList.remove("active")
+          .forEach(filter =>
+            filter.classList.remove("active")
           );
 
         button.classList.add("active");
@@ -210,8 +202,8 @@ function createFilterButton(
 
         workingFilters
           .querySelectorAll(".filter")
-          .forEach(button =>
-            button.classList.remove("active")
+          .forEach(filter =>
+            filter.classList.remove("active")
           );
 
         button.classList.add("active");
@@ -230,7 +222,6 @@ function createFilterButton(
   container.appendChild(button);
 
 }
-
 
 
 /* -----------------------------------------
@@ -259,7 +250,6 @@ function getFilteredInsights() {
   });
 
 }
-
 
 
 /* -----------------------------------------
@@ -298,70 +288,69 @@ function displayArchive() {
   }
 
 
-  filteredInsights.forEach(
-    (insight, index) => {
+  filteredInsights.forEach(insight => {
 
-      const card =
-        document.createElement("article");
-
-
-      card.className =
-        "insight-card";
+    const card =
+      document.createElement("article");
 
 
-      const salaryHTML =
-        insight.salary
-          ? `<div class="card-salary">
-               ${insight.salary}
-             </div>`
-          : "";
+    card.className =
+      "insight-card";
 
 
-      card.innerHTML = `
+    const salaryHTML =
+      insight.salary
+        ? `
+          <div class="card-salary">
+            ${insight.salary}
+          </div>
+        `
+        : "";
 
-        <div class="card-number">
-          ${String(index + 1).padStart(3, "0")}
+
+    card.innerHTML = `
+
+      <div class="card-number">
+        ${insight.id}
+      </div>
+
+
+      <div class="card-advice">
+        “${insight.advice}”
+      </div>
+
+
+      <div class="card-footer">
+
+        <div class="card-role">
+          ${insight.role}
         </div>
 
 
-        <div class="card-advice">
-          “${insight.advice}”
+        <div class="card-experience">
+          ${insight.workingAs}
+          ·
+          ${insight.experience} in practice
         </div>
 
 
-        <div class="card-footer">
-
-          <div class="card-role">
-            ${insight.role}
-          </div>
+        ${salaryHTML}
 
 
-          <div class="card-experience">
-            ${insight.workingAs}
-            ·
-            ${insight.experience} in practice
-          </div>
-
-
-          ${salaryHTML}
-
-
-          <div class="card-category">
-            ${insight.category}
-          </div>
-
+        <div class="card-category">
+          ${insight.category}
         </div>
 
-      `;
+      </div>
+
+    `;
 
 
-      archiveGrid.appendChild(card);
+    archiveGrid.appendChild(card);
 
-    }
-  );
+  });
 
 }
-
 
 
 /* -----------------------------------------
@@ -412,7 +401,6 @@ function showRandomInsight() {
 
 
     <p class="meta">
-
       ${insight.role}
       ·
       ${insight.workingAs}
@@ -424,7 +412,6 @@ function showRandomInsight() {
           ? ` · ${insight.salary}`
           : ""
       }
-
     </p>
 
 
@@ -435,7 +422,6 @@ function showRandomInsight() {
   `;
 
 }
-
 
 
 /* -----------------------------------------
@@ -462,7 +448,6 @@ clearFilters.addEventListener(
 );
 
 
-
 /* -----------------------------------------
    ANOTHER BUTTON
 ----------------------------------------- */
@@ -471,7 +456,6 @@ anotherButton.addEventListener(
   "click",
   showRandomInsight
 );
-
 
 
 /* -----------------------------------------
@@ -485,3 +469,4 @@ createWorkingFilters();
 displayArchive();
 
 showRandomInsight();
+```

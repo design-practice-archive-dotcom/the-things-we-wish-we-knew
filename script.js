@@ -8,6 +8,9 @@ const archiveGrid =
 const insightCount =
   document.getElementById("insight-count");
 
+const introCount =
+  document.getElementById("intro-count");
+
 const featuredInsight =
   document.getElementById("featured-insight");
 
@@ -20,16 +23,17 @@ const categoryFilters =
 const workingFilters =
   document.getElementById("working-filters");
 
-const categoryFilterArea =
-  document.getElementById("category-filter-area");
-
 const workingFilterArea =
   document.getElementById("working-filter-area");
 
+const clearFilters =
+  document.getElementById("clear-filters");
 
-// -----------------------------------------
-// GET AVAILABLE FILTERS
-// -----------------------------------------
+
+
+/* -----------------------------------------
+   AVAILABLE CATEGORIES
+----------------------------------------- */
 
 function getAvailableCategories() {
 
@@ -44,7 +48,12 @@ function getAvailableCategories() {
 }
 
 
-function getAvailableWorkingAs() {
+
+/* -----------------------------------------
+   AVAILABLE WORKING TYPES
+----------------------------------------- */
+
+function getAvailableWorkingTypes() {
 
   return [
     ...new Set(
@@ -57,9 +66,10 @@ function getAvailableWorkingAs() {
 }
 
 
-// -----------------------------------------
-// CREATE CATEGORY FILTERS
-// -----------------------------------------
+
+/* -----------------------------------------
+   CREATE CATEGORY FILTERS
+----------------------------------------- */
 
 function createCategoryFilters() {
 
@@ -68,158 +78,164 @@ function createCategoryFilters() {
 
   categoryFilters.innerHTML = "";
 
-  const allButton =
-    document.createElement("button");
 
-  allButton.className =
-    "filter active";
-
-  allButton.textContent =
-    "All";
-
-  allButton.dataset.category =
-    "ALL";
-
-  categoryFilters.appendChild(
-    allButton
+  createFilterButton(
+    categoryFilters,
+    "All",
+    "ALL",
+    "category"
   );
 
 
   categories.forEach(category => {
 
-    const button =
-      document.createElement("button");
-
-    button.className =
-      "filter";
-
-    button.textContent =
-      category;
-
-    button.dataset.category =
-      category;
-
-    categoryFilters.appendChild(
-      button
+    createFilterButton(
+      categoryFilters,
+      category,
+      category,
+      "category"
     );
 
   });
 
-
-  categoryFilters
-    .querySelectorAll(".filter")
-    .forEach(button => {
-
-      button.addEventListener(
-        "click",
-        () => {
-
-          categoryFilters
-            .querySelectorAll(".filter")
-            .forEach(item =>
-              item.classList.remove("active")
-            );
-
-          button.classList.add("active");
-
-          selectedCategory =
-            button.dataset.category;
-
-          displayArchive();
-
-          showRandomInsight();
-
-        }
-      );
-
-    });
-
 }
 
 
-// -----------------------------------------
-// CREATE WORKING-AS FILTERS
-// -----------------------------------------
+
+/* -----------------------------------------
+   CREATE WORKING FILTERS
+----------------------------------------- */
 
 function createWorkingFilters() {
 
   const workingTypes =
-    getAvailableWorkingAs();
+    getAvailableWorkingTypes();
+
+
+  /*
+    Only show the entire row if there is
+    actually working-as information.
+  */
+
+  if (workingTypes.length === 0) {
+
+    workingFilterArea.classList.add("hidden");
+
+    return;
+
+  }
+
+
+  workingFilterArea.classList.remove("hidden");
 
   workingFilters.innerHTML = "";
 
-  const allButton =
-    document.createElement("button");
 
-  allButton.className =
-    "filter active";
-
-  allButton.textContent =
-    "Everyone";
-
-  allButton.dataset.workingAs =
-    "ALL";
-
-  workingFilters.appendChild(
-    allButton
+  createFilterButton(
+    workingFilters,
+    "Everyone",
+    "ALL",
+    "working"
   );
 
 
   workingTypes.forEach(type => {
 
-    const button =
-      document.createElement("button");
-
-    button.className =
-      "filter";
-
-    button.textContent =
-      type;
-
-    button.dataset.workingAs =
-      type;
-
-    workingFilters.appendChild(
-      button
+    createFilterButton(
+      workingFilters,
+      type,
+      type,
+      "working"
     );
 
   });
 
+}
 
-  workingFilters
-    .querySelectorAll(".filter")
-    .forEach(button => {
 
-      button.addEventListener(
-        "click",
-        () => {
 
-          workingFilters
-            .querySelectorAll(".filter")
-            .forEach(item =>
-              item.classList.remove("active")
-            );
+/* -----------------------------------------
+   CREATE INDIVIDUAL FILTER BUTTON
+----------------------------------------- */
 
-          button.classList.add("active");
+function createFilterButton(
+  container,
+  label,
+  value,
+  type
+) {
 
-          selectedWorkingAs =
-            button.dataset.workingAs;
+  const button =
+    document.createElement("button");
 
-          displayArchive();
+  button.className = "filter";
 
-          showRandomInsight();
+  if (
+    (type === "category" &&
+      value === selectedCategory) ||
+    (type === "working" &&
+      value === selectedWorkingAs)
+  ) {
 
-        }
-      );
+    button.classList.add("active");
 
-    });
+  }
+
+
+  button.textContent = label;
+
+
+  button.addEventListener(
+    "click",
+    () => {
+
+      if (type === "category") {
+
+        selectedCategory = value;
+
+        categoryFilters
+          .querySelectorAll(".filter")
+          .forEach(button =>
+            button.classList.remove("active")
+          );
+
+        button.classList.add("active");
+
+      }
+
+
+      if (type === "working") {
+
+        selectedWorkingAs = value;
+
+        workingFilters
+          .querySelectorAll(".filter")
+          .forEach(button =>
+            button.classList.remove("active")
+          );
+
+        button.classList.add("active");
+
+      }
+
+
+      displayArchive();
+
+      showRandomInsight();
+
+    }
+  );
+
+
+  container.appendChild(button);
 
 }
 
 
-// -----------------------------------------
-// FILTER DATA
-// -----------------------------------------
+
+/* -----------------------------------------
+   FILTER INSIGHTS
+----------------------------------------- */
 
 function getFilteredInsights() {
 
@@ -229,9 +245,11 @@ function getFilteredInsights() {
       selectedCategory === "ALL" ||
       insight.category === selectedCategory;
 
+
     const workingMatches =
       selectedWorkingAs === "ALL" ||
       insight.workingAs === selectedWorkingAs;
+
 
     return (
       categoryMatches &&
@@ -243,27 +261,36 @@ function getFilteredInsights() {
 }
 
 
-// -----------------------------------------
-// DISPLAY ARCHIVE
-// -----------------------------------------
+
+/* -----------------------------------------
+   DISPLAY ARCHIVE
+----------------------------------------- */
 
 function displayArchive() {
 
   const filteredInsights =
     getFilteredInsights();
 
+
   archiveGrid.innerHTML = "";
+
 
   insightCount.textContent =
     filteredInsights.length;
 
 
+  introCount.textContent =
+    insights.length;
+
+
   if (filteredInsights.length === 0) {
 
     archiveGrid.innerHTML = `
+
       <div class="empty-state">
         Nothing here yet.
       </div>
+
     `;
 
     return;
@@ -277,8 +304,18 @@ function displayArchive() {
       const card =
         document.createElement("article");
 
+
       card.className =
         "insight-card";
+
+
+      const salaryHTML =
+        insight.salary
+          ? `<div class="card-salary">
+               ${insight.salary}
+             </div>`
+          : "";
+
 
       card.innerHTML = `
 
@@ -286,9 +323,11 @@ function displayArchive() {
           ${String(index + 1).padStart(3, "0")}
         </div>
 
+
         <div class="card-advice">
           “${insight.advice}”
         </div>
+
 
         <div class="card-footer">
 
@@ -296,10 +335,16 @@ function displayArchive() {
             ${insight.role}
           </div>
 
+
           <div class="card-experience">
-            ${insight.workingAs} ·
+            ${insight.workingAs}
+            ·
             ${insight.experience} in practice
           </div>
+
+
+          ${salaryHTML}
+
 
           <div class="card-category">
             ${insight.category}
@@ -309,6 +354,7 @@ function displayArchive() {
 
       `;
 
+
       archiveGrid.appendChild(card);
 
     }
@@ -317,9 +363,10 @@ function displayArchive() {
 }
 
 
-// -----------------------------------------
-// RANDOM FEATURED INSIGHT
-// -----------------------------------------
+
+/* -----------------------------------------
+   FEATURED INSIGHT
+----------------------------------------- */
 
 function showRandomInsight() {
 
@@ -336,7 +383,7 @@ function showRandomInsight() {
       </p>
 
       <p class="meta">
-        Try another combination.
+        Try another filter.
       </p>
 
     `;
@@ -363,26 +410,73 @@ function showRandomInsight() {
       “${insight.advice}”
     </p>
 
+
     <p class="meta">
+
       ${insight.role}
       ·
       ${insight.workingAs}
       ·
       ${insight.experience} in practice
+
+      ${
+        insight.salary
+          ? ` · ${insight.salary}`
+          : ""
+      }
+
     </p>
 
-    <p class="featured-category">
+
+    <div class="featured-category">
       ${insight.category}
-    </p>
+    </div>
 
   `;
 
 }
 
 
-// -----------------------------------------
-// INITIALISE
-// -----------------------------------------
+
+/* -----------------------------------------
+   CLEAR FILTERS
+----------------------------------------- */
+
+clearFilters.addEventListener(
+  "click",
+  () => {
+
+    selectedCategory = "ALL";
+
+    selectedWorkingAs = "ALL";
+
+    createCategoryFilters();
+
+    createWorkingFilters();
+
+    displayArchive();
+
+    showRandomInsight();
+
+  }
+);
+
+
+
+/* -----------------------------------------
+   ANOTHER BUTTON
+----------------------------------------- */
+
+anotherButton.addEventListener(
+  "click",
+  showRandomInsight
+);
+
+
+
+/* -----------------------------------------
+   INITIALISE
+----------------------------------------- */
 
 createCategoryFilters();
 

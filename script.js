@@ -1,3 +1,9 @@
+const DATA_URL =
+  "https://script.google.com/macros/s/AKfycbyFlLkBNRFMKwncTpH4TU0q7mD5oiNlS57fu4vx4jE6Cf1wEIYFLuR_a3jYJDe5YQI4sw/exec";
+
+
+let insights = [];
+
 let selectedCategory = "ALL";
 let selectedWorkingAs = "ALL";
 
@@ -7,6 +13,9 @@ const archiveGrid =
 
 const insightCount =
   document.getElementById("insight-count");
+
+const introCount =
+  document.getElementById("intro-count");
 
 const featuredInsight =
   document.getElementById("featured-insight");
@@ -20,45 +29,75 @@ const categoryFilters =
 const workingFilters =
   document.getElementById("working-filters");
 
+const workingFilterArea =
+  document.getElementById("working-filter-area");
 
-// =========================================
-// GET FILTERED INSIGHTS
-// =========================================
+const clearFilters =
+  document.getElementById("clear-filters");
 
-function getFilteredInsights() {
 
-  return insights.filter(insight => {
 
-    const categoryMatches =
-      selectedCategory === "ALL" ||
-      insight.category === selectedCategory;
+/* -----------------------------------------
+   LOAD DATA FROM GOOGLE SHEETS
+----------------------------------------- */
 
-    const workingAsMatches =
-      selectedWorkingAs === "ALL" ||
-      insight.workingAs === selectedWorkingAs;
+async function loadInsights() {
 
-    return categoryMatches && workingAsMatches;
+  try {
 
-  });
+    const response =
+      await fetch(DATA_URL);
+
+    if (!response.ok) {
+
+      throw new Error(
+        "Could not load archive data."
+      );
+
+    }
+
+
+    insights =
+      await response.json();
+
+
+    initialiseArchive();
+
+
+  } catch (error) {
+
+    console.error(
+      "Archive loading error:",
+      error
+    );
+
+
+    archiveGrid.innerHTML = `
+
+      <div class="empty-state">
+
+        The archive is temporarily unavailable.
+
+      </div>
+
+    `;
+
+    insightCount.textContent = "0";
+    introCount.textContent = "0";
+
+  }
 
 }
 
 
-// =========================================
-// CREATE FILTER BUTTONS
-// =========================================
 
-function createFilters() {
+/* -----------------------------------------
+   AVAILABLE CATEGORIES
+----------------------------------------- */
 
-  categoryFilters.innerHTML = "";
-  workingFilters.innerHTML = "";
+function getAvailableCategories() {
 
-
-  // -----------------------------------------
-  // CATEGORIES
-  // -----------------------------------------
-
-  const categories = [
+  return [
     ...new Set(
       insights
         .map(insight => insight.category)
@@ -66,12 +105,45 @@ function createFilters() {
     )
   ];
 
+}
+
+
+
+/* -----------------------------------------
+   AVAILABLE WORKING TYPES
+----------------------------------------- */
+
+function getAvailableWorkingTypes() {
+
+  return [
+    ...new Set(
+      insights
+        .map(insight => insight.workingAs)
+        .filter(Boolean)
+    )
+  ];
+
+}
+
+
+
+/* -----------------------------------------
+   CREATE CATEGORY FILTERS
+----------------------------------------- */
+
+function createCategoryFilters() {
+
+  const categories =
+    getAvailableCategories();
+
+  categoryFilters.innerHTML = "";
+
 
   createFilterButton(
     categoryFilters,
+    "All",
     "ALL",
-    "ALL",
-    "filter"
+    "category"
   );
 
 
@@ -81,56 +153,7 @@ function createFilters() {
       categoryFilters,
       category,
       category,
-      "filter"
-    );
-
-  });
-
-
-  // -----------------------------------------
-  // WORKING AS
-  // -----------------------------------------
-
-  const workingTypes = [
-    ...new Set(
-      insights
-        .map(insight => insight.workingAs)
-        .filter(Boolean)
-    )
-  ];
-
-
-  createFilterButton(
-    workingFilters,
-    "ALL",
-    "EVERYONE",
-    "working-filter"
-  );
-
-
-  workingTypes.forEach(type => {
-
-    let label = type;
-
-
-    if (type === "Freelance / Independent") {
-      label = "INDEPENDENT";
-    }
-
-    if (type === "Founder / Own studio") {
-      label = "FOUNDER / STUDIO";
-    }
-
-    if (type === "Academic / Research") {
-      label = "ACADEMIC / RESEARCH";
-    }
-
-
-    createFilterButton(
-      workingFilters,
-      type,
-      label,
-      "working-filter"
+      "category"
     );
 
   });
@@ -138,79 +161,127 @@ function createFilters() {
 }
 
 
-// =========================================
-// CREATE INDIVIDUAL FILTER
-// =========================================
+
+/* -----------------------------------------
+   CREATE WORKING FILTERS
+----------------------------------------- */
+
+function createWorkingFilters() {
+
+  const workingTypes =
+    getAvailableWorkingTypes();
+
+
+  if (workingTypes.length === 0) {
+
+    workingFilterArea.classList.add("hidden");
+
+    return;
+
+  }
+
+
+  workingFilterArea.classList.remove("hidden");
+
+  workingFilters.innerHTML = "";
+
+
+  createFilterButton(
+    workingFilters,
+    "Everyone",
+    "ALL",
+    "working"
+  );
+
+
+  workingTypes.forEach(type => {
+
+    createFilterButton(
+      workingFilters,
+      type,
+      type,
+      "working"
+    );
+
+  });
+
+}
+
+
+
+/* -----------------------------------------
+   CREATE FILTER BUTTON
+----------------------------------------- */
 
 function createFilterButton(
   container,
-  value,
   label,
-  className
+  value,
+  type
 ) {
 
   const button =
     document.createElement("button");
 
-  button.className =
-    `filter ${className}`;
+  button.className = "filter";
 
-  button.textContent =
-    label;
 
-  if (value === "ALL") {
+  if (
+    (type === "category" &&
+      value === selectedCategory) ||
+
+    (type === "working" &&
+      value === selectedWorkingAs)
+  ) {
+
     button.classList.add("active");
+
   }
 
 
-  if (className === "filter") {
+  button.textContent = label;
 
-    button.addEventListener(
-      "click",
-      () => {
 
-        document
-          .querySelectorAll(".filter")
-          .forEach(button => {
-            button.classList.remove("active");
-          });
+  button.addEventListener(
+    "click",
+    () => {
 
-        button.classList.add("active");
+      if (type === "category") {
 
         selectedCategory = value;
 
-        displayArchive();
-        showRandomInsight();
-
-      }
-    );
-
-  }
-
-
-  if (className === "working-filter") {
-
-    button.addEventListener(
-      "click",
-      () => {
-
-        document
-          .querySelectorAll(".working-filter")
-          .forEach(button => {
-            button.classList.remove("active");
-          });
+        categoryFilters
+          .querySelectorAll(".filter")
+          .forEach(button =>
+            button.classList.remove("active")
+          );
 
         button.classList.add("active");
 
+      }
+
+
+      if (type === "working") {
+
         selectedWorkingAs = value;
 
-        displayArchive();
-        showRandomInsight();
+        workingFilters
+          .querySelectorAll(".filter")
+          .forEach(button =>
+            button.classList.remove("active")
+          );
+
+        button.classList.add("active");
 
       }
-    );
 
-  }
+
+      displayArchive();
+
+      showRandomInsight();
+
+    }
+  );
 
 
   container.appendChild(button);
@@ -218,9 +289,39 @@ function createFilterButton(
 }
 
 
-// =========================================
-// DISPLAY ARCHIVE
-// =========================================
+
+/* -----------------------------------------
+   FILTER INSIGHTS
+----------------------------------------- */
+
+function getFilteredInsights() {
+
+  return insights.filter(insight => {
+
+    const categoryMatches =
+      selectedCategory === "ALL" ||
+      insight.category === selectedCategory;
+
+
+    const workingMatches =
+      selectedWorkingAs === "ALL" ||
+      insight.workingAs === selectedWorkingAs;
+
+
+    return (
+      categoryMatches &&
+      workingMatches
+    );
+
+  });
+
+}
+
+
+
+/* -----------------------------------------
+   DISPLAY ARCHIVE
+----------------------------------------- */
 
 function displayArchive() {
 
@@ -235,6 +336,25 @@ function displayArchive() {
     filteredInsights.length;
 
 
+  introCount.textContent =
+    insights.length;
+
+
+  if (filteredInsights.length === 0) {
+
+    archiveGrid.innerHTML = `
+
+      <div class="empty-state">
+        Nothing here yet.
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
   filteredInsights.forEach(
     (insight, index) => {
 
@@ -246,21 +366,14 @@ function displayArchive() {
         "insight-card";
 
 
-      let salaryHTML = "";
-
-
-      if (
-        insight.salary &&
-        insight.salary.trim() !== ""
-      ) {
-
-        salaryHTML = `
-          <div class="card-salary">
-            Salary: ${insight.salary}
-          </div>
-        `;
-
-      }
+      const salaryHTML =
+        insight.salary
+          ? `
+            <div class="card-salary">
+              ${insight.salary}
+            </div>
+          `
+          : "";
 
 
       card.innerHTML = `
@@ -285,8 +398,7 @@ function displayArchive() {
           <div class="card-experience">
             ${insight.workingAs}
             ·
-            ${insight.experience}
-            in practice
+            ${insight.experience} in practice
           </div>
 
 
@@ -310,9 +422,10 @@ function displayArchive() {
 }
 
 
-// =========================================
-// RANDOM FEATURED INSIGHT
-// =========================================
+
+/* -----------------------------------------
+   FEATURED INSIGHT
+----------------------------------------- */
 
 function showRandomInsight() {
 
@@ -320,14 +433,12 @@ function showRandomInsight() {
     getFilteredInsights();
 
 
-  if (
-    availableInsights.length === 0
-  ) {
+  if (availableInsights.length === 0) {
 
     featuredInsight.innerHTML = `
 
       <p class="quote">
-        No insights found for this combination yet.
+        Nothing here yet.
       </p>
 
       <p class="meta">
@@ -360,27 +471,60 @@ function showRandomInsight() {
 
 
     <p class="meta">
+
       ${insight.role}
       ·
       ${insight.workingAs}
       ·
-      ${insight.experience}
-      in practice
+      ${insight.experience} in practice
+
+      ${
+        insight.salary
+          ? ` · ${insight.salary}`
+          : ""
+      }
+
     </p>
 
 
-    <p class="featured-category">
+    <div class="featured-category">
       ${insight.category}
-    </p>
+    </div>
 
   `;
 
 }
 
 
-// =========================================
-// ANOTHER BUTTON
-// =========================================
+
+/* -----------------------------------------
+   CLEAR FILTERS
+----------------------------------------- */
+
+clearFilters.addEventListener(
+  "click",
+  () => {
+
+    selectedCategory = "ALL";
+
+    selectedWorkingAs = "ALL";
+
+    createCategoryFilters();
+
+    createWorkingFilters();
+
+    displayArchive();
+
+    showRandomInsight();
+
+  }
+);
+
+
+
+/* -----------------------------------------
+   ANOTHER BUTTON
+----------------------------------------- */
 
 anotherButton.addEventListener(
   "click",
@@ -388,12 +532,26 @@ anotherButton.addEventListener(
 );
 
 
-// =========================================
-// INITIALISE
-// =========================================
 
-createFilters();
+/* -----------------------------------------
+   INITIALISE
+----------------------------------------- */
 
-displayArchive();
+function initialiseArchive() {
 
-showRandomInsight();
+  createCategoryFilters();
+
+  createWorkingFilters();
+
+  displayArchive();
+
+  showRandomInsight();
+
+}
+
+
+/* -----------------------------------------
+   START
+----------------------------------------- */
+
+loadInsights();

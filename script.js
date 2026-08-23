@@ -1,15 +1,22 @@
 let selectedCategory = "ALL";
 let selectedWorkingAs = "ALL";
 
-const archiveGrid = document.getElementById("archive-grid");
-const insightCount = document.getElementById("insight-count");
-const featuredInsight = document.getElementById("featured-insight");
-const anotherButton = document.getElementById("another-button");
+const archiveGrid =
+  document.getElementById("archive-grid");
+
+const insightCount =
+  document.getElementById("insight-count");
+
+const featuredInsight =
+  document.getElementById("featured-insight");
+
+const anotherButton =
+  document.getElementById("another-button");
 
 
-// -----------------------------------------
+// =========================================
 // FILTER ARCHIVE
-// -----------------------------------------
+// =========================================
 
 function getFilteredInsights() {
 
@@ -30,33 +37,55 @@ function getFilteredInsights() {
 }
 
 
-// -----------------------------------------
+// =========================================
 // DISPLAY ARCHIVE
-// -----------------------------------------
+// =========================================
 
 function displayArchive() {
 
-  const filteredInsights = getFilteredInsights();
+  const filteredInsights =
+    getFilteredInsights();
 
   archiveGrid.innerHTML = "";
 
-  insightCount.textContent = filteredInsights.length;
+  insightCount.textContent =
+    filteredInsights.length;
+
 
   filteredInsights.forEach((insight, index) => {
 
-    const card = document.createElement("article");
+    const card =
+      document.createElement("article");
 
-    card.className = "insight-card";
+    card.className =
+      "insight-card";
+
+
+    const salaryHTML =
+      insight.salary
+        ? `<div class="card-salary">${insight.salary}</div>`
+        : "";
+
 
     card.innerHTML = `
 
-      <div class="card-number">
-        ${String(index + 1).padStart(3, "0")}
+      <div class="card-top">
+
+        <div class="card-number">
+          ${String(index + 1).padStart(3, "0")}
+        </div>
+
+        <div class="card-category">
+          ${insight.category}
+        </div>
+
       </div>
+
 
       <div class="card-advice">
         “${insight.advice}”
       </div>
+
 
       <div class="card-footer">
 
@@ -68,13 +97,12 @@ function displayArchive() {
           ${insight.workingAs} · ${insight.experience} in practice
         </div>
 
-        <div class="card-category">
-          ${insight.category}
-        </div>
+        ${salaryHTML}
 
       </div>
 
     `;
+
 
     archiveGrid.appendChild(card);
 
@@ -83,17 +111,20 @@ function displayArchive() {
 }
 
 
-// -----------------------------------------
+// =========================================
 // RANDOM FEATURED INSIGHT
-// -----------------------------------------
+// =========================================
 
 function showRandomInsight() {
 
-  const availableInsights = getFilteredInsights();
+  const availableInsights =
+    getFilteredInsights();
+
 
   if (availableInsights.length === 0) {
 
     featuredInsight.innerHTML = `
+
       <p class="quote">
         No insights found for this combination yet.
       </p>
@@ -101,16 +132,23 @@ function showRandomInsight() {
       <p class="meta">
         Try another filter.
       </p>
+
     `;
 
     return;
   }
 
-  const randomIndex = Math.floor(
-    Math.random() * availableInsights.length
-  );
 
-  const insight = availableInsights[randomIndex];
+  const randomIndex =
+    Math.floor(
+      Math.random() *
+      availableInsights.length
+    );
+
+
+  const insight =
+    availableInsights[randomIndex];
+
 
   featuredInsight.innerHTML = `
 
@@ -118,18 +156,24 @@ function showRandomInsight() {
       “${insight.advice}”
     </p>
 
-<p class="meta">
-  ${insight.role} · ${insight.workingAs} · ${insight.experience} in practice
-</p>
+    <p class="meta">
+      ${insight.role} ·
+      ${insight.workingAs} ·
+      ${insight.experience} in practice
+    </p>
 
-<p class="featured-category">
-  ${insight.category}
-</p>
+    <p class="featured-category">
+      ${insight.category}
+    </p>
 
   `;
 
 }
 
+
+// =========================================
+// ANOTHER BUTTON
+// =========================================
 
 anotherButton.addEventListener(
   "click",
@@ -137,68 +181,87 @@ anotherButton.addEventListener(
 );
 
 
-// -----------------------------------------
+// =========================================
 // TOPIC FILTERS
-// -----------------------------------------
-
+// =========================================
 
 const categoryFilters =
   document.querySelectorAll(".filter");
 
+
 categoryFilters.forEach(filter => {
 
-  filter.addEventListener("click", () => {
+  filter.addEventListener(
+    "click",
+    () => {
 
-    categoryFilters.forEach(button => {
-      button.classList.remove("active");
-    });
+      categoryFilters.forEach(button => {
 
-    filter.classList.add("active");
+        button.classList.remove("active");
 
-    selectedCategory =
-      filter.dataset.category;
+      });
 
-    displayArchive();
 
-    showRandomInsight();
+      filter.classList.add("active");
 
-  });
+
+      selectedCategory =
+        filter.dataset.category;
+
+
+      displayArchive();
+
+      showRandomInsight();
+
+    }
+  );
 
 });
 
 
-// -----------------------------------------
-// WORKING AS FILTERS
-// -----------------------------------------
+// =========================================
+// WORKING-AS FILTERS
+// =========================================
 
 const workingFilters =
-  document.querySelectorAll(".working-filter");
+  document.querySelectorAll(
+    ".working-filter"
+  );
+
 
 workingFilters.forEach(filter => {
 
-  filter.addEventListener("click", () => {
+  filter.addEventListener(
+    "click",
+    () => {
 
-    workingFilters.forEach(button => {
-      button.classList.remove("active");
-    });
+      workingFilters.forEach(button => {
 
-    filter.classList.add("active");
+        button.classList.remove("active");
 
-    selectedWorkingAs =
-      filter.dataset.workingAs;
+      });
 
-    displayArchive();
 
-    showRandomInsight();
+      filter.classList.add("active");
 
-  });
+
+      selectedWorkingAs =
+        filter.dataset.workingAs;
+
+
+      displayArchive();
+
+      showRandomInsight();
+
+    }
+  );
 
 });
 
 
-// -----------------------------------------
+// =========================================
 // INITIALISE
-// -----------------------------------------
+// =========================================
 
 displayArchive();
 

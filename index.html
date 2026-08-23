@@ -17,21 +17,29 @@
 <body>
 
   <!-- =========================================
-       NAVIGATION
+       TOP NAVIGATION
        ========================================= -->
 
-  <nav class="site-nav">
+  <nav class="top-nav">
 
-    <a href="#" class="nav-logo">
-      Things We Wish We'd Known
+    <a href="#" class="nav-title">
+      THE THINGS WE WISH WE'D KNOWN
     </a>
 
     <div class="nav-links">
-      <a href="#archive">Archive</a>
-      <a href="#about">About</a>
-      <a href="YOUR_GOOGLE_FORM_LINK" target="_blank">
-        Leave advice →
+
+      <a href="#archive">
+        Archive
       </a>
+
+      <a href="#about">
+        About
+      </a>
+
+      <a href="#contribute">
+        Leave an insight
+      </a>
+
     </div>
 
   </nav>
@@ -44,14 +52,14 @@
   <header class="site-header">
 
     <div class="site-title">
-      Things We Wish We'd Known
-      <span>About Design</span>
+      Things We Wish We'd<br>
+      Known About Design
     </div>
 
 
     <div class="site-intro">
 
-      <p class="tagline">
+      <p>
         A growing collection of advice from people working in design.
       </p>
 
@@ -59,21 +67,21 @@
         What knowledge would you pass on?
       </p>
 
+
       <div class="header-buttons">
 
         <a
           href="#archive"
           class="button button-dark"
         >
-          Read the archive
+          READ THE COLLECTION
         </a>
 
         <a
           href="YOUR_GOOGLE_FORM_LINK"
-          target="_blank"
           class="button button-outline"
         >
-          Leave your own
+          LEAVE YOUR OWN
         </a>
 
       </div>
@@ -92,19 +100,8 @@
 
     <section class="featured-section">
 
-      <div class="featured-top">
-
-        <div class="section-label">
-          From the archive
-        </div>
-
-        <button
-          id="another-button"
-          class="another-button"
-        >
-          Another insight →
-        </button>
-
+      <div class="section-label">
+        FROM THE ARCHIVE
       </div>
 
 
@@ -123,6 +120,14 @@
 
       </div>
 
+
+      <button
+        id="another-button"
+        class="another-button"
+      >
+        ANOTHER →
+      </button>
+
     </section>
 
 
@@ -140,20 +145,23 @@
         <div>
 
           <div class="section-label">
-            The archive
+            THE ARCHIVE
           </div>
 
-          <div class="archive-count">
-            <span id="insight-count">0</span>
-            <span>insights</span>
-          </div>
+          <h1>
+            Advice from the<br>
+            design profession.
+          </h1>
 
         </div>
 
 
         <div class="archive-description">
 
-          An archive of advice from the design profession.
+          <p>
+            A collection of things people working in design
+            wish someone had told them earlier.
+          </p>
 
         </div>
 
@@ -161,136 +169,53 @@
 
 
       <!-- =========================================
-           FILTERS
+           FILTER / ARCHIVE NAVIGATION
            ========================================= -->
 
-      <div class="filter-area">
+      <div class="archive-controls">
 
 
-        <!-- TOPIC -->
-
-        <div class="filter-group">
+        <div class="filter-column">
 
           <div class="filter-heading">
-            What are people talking about?
+            WHAT ARE THEY TALKING ABOUT?
           </div>
 
-          <div class="filters topic-filters">
-
-            <button
-              class="filter active"
-              data-category="ALL"
-            >
-              All
-            </button>
-
-            <button
-              class="filter"
-              data-category="CAREER"
-            >
-              Career
-            </button>
-
-            <button
-              class="filter"
-              data-category="MONEY"
-            >
-              Money
-            </button>
-
-            <button
-              class="filter"
-              data-category="CLIENTS"
-            >
-              Clients
-            </button>
-
-            <button
-              class="filter"
-              data-category="FREELANCE"
-            >
-              Freelance
-            </button>
-
-            <button
-              class="filter"
-              data-category="MAKING"
-            >
-              Making
-            </button>
-
-            <button
-              class="filter"
-              data-category="COLLABORATION"
-            >
-              Collaboration
-            </button>
-
-            <button
-              class="filter"
-              data-category="EDUCATION"
-            >
-              Education
-            </button>
-
+          <div
+            id="category-filters"
+            class="filters"
+          >
+            <!-- Generated automatically -->
           </div>
 
         </div>
 
 
-        <!-- WHO IS SPEAKING -->
-
-        <div class="filter-group">
+        <div class="filter-column">
 
           <div class="filter-heading">
-            Who is speaking?
+            WHO IS SPEAKING?
           </div>
 
-          <div class="filters working-filters">
-
-            <button
-              class="working-filter active"
-              data-working-as="ALL"
-            >
-              Everyone
-            </button>
-
-            <button
-              class="working-filter"
-              data-working-as="Employed"
-            >
-              Employed
-            </button>
-
-            <button
-              class="working-filter"
-              data-working-as="Freelance / Independent"
-            >
-              Independent
-            </button>
-
-            <button
-              class="working-filter"
-              data-working-as="Founder / Own studio"
-            >
-              Founder / Studio
-            </button>
-
-            <button
-              class="working-filter"
-              data-working-as="Academic / Research"
-            >
-              Academic / Research
-            </button>
-
-            <button
-              class="working-filter"
-              data-working-as="Student"
-            >
-              Student
-            </button>
-
+          <div
+            id="working-filters"
+            class="filters"
+          >
+            <!-- Generated automatically -->
           </div>
+
+        </div>
+
+
+        <div class="archive-count">
+
+          <span id="insight-count">
+            0
+          </span>
+
+          <span class="count-label">
+            insights
+          </span>
 
         </div>
 
@@ -305,7 +230,7 @@
         id="archive-grid"
         class="archive-grid"
       >
-        <!-- Cards generated by JavaScript -->
+        <!-- Cards generated automatically -->
       </div>
 
     </section>
@@ -315,34 +240,36 @@
          CONTRIBUTION
          ========================================= -->
 
-    <section class="contribute-section">
+    <section
+      id="contribute"
+      class="contribute-section"
+    >
 
-      <div class="contribute-inner">
-
-        <div class="section-label">
-          Leave something for the next person
-        </div>
-
-        <h2>
-          What is one thing<br>
-          you wish someone<br>
-          had told you?
-        </h2>
-
-        <p class="contribute-text">
-          Your experience might save someone else a few years
-          of figuring it out.
-        </p>
-
-        <a
-          href="YOUR_GOOGLE_FORM_LINK"
-          target="_blank"
-          class="button button-light"
-        >
-          Share your advice →
-        </a>
-
+      <div class="section-label">
+        LEAVE SOMETHING FOR THE NEXT PERSON
       </div>
+
+
+      <h2>
+        What is one thing<br>
+        you wish someone<br>
+        had told you?
+      </h2>
+
+
+      <p class="contribute-description">
+        It can be about work, money, clients, careers,
+        collaboration, education — or anything else
+        you learned along the way.
+      </p>
+
+
+      <a
+        href="YOUR_GOOGLE_FORM_LINK"
+        class="button button-light"
+      >
+        SHARE YOUR ADVICE →
+      </a>
 
     </section>
 
@@ -356,25 +283,25 @@
       class="about-section"
     >
 
-      <div class="about-label">
-        About the archive
+      <div class="section-label">
+        ABOUT THE ARCHIVE
       </div>
 
 
       <div class="about-content">
 
-        <h2>
-          Created by many,<br>
-          curated by Anja Zachau.
-        </h2>
+        <p class="about-credit">
+          Curated by Anja Zachau, created by many.
+        </p>
 
-        <div class="about-copy">
+
+        <div class="about-text">
 
           <p>
             Design education teaches us how to design.
-            Working in the profession teaches us how to navigate
-            clients, money, collaboration, careers and everything
-            in between.
+            Working in the profession teaches us how to
+            navigate clients, money, collaboration, careers
+            and everything in between.
           </p>
 
           <p>
@@ -382,11 +309,16 @@
             This archive collects some of it.
           </p>
 
+          <p>
+            Every contribution is shared anonymously.
+          </p>
+
         </div>
 
       </div>
 
     </section>
+
 
   </main>
 
@@ -398,11 +330,11 @@
   <footer>
 
     <div>
-      Things We Wish We'd Known About Design
+      THE THINGS WE WISH WE'D KNOWN
     </div>
 
     <div>
-      Created by many · Curated by Anja Zachau
+      AN ARCHIVE OF ADVICE FROM THE DESIGN PROFESSION
     </div>
 
   </footer>

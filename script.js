@@ -41,63 +41,88 @@ const clearFilters =
    LOAD DATA FROM GOOGLE SHEETS
 ----------------------------------------- */
 
-async function loadInsights() {
+function loadInsights() {
 
-  try {
+  const callbackName =
+    "archiveCallback_" +
+    Date.now();
 
-    const response =
-      await fetch(DATA_URL);
 
-    if (!response.ok) {
+  window[callbackName] =
+    function(data) {
 
-      throw new Error(
+      try {
+
+        if (!Array.isArray(data)) {
+
+          throw new Error(
+            "Archive data is not an array."
+          );
+
+        }
+
+
+        insights = data;
+
+
+        initialiseArchive();
+
+
+      } catch (error) {
+
+        console.error(
+          "Archive data error:",
+          error
+        );
+
+      }
+
+
+      delete window[callbackName];
+
+      script.remove();
+
+    };
+
+
+  const script =
+    document.createElement("script");
+
+
+  script.src =
+    DATA_URL +
+    "?callback=" +
+    callbackName;
+
+
+  script.onerror =
+    function() {
+
+      console.error(
         "Could not load archive data."
       );
 
-    }
+      archiveGrid.innerHTML = `
+
+        <div class="empty-state">
+          The archive is temporarily unavailable.
+        </div>
+
+      `;
+
+      insightCount.textContent = "0";
+
+      introCount.textContent = "0";
 
 
-    const data =
-      await response.json();
+      delete window[callbackName];
+
+      script.remove();
+
+    };
 
 
-    if (!Array.isArray(data)) {
-
-      throw new Error(
-        "Archive data is not an array."
-      );
-
-    }
-
-
-    insights = data;
-
-
-    initialiseArchive();
-
-
-  } catch (error) {
-
-    console.error(
-      "Archive loading error:",
-      error
-    );
-
-
-    archiveGrid.innerHTML = `
-
-      <div class="empty-state">
-        The archive is temporarily unavailable.
-      </div>
-
-    `;
-
-
-    insightCount.textContent = "0";
-
-    introCount.textContent = "0";
-
-  }
+  document.body.appendChild(script);
 
 }
 

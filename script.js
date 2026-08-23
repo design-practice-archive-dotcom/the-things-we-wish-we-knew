@@ -1,11 +1,6 @@
-```javascript
 let selectedCategory = "ALL";
 let selectedWorkingAs = "ALL";
 
-
-/* -----------------------------------------
-   ELEMENTS
------------------------------------------ */
 
 const archiveGrid =
   document.getElementById("archive-grid");
@@ -70,7 +65,7 @@ function getAvailableWorkingTypes() {
 
 
 /* -----------------------------------------
-   CREATE CATEGORY FILTERS
+   CATEGORY FILTERS
 ----------------------------------------- */
 
 function createCategoryFilters() {
@@ -104,7 +99,7 @@ function createCategoryFilters() {
 
 
 /* -----------------------------------------
-   CREATE WORKING FILTERS
+   WORKING TYPE FILTERS
 ----------------------------------------- */
 
 function createWorkingFilters() {
@@ -112,11 +107,6 @@ function createWorkingFilters() {
   const workingTypes =
     getAvailableWorkingTypes();
 
-
-  /*
-    Only show this filter section when
-    working-status information exists.
-  */
 
   if (workingTypes.length === 0) {
 
@@ -155,7 +145,7 @@ function createWorkingFilters() {
 
 
 /* -----------------------------------------
-   CREATE INDIVIDUAL FILTER BUTTON
+   CREATE FILTER BUTTON
 ----------------------------------------- */
 
 function createFilterButton(
@@ -172,10 +162,6 @@ function createFilterButton(
   button.className = "filter";
 
 
-  /*
-    Mark the currently selected filter.
-  */
-
   if (
     (type === "category" &&
       value === selectedCategory) ||
@@ -191,59 +177,43 @@ function createFilterButton(
   button.textContent = label;
 
 
-  button.addEventListener(
-    "click",
-    () => {
+  button.addEventListener("click", () => {
 
+    if (type === "category") {
 
-      /* CATEGORY FILTER */
+      selectedCategory = value;
 
-      if (type === "category") {
+      categoryFilters
+        .querySelectorAll(".filter")
+        .forEach(filter =>
+          filter.classList.remove("active")
+        );
 
-        selectedCategory = value;
-
-
-        categoryFilters
-          .querySelectorAll(".filter")
-          .forEach(filter => {
-
-            filter.classList.remove("active");
-
-          });
-
-
-        button.classList.add("active");
-
-      }
-
-
-      /* WORKING STATUS FILTER */
-
-      if (type === "working") {
-
-        selectedWorkingAs = value;
-
-
-        workingFilters
-          .querySelectorAll(".filter")
-          .forEach(filter => {
-
-            filter.classList.remove("active");
-
-          });
-
-
-        button.classList.add("active");
-
-      }
-
-
-      displayArchive();
-
-      showRandomInsight();
+      button.classList.add("active");
 
     }
-  );
+
+
+    if (type === "working") {
+
+      selectedWorkingAs = value;
+
+      workingFilters
+        .querySelectorAll(".filter")
+        .forEach(filter =>
+          filter.classList.remove("active")
+        );
+
+      button.classList.add("active");
+
+    }
+
+
+    displayArchive();
+
+    showRandomInsight();
+
+  });
 
 
   container.appendChild(button);
@@ -258,7 +228,6 @@ function createFilterButton(
 function getFilteredInsights() {
 
   return insights.filter(insight => {
-
 
     const categoryMatches =
       selectedCategory === "ALL" ||
@@ -293,25 +262,13 @@ function displayArchive() {
   archiveGrid.innerHTML = "";
 
 
-  /*
-    Number of results currently visible.
-  */
-
   insightCount.textContent =
     filteredInsights.length;
 
 
-  /*
-    Total number of insights in the archive.
-  */
-
   introCount.textContent =
     insights.length;
 
-
-  /*
-    Empty state.
-  */
 
   if (filteredInsights.length === 0) {
 
@@ -328,28 +285,7 @@ function displayArchive() {
   }
 
 
-  /*
-    Create each archive card.
-
-    IMPORTANT:
-    We use insight.id here rather than the
-    position in the filtered list.
-
-    This means archive numbers remain stable.
-
-    Example:
-
-    Original archive:
-    001
-    002
-    003
-
-    If someone filters to 002,
-    it still displays as 002.
-  */
-
   filteredInsights.forEach(insight => {
-
 
     const card =
       document.createElement("article");
@@ -358,12 +294,6 @@ function displayArchive() {
     card.className =
       "insight-card";
 
-
-    /*
-      Salary is optional.
-      If there is no salary information,
-      nothing is displayed.
-    */
 
     const salaryHTML =
       insight.salary
@@ -421,7 +351,7 @@ function displayArchive() {
 
 
 /* -----------------------------------------
-   FEATURED INSIGHT
+   FEATURED ADVICE
 ----------------------------------------- */
 
 function showRandomInsight() {
@@ -429,11 +359,6 @@ function showRandomInsight() {
   const availableInsights =
     getFilteredInsights();
 
-
-  /*
-    Nothing available for the
-    current filter combination.
-  */
 
   if (availableInsights.length === 0) {
 
@@ -454,10 +379,6 @@ function showRandomInsight() {
   }
 
 
-  /*
-    Pick a random insight.
-  */
-
   const randomIndex =
     Math.floor(
       Math.random() *
@@ -468,10 +389,6 @@ function showRandomInsight() {
   const insight =
     availableInsights[randomIndex];
 
-
-  /*
-    Display the featured insight.
-  */
 
   featuredInsight.innerHTML = `
 
@@ -510,29 +427,25 @@ function showRandomInsight() {
    CLEAR FILTERS
 ----------------------------------------- */
 
-clearFilters.addEventListener(
-  "click",
-  () => {
+clearFilters.addEventListener("click", () => {
 
-    selectedCategory = "ALL";
+  selectedCategory = "ALL";
 
-    selectedWorkingAs = "ALL";
+  selectedWorkingAs = "ALL";
 
+  createCategoryFilters();
 
-    createCategoryFilters();
+  createWorkingFilters();
 
-    createWorkingFilters();
+  displayArchive();
 
-    displayArchive();
+  showRandomInsight();
 
-    showRandomInsight();
-
-  }
-);
+});
 
 
 /* -----------------------------------------
-   ANOTHER BUTTON
+   ANOTHER ADVICE
 ----------------------------------------- */
 
 anotherButton.addEventListener(
@@ -542,7 +455,7 @@ anotherButton.addEventListener(
 
 
 /* -----------------------------------------
-   INITIALISE ARCHIVE
+   INITIALISE
 ----------------------------------------- */
 
 createCategoryFilters();
@@ -552,4 +465,3 @@ createWorkingFilters();
 displayArchive();
 
 showRandomInsight();
-```

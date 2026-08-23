@@ -1,16 +1,17 @@
-```css
 :root {
+
   --paper: #ffffff;
-  --paper-soft: #f7f7f5;
+  --paper-warm: #f7f6f2;
+  --paper-blue: #f2f5f8;
 
-  --ink: #111111;
-  --muted: #707070;
+  --ink: #151515;
+  --muted: #696969;
 
-  --line: #bdbdbd;
-  --line-dark: #111111;
+  --line: #c9c9c6;
+  --line-dark: #151515;
 
-  --blue: #244f7c;
-  --blue-light: #eef2f6;
+  --blue: #244d78;
+  --blue-light: #e9eff5;
 
   --serif:
     "Libre Baskerville",
@@ -23,8 +24,8 @@
     Arial,
     sans-serif;
 
-  --page: 92vw;
-  --max: 1500px;
+  --page: 90vw;
+  --max: 1450px;
 }
 
 
@@ -41,13 +42,17 @@ html {
 }
 
 body {
+
   margin: 0;
 
   background: var(--paper);
+
   color: var(--ink);
 
   font-family: var(--sans);
+
   font-size: 16px;
+
   line-height: 1.5;
 
   -webkit-font-smoothing: antialiased;
@@ -72,39 +77,40 @@ button {
 ----------------------------------------- */
 
 .site-header {
+
   width: var(--page);
+
   max-width: var(--max);
 
   margin: auto;
 
-  min-height: 76px;
+  min-height: 72px;
 
   display: flex;
-  align-items: center;
+
   justify-content: space-between;
+
+  align-items: center;
 
   border-bottom: 1px solid var(--line-dark);
 }
 
 .site-title {
-  max-width: 280px;
 
-  font-family: var(--sans);
+  max-width: 300px;
+
   font-size: 0.72rem;
+
   font-weight: 500;
-  line-height: 1.2;
 }
 
 .site-nav {
+
   display: flex;
+
   gap: 2rem;
 
-  font-family: var(--sans);
   font-size: 0.72rem;
-}
-
-.site-nav a {
-  transition: color 0.2s ease;
 }
 
 .site-nav a:hover {
@@ -117,7 +123,9 @@ button {
 ----------------------------------------- */
 
 .intro {
+
   width: var(--page);
+
   max-width: var(--max);
 
   margin: auto;
@@ -129,7 +137,7 @@ button {
   display: grid;
 
   grid-template-columns:
-    minmax(0, 1.5fr)
+    minmax(0, 1.45fr)
     minmax(240px, 0.7fr)
     150px;
 
@@ -141,45 +149,68 @@ button {
 }
 
 .intro-title h1 {
+
   margin: 0;
 
-  max-width: 1000px;
-
   font-family: var(--serif);
+
   font-weight: 400;
 
   font-size:
-    clamp(4rem, 7.5vw, 8.5rem);
+    clamp(4rem, 7vw, 8rem);
 
-  line-height: 0.94;
+  line-height: 0.96;
 
   letter-spacing: -0.06em;
 }
 
+.title-secondary {
+
+  display: block;
+
+  margin-top: 0.15em;
+
+  font-family: var(--sans);
+
+  font-size:
+    clamp(1.6rem, 2.7vw, 3rem);
+
+  line-height: 1;
+
+  letter-spacing: -0.04em;
+
+  color: var(--blue);
+}
+
 .intro-info {
+
   max-width: 390px;
 
   padding-bottom: 8px;
 }
 
 .intro-description {
+
   margin: 0 0 2rem;
 
   font-size: 1.05rem;
+
   line-height: 1.45;
 }
 
 .intro-question {
+
   margin: 0 0 2rem;
 
   font-family: var(--serif);
+
   font-style: italic;
 
   font-size: 1rem;
-  line-height: 1.45;
 }
 
 .intro-index {
+
   align-self: stretch;
 
   padding-left: 1.5rem;
@@ -187,20 +218,24 @@ button {
   border-left: 1px solid var(--line);
 
   display: flex;
+
   flex-direction: column;
+
   justify-content: flex-end;
 
-  font-family: var(--sans);
   font-size: 0.65rem;
 
   color: var(--muted);
 }
 
 .intro-index strong {
+
   margin: 0.15rem 0;
 
   font-family: var(--serif);
+
   font-size: 4rem;
+
   font-weight: 400;
 
   line-height: 1;
@@ -210,20 +245,19 @@ button {
 
 
 /* -----------------------------------------
-   BUTTONS / LINKS
+   BUTTON
 ----------------------------------------- */
 
 .button {
+
   display: inline-block;
 
   padding: 10px 0;
 
   border-bottom: 1px solid var(--ink);
 
-  background: transparent;
-
-  font-family: var(--sans);
   font-size: 0.72rem;
+
   font-weight: 500;
 
   transition:
@@ -232,12 +266,15 @@ button {
 }
 
 .button:hover {
+
   color: var(--blue);
+
   border-color: var(--blue);
 }
 
 .button-blue {
-  padding: 10px 14px;
+
+  padding: 11px 15px;
 
   border: 1px solid var(--blue);
 
@@ -247,41 +284,49 @@ button {
 }
 
 .button-blue:hover {
-  border-color: var(--ink);
+
   background: var(--ink);
+
+  border-color: var(--ink);
+
   color: white;
 }
 
 
 /* -----------------------------------------
-   FEATURED INSIGHT
+   FEATURED
 ----------------------------------------- */
 
 .featured {
+
+  background: var(--paper-warm);
+
+  border-bottom: 1px solid var(--line-dark);
+}
+
+.featured-content {
+
   width: var(--page);
+
   max-width: var(--max);
 
   margin: auto;
 
-  padding: 105px 0 110px;
-
-  border-bottom: 1px solid var(--line);
-}
-
-.featured-content {
-  max-width: 1120px;
-
-  margin-left: 8vw;
+  padding: 105px 8vw 0 8vw;
 }
 
 .quote {
+
   margin: 0;
 
+  max-width: 1100px;
+
   font-family: var(--serif);
-  font-weight: 400;
 
   font-size:
     clamp(2.8rem, 5vw, 5.8rem);
+
+  font-weight: 400;
 
   line-height: 1.08;
 
@@ -289,52 +334,50 @@ button {
 }
 
 .meta {
+
   margin: 2.5rem 0 0;
 
-  font-family: var(--sans);
-
   font-size: 0.68rem;
+
   line-height: 1.6;
 
   color: var(--muted);
 }
 
 .featured-category {
+
   display: inline-block;
 
-  margin-top: 0.9rem;
-
-  font-family: var(--sans);
-
-  font-size: 0.68rem;
-  font-weight: 500;
+  margin-top: 0.8rem;
 
   color: var(--blue);
+
+  font-size: 0.68rem;
+
+  font-weight: 500;
 }
 
 .another-button {
-  margin-top: 3rem;
-  margin-left: 8vw;
+
+  margin: 3rem 0 90px 8vw;
 
   padding: 0 0 3px;
 
   border: 0;
+
   border-bottom: 1px solid var(--ink);
 
   background: transparent;
 
   cursor: pointer;
 
-  font-family: var(--sans);
   font-size: 0.7rem;
-
-  transition:
-    color 0.2s ease,
-    border-color 0.2s ease;
 }
 
 .another-button:hover {
+
   color: var(--blue);
+
   border-color: var(--blue);
 }
 
@@ -344,15 +387,18 @@ button {
 ----------------------------------------- */
 
 .archive {
+
   width: var(--page);
+
   max-width: var(--max);
 
   margin: auto;
 
-  padding: 105px 0 130px;
+  padding: 100px 0 120px;
 }
 
 .section-header {
+
   display: grid;
 
   grid-template-columns: 1fr 0.65fr;
@@ -367,21 +413,24 @@ button {
 }
 
 .section-label {
+
   display: block;
 
   margin-bottom: 1rem;
 
-  font-family: var(--sans);
   font-size: 0.65rem;
+
   font-weight: 500;
 
   color: var(--muted);
 }
 
 .section-header h2 {
+
   margin: 0;
 
   font-family: var(--serif);
+
   font-size:
     clamp(2.5rem, 4vw, 4.5rem);
 
@@ -393,12 +442,12 @@ button {
 }
 
 .section-header > p {
+
   max-width: 420px;
 
   margin: 0;
 
   font-size: 0.92rem;
-  line-height: 1.5;
 
   color: var(--muted);
 }
@@ -409,10 +458,16 @@ button {
 ----------------------------------------- */
 
 .filters-container {
-  border-bottom: 1px solid var(--line);
+
+  margin-top: 45px;
+
+  border: 1px solid var(--line-dark);
+
+  background: var(--paper);
 }
 
 .filter-row {
+
   display: grid;
 
   grid-template-columns: 260px 1fr;
@@ -427,39 +482,45 @@ button {
 }
 
 .filter-label {
+
   padding: 18px 20px;
 
   display: flex;
+
   align-items: center;
 
   border-right: 1px solid var(--line);
 
-  font-family: var(--sans);
   font-size: 0.65rem;
+
   font-weight: 500;
 
   color: var(--muted);
 }
 
 .filter-buttons {
+
   display: flex;
+
   flex-wrap: wrap;
+
   align-items: stretch;
 }
 
 .filter {
+
   min-height: 68px;
 
   padding: 0 20px;
 
   border: 0;
+
   border-right: 1px solid var(--line);
 
   background: transparent;
 
   cursor: pointer;
 
-  font-family: var(--sans);
   font-size: 0.68rem;
 
   color: var(--ink);
@@ -470,11 +531,16 @@ button {
 }
 
 .filter:hover {
-  background: var(--paper-soft);
+
+  background: var(--paper-warm);
+
+  color: var(--blue);
 }
 
 .filter.active {
-  background: var(--ink);
+
+  background: var(--blue);
+
   color: white;
 }
 
@@ -484,24 +550,29 @@ button {
 ----------------------------------------- */
 
 .result-bar {
+
   min-height: 58px;
 
   display: flex;
-  align-items: center;
+
   justify-content: space-between;
 
-  font-family: var(--sans);
+  align-items: center;
+
   font-size: 0.65rem;
 
   color: var(--muted);
 }
 
 .result-bar strong {
+
   color: var(--ink);
+
   font-weight: 500;
 }
 
 .clear-button {
+
   padding: 0;
 
   border: 0;
@@ -510,7 +581,6 @@ button {
 
   cursor: pointer;
 
-  font-family: var(--sans);
   font-size: 0.65rem;
 
   color: var(--muted);
@@ -526,50 +596,61 @@ button {
 ----------------------------------------- */
 
 .archive-grid {
+
   display: grid;
 
   grid-template-columns:
     repeat(3, minmax(0, 1fr));
 
-  border-top: 1px solid var(--line-dark);
-  border-left: 1px solid var(--line-dark);
+  gap: 12px;
+
+  padding: 12px;
+
+  border: 1px solid var(--line-dark);
+
+  background: var(--paper-warm);
 }
 
 
 /* -----------------------------------------
-   ARCHIVE CARD
+   ARCHIVE CARDS
 ----------------------------------------- */
 
 .insight-card {
-  min-height: 420px;
+
+  min-height: 410px;
 
   padding: 20px 22px 22px;
 
   display: flex;
+
   flex-direction: column;
 
-  border-right: 1px solid var(--line-dark);
-  border-bottom: 1px solid var(--line-dark);
+  border: 1px solid var(--line-dark);
 
   background: var(--paper);
 
-  transition: background 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
 }
 
 .insight-card:hover {
-  background: var(--paper-soft);
+
+  background: #fbfbfb;
+
+  transform: translateY(-2px);
 }
 
 .card-number {
-  font-family: var(--sans);
 
   font-size: 0.62rem;
-  font-weight: 500;
 
   color: var(--muted);
 }
 
 .card-advice {
+
   margin: auto 0;
 
   padding: 45px 0;
@@ -587,11 +668,10 @@ button {
 }
 
 .card-footer {
+
   padding-top: 18px;
 
   border-top: 1px solid var(--line);
-
-  font-family: var(--sans);
 
   font-size: 0.64rem;
 
@@ -599,25 +679,31 @@ button {
 }
 
 .card-role {
+
   font-size: 0.72rem;
+
   font-weight: 500;
 }
 
 .card-experience,
 .card-salary {
+
   color: var(--muted);
 }
 
 .card-category {
+
   margin-top: 9px;
 
   font-size: 0.64rem;
+
   font-weight: 500;
 
   color: var(--blue);
 }
 
 .empty-state {
+
   grid-column: 1 / -1;
 
   padding: 120px 20px;
@@ -625,6 +711,7 @@ button {
   text-align: center;
 
   font-family: var(--serif);
+
   font-style: italic;
 
   font-size: 1.5rem;
@@ -636,25 +723,40 @@ button {
 ----------------------------------------- */
 
 .contribute {
-  width: var(--page);
-  max-width: var(--max);
 
-  margin: auto;
-
-  padding: 90px 0;
-
-  display: grid;
-
-  grid-template-columns: 1.3fr 0.7fr;
-
-  gap: 8vw;
+  background: var(--paper-blue);
 
   border-top: 1px solid var(--line-dark);
+
   border-bottom: 1px solid var(--line-dark);
 }
 
+.contribute > * {
+
+  width: var(--page);
+
+  max-width: var(--max);
+
+  margin-left: auto;
+
+  margin-right: auto;
+}
+
+.contribute {
+
+  padding-top: 90px;
+
+  padding-bottom: 90px;
+}
+
+.contribute > div:first-child {
+
+  margin-bottom: 40px;
+}
+
 .contribute h2 {
-  max-width: 900px;
+
+  max-width: 1000px;
 
   margin: 0;
 
@@ -671,12 +773,14 @@ button {
 }
 
 .contribute-info {
-  align-self: end;
 
-  max-width: 350px;
+  max-width: 400px;
+
+  margin-left: auto !important;
 }
 
 .contribute-info p {
+
   margin: 0 0 2rem;
 
   color: var(--muted);
@@ -688,7 +792,9 @@ button {
 ----------------------------------------- */
 
 .about {
+
   width: var(--page);
+
   max-width: var(--max);
 
   margin: auto;
@@ -703,25 +809,35 @@ button {
 }
 
 .about-content {
+
   max-width: 720px;
 }
 
 .about-large {
+
   margin-top: 0;
 
   font-family: var(--serif);
 
-  font-size: 2rem;
+  font-size: 1.6rem;
 
-  line-height: 1.3;
-
-  letter-spacing: -0.025em;
+  line-height: 1.35;
 }
 
 .about-content p:not(.about-large) {
+
   max-width: 600px;
 
   color: var(--muted);
+}
+
+.about-content .curator {
+
+  margin-top: 2.5rem;
+
+  font-size: 0.72rem;
+
+  color: var(--ink);
 }
 
 
@@ -730,7 +846,9 @@ button {
 ----------------------------------------- */
 
 footer {
+
   width: var(--page);
+
   max-width: var(--max);
 
   margin: auto;
@@ -745,8 +863,6 @@ footer {
 
   border-top: 1px solid var(--line);
 
-  font-family: var(--sans);
-
   font-size: 0.6rem;
 
   color: var(--muted);
@@ -754,20 +870,13 @@ footer {
 
 
 /* -----------------------------------------
-   MOBILE
+   TABLET
 ----------------------------------------- */
 
 @media (max-width: 900px) {
 
-  .site-header {
-    padding: 0;
-  }
-
-  .site-nav {
-    gap: 1.2rem;
-  }
-
   .intro {
+
     min-height: auto;
 
     padding: 70px 0;
@@ -778,15 +887,14 @@ footer {
   }
 
   .intro-title h1 {
-    font-size: 15vw;
-  }
 
-  .intro-info {
-    max-width: 500px;
+    font-size: 13vw;
   }
 
   .intro-index {
+
     border-left: 0;
+
     border-top: 1px solid var(--line);
 
     padding: 20px 0 0;
@@ -795,6 +903,7 @@ footer {
   }
 
   .intro-index strong {
+
     display: inline;
 
     margin: 0 5px;
@@ -802,69 +911,77 @@ footer {
     font-size: 2rem;
   }
 
-  .featured {
-    padding: 70px 0 80px;
-  }
-
   .featured-content {
-    margin-left: 0;
+
+    padding-left: 0;
+
+    padding-right: 0;
   }
 
   .another-button {
-    margin-left: 0;
+
+    margin-left: var(--page);
   }
 
   .section-header {
+
     grid-template-columns: 1fr;
+
     gap: 30px;
   }
 
   .filter-row {
+
     display: block;
   }
 
   .filter-label {
+
     min-height: auto;
 
-    padding: 15px 0;
+    padding: 15px;
 
     border-right: 0;
+
     border-bottom: 1px solid var(--line);
   }
 
   .filter-buttons {
+
     overflow-x: auto;
+
     flex-wrap: nowrap;
   }
 
   .filter {
+
     min-height: 55px;
+
     flex: 0 0 auto;
   }
 
   .archive-grid {
+
     grid-template-columns: 1fr 1fr;
   }
 
-  .insight-card {
-    min-height: 380px;
-  }
+  .contribute-info {
 
-  .contribute {
-    grid-template-columns: 1fr;
-    gap: 40px;
+    margin-left: 0 !important;
   }
 
   .about {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
 
-  footer {
-    flex-direction: column;
+    grid-template-columns: 1fr;
+
+    gap: 20px;
   }
 }
 
+
+/* -----------------------------------------
+   MOBILE
+----------------------------------------- */
 
 @media (max-width: 600px) {
 
@@ -873,10 +990,12 @@ footer {
   }
 
   .site-header {
+
     min-height: 60px;
   }
 
   .site-nav {
+
     gap: 0.8rem;
   }
 
@@ -885,40 +1004,79 @@ footer {
   }
 
   .intro {
+
     padding: 55px 0 65px;
   }
 
   .intro-title h1 {
-    font-size: 16vw;
+
+    font-size: 15vw;
   }
 
-  .featured {
-    padding: 60px 0 70px;
+  .title-secondary {
+
+    font-size: 7vw;
+  }
+
+  .featured-content {
+
+    padding-top: 65px;
   }
 
   .quote {
-    font-size: 2.5rem;
+
+    font-size: 2.45rem;
+  }
+
+  .another-button {
+
+    margin-top: 2.5rem;
+
+    margin-bottom: 65px;
   }
 
   .archive {
+
     padding-top: 65px;
-    padding-bottom: 85px;
+
+    padding-bottom: 80px;
+  }
+
+  .filters-container {
+
+    margin-top: 30px;
   }
 
   .archive-grid {
+
     grid-template-columns: 1fr;
+
+    gap: 8px;
+
+    padding: 8px;
   }
 
   .insight-card {
+
     min-height: 350px;
   }
 
   .contribute {
-    padding: 65px 0;
+
+    padding-top: 65px;
+
+    padding-bottom: 65px;
   }
 
   .about {
-    padding: 65px 0;
+
+    padding-top: 65px;
+
+    padding-bottom: 65px;
+  }
+
+  footer {
+
+    flex-direction: column;
   }
 }
-```

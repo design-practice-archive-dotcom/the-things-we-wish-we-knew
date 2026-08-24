@@ -1,6 +1,11 @@
 const DATA_URL =
   "https://script.google.com/macros/s/AKfycbxfHNB1tTeQVdKz5e3aZZrM1cCAIk9lKNYygpDoPFPPP4OnbuRQ7oL410Mv9SeZd-hUHg/exec";
 
+
+/* -----------------------------------------
+   STATE
+----------------------------------------- */
+
 let insights = [];
 
 let selectedCategory = "ALL";
@@ -41,7 +46,6 @@ const clearFilters =
 
 /* -----------------------------------------
    LOAD DATA USING JSONP
-   This avoids the GitHub Pages CORS problem.
 ----------------------------------------- */
 
 function loadInsights() {
@@ -51,9 +55,14 @@ function loadInsights() {
   const callbackName =
     "archiveCallback_" + Date.now();
 
+
   window[callbackName] = function(data) {
 
-    console.log("Archive data received:", data);
+    console.log(
+      "Archive data received:",
+      data
+    );
+
 
     try {
 
@@ -65,13 +74,14 @@ function loadInsights() {
 
       }
 
+
       insights = data;
+
 
       initialiseArchive();
 
-    }
 
-    catch (error) {
+    } catch (error) {
 
       console.error(
         "Archive processing error:",
@@ -82,17 +92,20 @@ function loadInsights() {
 
     }
 
+
     finally {
 
       delete window[callbackName];
 
-      const script =
+
+      const oldScript =
         document.getElementById(
           callbackName
         );
 
-      if (script) {
-        script.remove();
+
+      if (oldScript) {
+        oldScript.remove();
       }
 
     }
@@ -122,9 +135,12 @@ function loadInsights() {
       "Could not load archive data."
     );
 
+
     showArchiveError();
 
+
     delete window[callbackName];
+
 
     script.remove();
 
@@ -180,8 +196,9 @@ function getAvailableCategories() {
 
       insights
 
-        .map(insight =>
-          insight.category
+        .map(
+          insight =>
+            insight.category
         )
 
         .filter(Boolean)
@@ -204,8 +221,9 @@ function getAvailableWorkingTypes() {
 
       insights
 
-        .map(insight =>
-          insight.workingAs
+        .map(
+          insight =>
+            insight.workingAs
         )
 
         .filter(Boolean)
@@ -237,22 +255,24 @@ function createCategoryFilters() {
 
   createFilterButton(
     categoryFilters,
-    "All",
+    "Everyone",
     "ALL",
     "category"
   );
 
 
-  categories.forEach(category => {
+  categories.forEach(
+    category => {
 
-    createFilterButton(
-      categoryFilters,
-      category,
-      category,
-      "category"
-    );
+      createFilterButton(
+        categoryFilters,
+        category,
+        category,
+        "category"
+      );
 
-  });
+    }
+  );
 
 }
 
@@ -264,13 +284,8 @@ function createCategoryFilters() {
 
 function createWorkingFilters() {
 
-  if (
-    !workingFilters ||
-    !workingFilterArea
-  ) {
-
+  if (!workingFilters) {
     return;
-
   }
 
 
@@ -278,25 +293,29 @@ function createWorkingFilters() {
     getAvailableWorkingTypes();
 
 
-  if (
-    workingTypes.length === 0
-  ) {
-
-    workingFilterArea.classList.add(
-      "hidden"
-    );
-
-    return;
-
-  }
-
-
-  workingFilterArea.classList.remove(
-    "hidden"
+  console.log(
+    "Working types:",
+    workingTypes
   );
 
 
   workingFilters.innerHTML = "";
+
+
+  /*
+     IMPORTANT:
+     Always show the working filter area.
+     This prevents the second filter row
+     from disappearing because of CSS/HTML.
+  */
+
+  if (workingFilterArea) {
+
+    workingFilterArea.classList.remove(
+      "hidden"
+    );
+
+  }
 
 
   createFilterButton(
@@ -307,16 +326,18 @@ function createWorkingFilters() {
   );
 
 
-  workingTypes.forEach(type => {
+  workingTypes.forEach(
+    type => {
 
-    createFilterButton(
-      workingFilters,
-      type,
-      type,
-      "working"
-    );
+      createFilterButton(
+        workingFilters,
+        type,
+        type,
+        "working"
+      );
 
-  });
+    }
+  );
 
 }
 
@@ -333,8 +354,17 @@ function createFilterButton(
   type
 ) {
 
+  if (!container) {
+    return;
+  }
+
+
   const button =
     document.createElement("button");
+
+
+  button.type =
+    "button";
 
 
   button.className =
@@ -342,6 +372,7 @@ function createFilterButton(
 
 
   if (
+
     (
       type === "category" &&
       value === selectedCategory
@@ -353,6 +384,7 @@ function createFilterButton(
       type === "working" &&
       value === selectedWorkingAs
     )
+
   ) {
 
     button.classList.add(
@@ -370,6 +402,9 @@ function createFilterButton(
     "click",
     function() {
 
+
+      /* CATEGORY */
+
       if (
         type === "category"
       ) {
@@ -378,19 +413,14 @@ function createFilterButton(
           value;
 
 
-        if (categoryFilters) {
-
-          categoryFilters
-            .querySelectorAll(".filter")
-            .forEach(button => {
-
+        categoryFilters
+          ?.querySelectorAll(".filter")
+          .forEach(
+            button =>
               button.classList.remove(
                 "active"
-              );
-
-            });
-
-        }
+              )
+          );
 
 
         button.classList.add(
@@ -400,6 +430,8 @@ function createFilterButton(
       }
 
 
+      /* WORKING AS */
+
       if (
         type === "working"
       ) {
@@ -408,19 +440,14 @@ function createFilterButton(
           value;
 
 
-        if (workingFilters) {
-
-          workingFilters
-            .querySelectorAll(".filter")
-            .forEach(button => {
-
+        workingFilters
+          ?.querySelectorAll(".filter")
+          .forEach(
+            button =>
               button.classList.remove(
                 "active"
-              );
-
-            });
-
-        }
+              )
+          );
 
 
         button.classList.add(
@@ -454,6 +481,7 @@ function getFilteredInsights() {
 
   return insights.filter(
     function(insight) {
+
 
       const categoryMatches =
         selectedCategory === "ALL" ||
@@ -533,6 +561,7 @@ function displayArchive() {
   filteredInsights.forEach(
     function(insight, index) {
 
+
       const card =
         document.createElement(
           "article"
@@ -562,25 +591,31 @@ function displayArchive() {
       card.innerHTML = `
 
         <div class="card-number">
+
           ${String(
             index + 1
           ).padStart(3, "0")}
+
         </div>
 
 
         <div class="card-advice">
+
           “${escapeHTML(
             insight.advice
           )}”
+
         </div>
 
 
         <div class="card-footer">
 
           <div class="card-role">
+
             ${escapeHTML(
               insight.role
             )}
+
           </div>
 
 
@@ -605,9 +640,11 @@ function displayArchive() {
 
 
           <div class="card-category">
+
             ${escapeHTML(
               insight.category
             )}
+
           </div>
 
         </div>
@@ -678,9 +715,11 @@ function showRandomInsight() {
   featuredInsight.innerHTML = `
 
     <p class="quote">
+
       “${escapeHTML(
         insight.advice
       )}”
+
     </p>
 
 
@@ -706,9 +745,11 @@ function showRandomInsight() {
 
       ${
         insight.salary
+
           ? ` · ${escapeHTML(
               insight.salary
             )}`
+
           : ""
       }
 

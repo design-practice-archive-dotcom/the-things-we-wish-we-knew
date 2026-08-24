@@ -1,5 +1,25 @@
+/* =========================================
+   THE THINGS WE WISH WE'D KNOWN
+
+   DATA SOURCE:
+   Google Apps Script JSONP endpoint
+========================================= */
+
+
+/* -----------------------------------------
+   GOOGLE APPS SCRIPT ENDPOINT
+----------------------------------------- */
+
 const DATA_URL =
   "https://script.google.com/macros/s/AKfycbxfHNB1tTeQVdKz5e3aZZrM1cCAIk9lKNYygpDoPFPPP4OnbuRQ7oL410Mv9SeZd-hUHg/exec";
+
+
+/* -----------------------------------------
+   GOOGLE FORM
+----------------------------------------- */
+
+const GOOGLE_FORM_URL =
+  "https://docs.google.com/forms/d/e/1FAIpQLScjiItmC0lLiyAeuG68L-sKDdghVBmpc2iqTyt22s_fOLPhBw/viewform?usp=header";
 
 
 /* -----------------------------------------
@@ -9,11 +29,12 @@ const DATA_URL =
 let insights = [];
 
 let selectedCategory = "ALL";
+
 let selectedWorkingAs = "ALL";
 
 
 /* -----------------------------------------
-   ELEMENTS
+   DOM ELEMENTS
 ----------------------------------------- */
 
 const archiveGrid =
@@ -45,18 +66,121 @@ const clearFilters =
 
 
 /* -----------------------------------------
+   GOOGLE FORM BUTTONS
+----------------------------------------- */
+
+function connectGoogleFormButtons() {
+
+  const formLinks =
+    document.querySelectorAll(
+      'a[href="YOUR_GOOGLE_FORM_LINK"]'
+    );
+
+
+  formLinks.forEach(link => {
+
+    link.href =
+      GOOGLE_FORM_URL;
+
+    link.target =
+      "_blank";
+
+    link.rel =
+      "noopener noreferrer";
+
+  });
+
+}
+
+
+
+/* -----------------------------------------
    LOAD DATA USING JSONP
 ----------------------------------------- */
 
 function loadInsights() {
 
-  console.log("Loading archive...");
+  return new Promise((resolve, reject) => {
 
-  const callbackName =
-    "archiveCallback_" + Date.now();
+    const callbackName =
+      "archiveCallback_" +
+      Date.now();
 
 
-  window[callbackName] = function(data) {
+    const script =
+      document.createElement("script");
+
+
+    const timeout =
+      setTimeout(() => {
+
+        cleanup();
+
+        reject(
+          new Error(
+            "The archive data took too long to load."
+          )
+        );
+
+      }, 10000);
+
+
+    function cleanup() {
+
+      clearTimeout(timeout);
+
+      delete window[callbackName];
+
+      if (script.parentNode) {
+
+        script.parentNode.removeChild(
+          script
+        );
+
+      }
+
+    }
+
+
+    window[callbackName] =
+      function(data) {
+
+        cleanup();
+
+        resolve(data);
+
+      };
+
+
+    script.src =
+      DATA_URL +
+      "?callback=" +
+      encodeURIComponent(callbackName) +
+      "&t=" +
+      Date.now();
+
+
+    script.onerror =
+      function() {
+
+        cleanup();
+
+        reject(
+          new Error(
+            "Could not connect to the archive."
+          )
+        );
+
+      };
+
+
+    document.body.appendChild(
+      script
+    );
+
+  })
+
+  .then(data => {
 
     console.log(
       "Archive data received:",
@@ -64,122 +188,111 @@ function loadInsights() {
     );
 
 
-    try {
+    if (!Array.isArray(data)) {
 
-      if (!Array.isArray(data)) {
-
-        throw new Error(
-          "Archive data is not an array."
-        );
-
-      }
-
-
-      insights = data;
-
-
-      initialiseArchive();
-
-
-    } catch (error) {
-
-      console.error(
-        "Archive processing error:",
-        error
+      throw new Error(
+        "Archive data is not an array."
       );
 
-      showArchiveError();
-
     }
 
 
-    finally {
-
-      delete window[callbackName];
-
-
-      const oldScript =
-        document.getElementById(
-          callbackName
-        );
+    insights =
+      data;
 
 
-      if (oldScript) {
-        oldScript.remove();
-      }
+    initialiseArchive();
 
-    }
+  })
 
-  };
-
-
-  const script =
-    document.createElement("script");
-
-
-  script.id =
-    callbackName;
-
-
-  script.src =
-    DATA_URL +
-    "?callback=" +
-    encodeURIComponent(
-      callbackName
-    );
-
-
-  script.onerror = function() {
+  .catch(error => {
 
     console.error(
-      "Could not load archive data."
+      "Archive loading error:",
+      error
     );
 
 
-    showArchiveError();
+    if (archiveGrid) {
+
+      archiveGrid.innerHTML = `
+
+        <div class="empty-state">
+          The archive is temporarily unavailable.
+        </div>
+
+      `;
+
+    }
 
 
-    delete window[callbackName];
+    if (insightCount) {
+
+      insightCount.textContent =
+        "0";
+
+    }
 
 
-    script.remove();
+    if (introCount) {
 
-  };
+      introCount.textContent =
+        "0";
 
+    }
 
-  document.body.appendChild(script);
+  });
 
 }
 
 
 
 /* -----------------------------------------
-   ERROR STATE
+   CATEGORY HELPERS
 ----------------------------------------- */
 
-function showArchiveError() {
+/*
+   Turns:
 
-  if (archiveGrid) {
+   "Clients, Money"
 
-    archiveGrid.innerHTML = `
+   into:
 
-      <div class="empty-state">
-        The archive is temporarily unavailable.
-      </div>
+   ["Clients", "Money"]
 
-    `;
+   Also works with:
+
+   "Career"
+
+   and:
+
+   "Clients, Career, Money"
+*/
+
+function getCategoriesFromInsight(
+  insight
+) {
+
+  if (
+    !insight.category
+  ) {
+
+    return [];
 
   }
 
 
-  if (insightCount) {
-    insightCount.textContent = "0";
-  }
+  return String(
+    insight.category
+  )
 
+    .split(",")
 
-  if (introCount) {
-    introCount.textContent = "0";
-  }
+    .map(category =>
+      category.trim()
+    )
+
+    .filter(Boolean);
 
 }
 
@@ -191,20 +304,39 @@ function showArchiveError() {
 
 function getAvailableCategories() {
 
-  return [
-    ...new Set(
+  const categories = [];
 
-      insights
 
-        .map(
-          insight =>
-            insight.category
-        )
+  insights.forEach(insight => {
 
-        .filter(Boolean)
+    const insightCategories =
+      getCategoriesFromInsight(
+        insight
+      );
 
-    )
-  ];
+
+    insightCategories.forEach(
+      category => {
+
+        if (
+          !categories.includes(
+            category
+          )
+        ) {
+
+          categories.push(
+            category
+          );
+
+        }
+
+      }
+    );
+
+  });
+
+
+  return categories;
 
 }
 
@@ -221,9 +353,10 @@ function getAvailableWorkingTypes() {
 
       insights
 
-        .map(
-          insight =>
-            insight.workingAs
+        .map(insight =>
+          String(
+            insight.workingAs || ""
+          ).trim()
         )
 
         .filter(Boolean)
@@ -236,21 +369,54 @@ function getAvailableWorkingTypes() {
 
 
 /* -----------------------------------------
+   DISPLAY WORKING TYPE
+----------------------------------------- */
+
+/*
+   We keep the original value in the
+   data, but change what is displayed.
+
+   Freelance / Independent
+   becomes:
+
+   Independent / Founder
+*/
+
+function getWorkingLabel(
+  workingType
+) {
+
+  if (
+    workingType ===
+    "Freelance / Independent"
+  ) {
+
+    return "Independent / Founder";
+
+  }
+
+
+  return workingType;
+
+}
+
+
+
+/* -----------------------------------------
    CREATE CATEGORY FILTERS
 ----------------------------------------- */
 
 function createCategoryFilters() {
 
   if (!categoryFilters) {
+
     return;
+
   }
 
 
-  const categories =
-    getAvailableCategories();
-
-
-  categoryFilters.innerHTML = "";
+  categoryFilters.innerHTML =
+    "";
 
 
   createFilterButton(
@@ -259,6 +425,10 @@ function createCategoryFilters() {
     "ALL",
     "category"
   );
+
+
+  const categories =
+    getAvailableCategories();
 
 
   categories.forEach(
@@ -285,37 +455,14 @@ function createCategoryFilters() {
 function createWorkingFilters() {
 
   if (!workingFilters) {
+
     return;
-  }
-
-
-  const workingTypes =
-    getAvailableWorkingTypes();
-
-
-  console.log(
-    "Working types:",
-    workingTypes
-  );
-
-
-  workingFilters.innerHTML = "";
-
-
-  /*
-     IMPORTANT:
-     Always show the working filter area.
-     This prevents the second filter row
-     from disappearing because of CSS/HTML.
-  */
-
-  if (workingFilterArea) {
-
-    workingFilterArea.classList.remove(
-      "hidden"
-    );
 
   }
+
+
+  workingFilters.innerHTML =
+    "";
 
 
   createFilterButton(
@@ -326,18 +473,31 @@ function createWorkingFilters() {
   );
 
 
+  const workingTypes =
+    getAvailableWorkingTypes();
+
+
   workingTypes.forEach(
     type => {
 
       createFilterButton(
         workingFilters,
-        type,
+        getWorkingLabel(type),
         type,
         "working"
       );
 
     }
   );
+
+
+  if (workingFilterArea) {
+
+    workingFilterArea.classList.remove(
+      "hidden"
+    );
+
+  }
 
 }
 
@@ -355,12 +515,16 @@ function createFilterButton(
 ) {
 
   if (!container) {
+
     return;
+
   }
 
 
   const button =
-    document.createElement("button");
+    document.createElement(
+      "button"
+    );
 
 
   button.type =
@@ -403,7 +567,9 @@ function createFilterButton(
     function() {
 
 
-      /* CATEGORY */
+      /* ---------------------------------
+         CATEGORY FILTER
+      --------------------------------- */
 
       if (
         type === "category"
@@ -413,14 +579,21 @@ function createFilterButton(
           value;
 
 
-        categoryFilters
-          ?.querySelectorAll(".filter")
-          .forEach(
-            button =>
-              button.classList.remove(
+        if (categoryFilters) {
+
+          categoryFilters
+            .querySelectorAll(
+              ".filter"
+            )
+            .forEach(filter => {
+
+              filter.classList.remove(
                 "active"
-              )
-          );
+              );
+
+            });
+
+        }
 
 
         button.classList.add(
@@ -430,7 +603,10 @@ function createFilterButton(
       }
 
 
-      /* WORKING AS */
+
+      /* ---------------------------------
+         WORKING AS FILTER
+      --------------------------------- */
 
       if (
         type === "working"
@@ -440,14 +616,21 @@ function createFilterButton(
           value;
 
 
-        workingFilters
-          ?.querySelectorAll(".filter")
-          .forEach(
-            button =>
-              button.classList.remove(
+        if (workingFilters) {
+
+          workingFilters
+            .querySelectorAll(
+              ".filter"
+            )
+            .forEach(filter => {
+
+              filter.classList.remove(
                 "active"
-              )
-          );
+              );
+
+            });
+
+        }
 
 
         button.classList.add(
@@ -474,24 +657,80 @@ function createFilterButton(
 
 
 /* -----------------------------------------
+   CATEGORY MATCHING
+----------------------------------------- */
+
+/*
+   This is the important part.
+
+   An insight with:
+
+   category: "Clients, Money"
+
+   matches BOTH:
+
+   "Clients"
+
+   and:
+
+   "Money"
+*/
+
+function insightMatchesCategory(
+  insight,
+  selectedCategory
+) {
+
+  if (
+    selectedCategory ===
+    "ALL"
+  ) {
+
+    return true;
+
+  }
+
+
+  const categories =
+    getCategoriesFromInsight(
+      insight
+    );
+
+
+  return categories.includes(
+    selectedCategory
+  );
+
+}
+
+
+
+/* -----------------------------------------
    FILTER INSIGHTS
 ----------------------------------------- */
 
 function getFilteredInsights() {
 
   return insights.filter(
-    function(insight) {
+    insight => {
 
 
       const categoryMatches =
-        selectedCategory === "ALL" ||
-        insight.category ===
-          selectedCategory;
+        insightMatchesCategory(
+          insight,
+          selectedCategory
+        );
+
+
+      const workingAs =
+        String(
+          insight.workingAs || ""
+        ).trim();
 
 
       const workingMatches =
         selectedWorkingAs === "ALL" ||
-        insight.workingAs ===
+        workingAs ===
           selectedWorkingAs;
 
 
@@ -514,7 +753,9 @@ function getFilteredInsights() {
 function displayArchive() {
 
   if (!archiveGrid) {
+
     return;
+
   }
 
 
@@ -522,7 +763,8 @@ function displayArchive() {
     getFilteredInsights();
 
 
-  archiveGrid.innerHTML = "";
+  archiveGrid.innerHTML =
+    "";
 
 
   if (insightCount) {
@@ -559,7 +801,7 @@ function displayArchive() {
 
 
   filteredInsights.forEach(
-    function(insight, index) {
+    (insight, index) => {
 
 
       const card =
@@ -573,7 +815,11 @@ function displayArchive() {
 
 
       const salaryHTML =
-        insight.salary
+
+        insight.salary &&
+        String(
+          insight.salary
+        ).trim()
 
           ? `
 
@@ -622,7 +868,11 @@ function displayArchive() {
           <div class="card-experience">
 
             ${escapeHTML(
-              insight.workingAs
+              getWorkingLabel(
+                String(
+                  insight.workingAs || ""
+                ).trim()
+              )
             )}
 
             ·
@@ -670,7 +920,9 @@ function displayArchive() {
 function showRandomInsight() {
 
   if (!featuredInsight) {
+
     return;
+
   }
 
 
@@ -712,6 +964,14 @@ function showRandomInsight() {
     ];
 
 
+  const workingLabel =
+    getWorkingLabel(
+      String(
+        insight.workingAs || ""
+      ).trim()
+    );
+
+
   featuredInsight.innerHTML = `
 
     <p class="quote">
@@ -732,7 +992,7 @@ function showRandomInsight() {
       ·
 
       ${escapeHTML(
-        insight.workingAs
+        workingLabel
       )}
 
       ·
@@ -744,7 +1004,10 @@ function showRandomInsight() {
       in practice
 
       ${
-        insight.salary
+        insight.salary &&
+        String(
+          insight.salary
+        ).trim()
 
           ? ` · ${escapeHTML(
               insight.salary
@@ -783,6 +1046,7 @@ if (clearFilters) {
       selectedCategory =
         "ALL";
 
+
       selectedWorkingAs =
         "ALL";
 
@@ -810,7 +1074,11 @@ if (anotherButton) {
 
   anotherButton.addEventListener(
     "click",
-    showRandomInsight
+    function() {
+
+      showRandomInsight();
+
+    }
   );
 
 }
@@ -821,7 +1089,9 @@ if (anotherButton) {
    ESCAPE HTML
 ----------------------------------------- */
 
-function escapeHTML(value) {
+function escapeHTML(
+  value
+) {
 
   if (
     value === null ||
@@ -892,5 +1162,7 @@ function initialiseArchive() {
 /* -----------------------------------------
    START
 ----------------------------------------- */
+
+connectGoogleFormButtons();
 
 loadInsights();

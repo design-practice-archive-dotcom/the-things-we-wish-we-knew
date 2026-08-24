@@ -1,41 +1,12 @@
-/* =========================================
-   THE THINGS WE WISH WE'D KNOWN
-
-   DATA SOURCE:
-   Google Apps Script JSONP endpoint
-========================================= */
-
-
-/* -----------------------------------------
-   GOOGLE APPS SCRIPT ENDPOINT
------------------------------------------ */
-
 const DATA_URL =
   "https://script.google.com/macros/s/AKfycbxfHNB1tTeQVdKz5e3aZZrM1cCAIk9lKNYygpDoPFPPP4OnbuRQ7oL410Mv9SeZd-hUHg/exec";
 
 
-/* -----------------------------------------
-   GOOGLE FORM
------------------------------------------ */
-
-const GOOGLE_FORM_URL =
-  "https://docs.google.com/forms/d/e/1FAIpQLScjiItmC0lLiyAeuG68L-sKDdghVBmpc2iqTyt22s_fOLPhBw/viewform?usp=header";
-
-
-/* -----------------------------------------
-   STATE
------------------------------------------ */
-
 let insights = [];
 
 let selectedCategory = "ALL";
-
 let selectedWorkingAs = "ALL";
 
-
-/* -----------------------------------------
-   DOM ELEMENTS
------------------------------------------ */
 
 const archiveGrid =
   document.getElementById("archive-grid");
@@ -66,88 +37,48 @@ const clearFilters =
 
 
 /* -----------------------------------------
-   GOOGLE FORM BUTTONS
+   LOAD DATA
 ----------------------------------------- */
 
-function connectGoogleFormButtons() {
+async function loadInsights() {
 
-  const formLinks =
-    document.querySelectorAll(
-      'a[href="YOUR_GOOGLE_FORM_LINK"]'
-    );
-
-
-  formLinks.forEach(link => {
-
-    link.href =
-      GOOGLE_FORM_URL;
-
-    link.target =
-      "_blank";
-
-    link.rel =
-      "noopener noreferrer";
-
-  });
-
-}
-
-
-
-/* -----------------------------------------
-   LOAD DATA USING JSONP
------------------------------------------ */
-
-function loadInsights() {
-
-  return new Promise((resolve, reject) => {
+  try {
 
     const callbackName =
-      "archiveCallback_" +
-      Date.now();
+      "archiveCallback_" + Date.now();
 
 
     const script =
       document.createElement("script");
 
 
-    const timeout =
-      setTimeout(() => {
-
-        cleanup();
-
-        reject(
-          new Error(
-            "The archive data took too long to load."
-          )
-        );
-
-      }, 10000);
-
-
-    function cleanup() {
-
-      clearTimeout(timeout);
-
-      delete window[callbackName];
-
-      if (script.parentNode) {
-
-        script.parentNode.removeChild(
-          script
-        );
-
-      }
-
-    }
-
-
     window[callbackName] =
       function(data) {
 
-        cleanup();
+        delete window[callbackName];
 
-        resolve(data);
+        script.remove();
+
+
+        if (!Array.isArray(data)) {
+
+          throw new Error(
+            "Archive data is not an array."
+          );
+
+        }
+
+
+        insights = data;
+
+
+        console.log(
+          "Archive loaded:",
+          insights
+        );
+
+
+        initialiseArchive();
 
       };
 
@@ -155,7 +86,7 @@ function loadInsights() {
     script.src =
       DATA_URL +
       "?callback=" +
-      encodeURIComponent(callbackName) +
+      callbackName +
       "&t=" +
       Date.now();
 
@@ -163,49 +94,22 @@ function loadInsights() {
     script.onerror =
       function() {
 
-        cleanup();
+        delete window[callbackName];
 
-        reject(
-          new Error(
-            "Could not connect to the archive."
-          )
+        script.remove();
+
+
+        throw new Error(
+          "Could not load archive data."
         );
 
       };
 
 
-    document.body.appendChild(
-      script
-    );
-
-  })
-
-  .then(data => {
-
-    console.log(
-      "Archive data received:",
-      data
-    );
+    document.body.appendChild(script);
 
 
-    if (!Array.isArray(data)) {
-
-      throw new Error(
-        "Archive data is not an array."
-      );
-
-    }
-
-
-    insights =
-      data;
-
-
-    initialiseArchive();
-
-  })
-
-  .catch(error => {
+  } catch (error) {
 
     console.error(
       "Archive loading error:",
@@ -227,72 +131,128 @@ function loadInsights() {
 
 
     if (insightCount) {
-
-      insightCount.textContent =
-        "0";
-
+      insightCount.textContent = "0";
     }
 
 
     if (introCount) {
-
-      introCount.textContent =
-        "0";
-
+      introCount.textContent = "0";
     }
 
-  });
+  }
 
 }
 
 
 
 /* -----------------------------------------
-   CATEGORY HELPERS
+   NORMALISE WORKING TYPE
 ----------------------------------------- */
 
 /*
-   Turns:
+   This changes how working types are displayed.
 
-   "Clients, Money"
+   Freelance / Independent
+   →
+   Independent / Founder
 
-   into:
-
-   ["Clients", "Money"]
-
-   Also works with:
-
-   "Career"
-
-   and:
-
-   "Clients, Career, Money"
+   Everything else stays as it is.
 */
 
-function getCategoriesFromInsight(
-  insight
-) {
+function normaliseWorkingType(value) {
+
+  if (!value) {
+    return "";
+  }
+
+
+  const cleaned =
+    String(value).trim();
+
+
+  const lower =
+    cleaned.toLowerCase();
+
 
   if (
-    !insight.category
+    lower === "freelance / independent" ||
+    lower === "freelance/independent" ||
+    lower === "independent / freelance" ||
+    lower === "independent/freelance"
   ) {
 
-    return [];
+    return "Independent / Founder";
 
   }
 
 
-  return String(
-    insight.category
-  )
+  return cleaned;
 
-    .split(",")
+}
+
+
+
+/* -----------------------------------------
+   SPLIT CATEGORIES
+----------------------------------------- */
+
+/*
+   A contribution can belong to more than
+   one category.
+
+   Examples:
+
+   "Clients, Money"
+   →
+   ["Clients", "Money"]
+
+   "Clients / Money"
+   →
+   ["Clients", "Money"]
+
+   "Clients & Money"
+   →
+   ["Clients", "Money"]
+
+   "Clients"
+   →
+   ["Clients"]
+*/
+
+function getCategories(insight) {
+
+  if (!insight || !insight.category) {
+    return [];
+  }
+
+
+  return String(insight.category)
+
+    .split(/\s*(?:,|\/|&|\+|\band\b)\s*/i)
 
     .map(category =>
       category.trim()
     )
 
     .filter(Boolean);
+
+}
+
+
+
+/* -----------------------------------------
+   DISPLAY CATEGORY
+----------------------------------------- */
+
+function getPrimaryCategory(insight) {
+
+  const categories =
+    getCategories(insight);
+
+
+  return categories.length
+    ? categories[0]
+    : "";
 
 }
 
@@ -309,29 +269,18 @@ function getAvailableCategories() {
 
   insights.forEach(insight => {
 
-    const insightCategories =
-      getCategoriesFromInsight(
-        insight
-      );
-
-
-    insightCategories.forEach(
-      category => {
+    getCategories(insight)
+      .forEach(category => {
 
         if (
-          !categories.includes(
-            category
-          )
+          !categories.includes(category)
         ) {
 
-          categories.push(
-            category
-          );
+          categories.push(category);
 
         }
 
-      }
-    );
+      });
 
   });
 
@@ -348,55 +297,32 @@ function getAvailableCategories() {
 
 function getAvailableWorkingTypes() {
 
-  return [
-    ...new Set(
-
-      insights
-
-        .map(insight =>
-          String(
-            insight.workingAs || ""
-          ).trim()
-        )
-
-        .filter(Boolean)
-
-    )
-  ];
-
-}
+  const workingTypes = [];
 
 
+  insights.forEach(insight => {
 
-/* -----------------------------------------
-   DISPLAY WORKING TYPE
------------------------------------------ */
-
-/*
-   We keep the original value in the
-   data, but change what is displayed.
-
-   Freelance / Independent
-   becomes:
-
-   Independent / Founder
-*/
-
-function getWorkingLabel(
-  workingType
-) {
-
-  if (
-    workingType ===
-    "Freelance / Independent"
-  ) {
-
-    return "Independent / Founder";
-
-  }
+    const workingType =
+      normaliseWorkingType(
+        insight.workingAs
+      );
 
 
-  return workingType;
+    if (
+      workingType &&
+      !workingTypes.includes(workingType)
+    ) {
+
+      workingTypes.push(
+        workingType
+      );
+
+    }
+
+  });
+
+
+  return workingTypes;
 
 }
 
@@ -409,40 +335,35 @@ function getWorkingLabel(
 function createCategoryFilters() {
 
   if (!categoryFilters) {
-
     return;
-
   }
-
-
-  categoryFilters.innerHTML =
-    "";
-
-
-  createFilterButton(
-    categoryFilters,
-    "Everyone",
-    "ALL",
-    "category"
-  );
 
 
   const categories =
     getAvailableCategories();
 
 
-  categories.forEach(
-    category => {
+  categoryFilters.innerHTML = "";
 
-      createFilterButton(
-        categoryFilters,
-        category,
-        category,
-        "category"
-      );
 
-    }
+  createFilterButton(
+    categoryFilters,
+    "All",
+    "ALL",
+    "category"
   );
+
+
+  categories.forEach(category => {
+
+    createFilterButton(
+      categoryFilters,
+      category,
+      category,
+      "category"
+    );
+
+  });
 
 }
 
@@ -454,15 +375,37 @@ function createCategoryFilters() {
 
 function createWorkingFilters() {
 
-  if (!workingFilters) {
+  if (
+    !workingFilters ||
+    !workingFilterArea
+  ) {
 
     return;
 
   }
 
 
-  workingFilters.innerHTML =
-    "";
+  const workingTypes =
+    getAvailableWorkingTypes();
+
+
+  if (workingTypes.length === 0) {
+
+    workingFilterArea.classList.add(
+      "hidden"
+    );
+
+    return;
+
+  }
+
+
+  workingFilterArea.classList.remove(
+    "hidden"
+  );
+
+
+  workingFilters.innerHTML = "";
 
 
   createFilterButton(
@@ -473,31 +416,16 @@ function createWorkingFilters() {
   );
 
 
-  const workingTypes =
-    getAvailableWorkingTypes();
+  workingTypes.forEach(type => {
 
-
-  workingTypes.forEach(
-    type => {
-
-      createFilterButton(
-        workingFilters,
-        getWorkingLabel(type),
-        type,
-        "working"
-      );
-
-    }
-  );
-
-
-  if (workingFilterArea) {
-
-    workingFilterArea.classList.remove(
-      "hidden"
+    createFilterButton(
+      workingFilters,
+      type,
+      type,
+      "working"
     );
 
-  }
+  });
 
 }
 
@@ -514,21 +442,8 @@ function createFilterButton(
   type
 ) {
 
-  if (!container) {
-
-    return;
-
-  }
-
-
   const button =
-    document.createElement(
-      "button"
-    );
-
-
-  button.type =
-    "button";
+    document.createElement("button");
 
 
   button.className =
@@ -536,24 +451,14 @@ function createFilterButton(
 
 
   if (
+    (type === "category" &&
+      value === selectedCategory) ||
 
-    (
-      type === "category" &&
-      value === selectedCategory
-    )
-
-    ||
-
-    (
-      type === "working" &&
-      value === selectedWorkingAs
-    )
-
+    (type === "working" &&
+      value === selectedWorkingAs)
   ) {
 
-    button.classList.add(
-      "active"
-    );
+    button.classList.add("active");
 
   }
 
@@ -564,16 +469,9 @@ function createFilterButton(
 
   button.addEventListener(
     "click",
-    function() {
+    () => {
 
-
-      /* ---------------------------------
-         CATEGORY FILTER
-      --------------------------------- */
-
-      if (
-        type === "category"
-      ) {
+      if (type === "category") {
 
         selectedCategory =
           value;
@@ -582,16 +480,12 @@ function createFilterButton(
         if (categoryFilters) {
 
           categoryFilters
-            .querySelectorAll(
-              ".filter"
-            )
-            .forEach(filter => {
-
-              filter.classList.remove(
+            .querySelectorAll(".filter")
+            .forEach(button =>
+              button.classList.remove(
                 "active"
-              );
-
-            });
+              )
+            );
 
         }
 
@@ -603,14 +497,7 @@ function createFilterButton(
       }
 
 
-
-      /* ---------------------------------
-         WORKING AS FILTER
-      --------------------------------- */
-
-      if (
-        type === "working"
-      ) {
+      if (type === "working") {
 
         selectedWorkingAs =
           value;
@@ -619,16 +506,12 @@ function createFilterButton(
         if (workingFilters) {
 
           workingFilters
-            .querySelectorAll(
-              ".filter"
-            )
-            .forEach(filter => {
-
-              filter.classList.remove(
+            .querySelectorAll(".filter")
+            .forEach(button =>
+              button.classList.remove(
                 "active"
-              );
-
-            });
+              )
+            );
 
         }
 
@@ -648,42 +531,23 @@ function createFilterButton(
   );
 
 
-  container.appendChild(
-    button
-  );
+  container.appendChild(button);
 
 }
 
 
 
 /* -----------------------------------------
-   CATEGORY MATCHING
+   CHECK CATEGORY
 ----------------------------------------- */
 
-/*
-   This is the important part.
-
-   An insight with:
-
-   category: "Clients, Money"
-
-   matches BOTH:
-
-   "Clients"
-
-   and:
-
-   "Money"
-*/
-
-function insightMatchesCategory(
+function insightHasCategory(
   insight,
   selectedCategory
 ) {
 
   if (
-    selectedCategory ===
-    "ALL"
+    selectedCategory === "ALL"
   ) {
 
     return true;
@@ -692,13 +556,13 @@ function insightMatchesCategory(
 
 
   const categories =
-    getCategoriesFromInsight(
-      insight
-    );
+    getCategories(insight);
 
 
-  return categories.includes(
-    selectedCategory
+  return categories.some(
+    category =>
+      category.toLowerCase() ===
+      selectedCategory.toLowerCase()
   );
 
 }
@@ -711,36 +575,32 @@ function insightMatchesCategory(
 
 function getFilteredInsights() {
 
-  return insights.filter(
-    insight => {
+  return insights.filter(insight => {
 
-
-      const categoryMatches =
-        insightMatchesCategory(
-          insight,
-          selectedCategory
-        );
-
-
-      const workingAs =
-        String(
-          insight.workingAs || ""
-        ).trim();
-
-
-      const workingMatches =
-        selectedWorkingAs === "ALL" ||
-        workingAs ===
-          selectedWorkingAs;
-
-
-      return (
-        categoryMatches &&
-        workingMatches
+    const categoryMatches =
+      insightHasCategory(
+        insight,
+        selectedCategory
       );
 
-    }
-  );
+
+    const workingType =
+      normaliseWorkingType(
+        insight.workingAs
+      );
+
+
+    const workingMatches =
+      selectedWorkingAs === "ALL" ||
+      workingType === selectedWorkingAs;
+
+
+    return (
+      categoryMatches &&
+      workingMatches
+    );
+
+  });
 
 }
 
@@ -753,9 +613,7 @@ function getFilteredInsights() {
 function displayArchive() {
 
   if (!archiveGrid) {
-
     return;
-
   }
 
 
@@ -763,8 +621,7 @@ function displayArchive() {
     getFilteredInsights();
 
 
-  archiveGrid.innerHTML =
-    "";
+  archiveGrid.innerHTML = "";
 
 
   if (insightCount) {
@@ -803,7 +660,6 @@ function displayArchive() {
   filteredInsights.forEach(
     (insight, index) => {
 
-
       const card =
         document.createElement(
           "article"
@@ -815,86 +671,77 @@ function displayArchive() {
 
 
       const salaryHTML =
-
-        insight.salary &&
-        String(
-          insight.salary
-        ).trim()
-
+        insight.salary
           ? `
-
             <div class="card-salary">
               ${escapeHTML(
                 insight.salary
               )}
             </div>
-
           `
-
           : "";
+
+
+      const categories =
+        getCategories(insight);
+
+
+      const categoryHTML =
+        categories
+          .map(category => `
+            <span class="card-category">
+              ${escapeHTML(category)}
+            </span>
+          `)
+          .join(" ");
+
+
+      const workingType =
+        normaliseWorkingType(
+          insight.workingAs
+        );
 
 
       card.innerHTML = `
 
         <div class="card-number">
-
-          ${String(
-            index + 1
-          ).padStart(3, "0")}
-
+          ${String(index + 1).padStart(3, "0")}
         </div>
 
 
         <div class="card-advice">
-
           “${escapeHTML(
             insight.advice
           )}”
-
         </div>
 
 
         <div class="card-footer">
 
           <div class="card-role">
-
             ${escapeHTML(
-              insight.role
+              insight.role || ""
             )}
-
           </div>
 
 
           <div class="card-experience">
-
             ${escapeHTML(
-              getWorkingLabel(
-                String(
-                  insight.workingAs || ""
-                ).trim()
-              )
+              workingType
             )}
-
             ·
-
             ${escapeHTML(
-              insight.experience
+              insight.experience || ""
             )}
-
             in practice
-
           </div>
 
 
           ${salaryHTML}
 
 
-          <div class="card-category">
-
-            ${escapeHTML(
-              insight.category
-            )}
-
+          <div class="card-category-list">
+            ${categoryHTML}
           </div>
 
         </div>
@@ -902,9 +749,7 @@ function displayArchive() {
       `;
 
 
-      archiveGrid.appendChild(
-        card
-      );
+      archiveGrid.appendChild(card);
 
     }
   );
@@ -920,9 +765,7 @@ function displayArchive() {
 function showRandomInsight() {
 
   if (!featuredInsight) {
-
     return;
-
   }
 
 
@@ -964,70 +807,104 @@ function showRandomInsight() {
     ];
 
 
-  const workingLabel =
-    getWorkingLabel(
-      String(
-        insight.workingAs || ""
-      ).trim()
+  const workingType =
+    normaliseWorkingType(
+      insight.workingAs
     );
+
+
+  const categories =
+    getCategories(insight);
+
+
+  const categoryHTML =
+    categories
+      .map(category => `
+        <span class="featured-category">
+          ${escapeHTML(category)}
+        </span>
+      `)
+      .join("");
 
 
   featuredInsight.innerHTML = `
 
     <p class="quote">
-
       “${escapeHTML(
         insight.advice
       )}”
-
     </p>
 
 
     <p class="meta">
 
       ${escapeHTML(
-        insight.role
+        insight.role || ""
       )}
 
       ·
 
       ${escapeHTML(
-        workingLabel
+        workingType
       )}
 
       ·
 
       ${escapeHTML(
-        insight.experience
+        insight.experience || ""
       )}
 
       in practice
 
       ${
-        insight.salary &&
-        String(
-          insight.salary
-        ).trim()
-
+        insight.salary
           ? ` · ${escapeHTML(
               insight.salary
             )}`
-
           : ""
       }
 
     </p>
 
 
-    <div class="featured-category">
-
-      ${escapeHTML(
-        insight.category
-      )}
-
+    <div class="featured-categories">
+      ${categoryHTML}
     </div>
 
   `;
+
+}
+
+
+
+/* -----------------------------------------
+   ESCAPE HTML
+----------------------------------------- */
+
+function escapeHTML(value) {
+
+  if (value === null ||
+      value === undefined) {
+
+    return "";
+
+  }
+
+
+  return String(value)
+
+    .replace(/&/g, "&amp;")
+
+    .replace(/</g, "&lt;")
+
+    .replace(/>/g, "&gt;")
+
+    .replace(/"/g, "&quot;")
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
 
 }
 
@@ -1041,14 +918,11 @@ if (clearFilters) {
 
   clearFilters.addEventListener(
     "click",
-    function() {
+    () => {
 
-      selectedCategory =
-        "ALL";
+      selectedCategory = "ALL";
 
-
-      selectedWorkingAs =
-        "ALL";
+      selectedWorkingAs = "ALL";
 
 
       createCategoryFilters();
@@ -1074,61 +948,8 @@ if (anotherButton) {
 
   anotherButton.addEventListener(
     "click",
-    function() {
-
-      showRandomInsight();
-
-    }
+    showRandomInsight
   );
-
-}
-
-
-
-/* -----------------------------------------
-   ESCAPE HTML
------------------------------------------ */
-
-function escapeHTML(
-  value
-) {
-
-  if (
-    value === null ||
-    value === undefined
-  ) {
-
-    return "";
-
-  }
-
-
-  return String(value)
-
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-
-    .replace(
-      /</g,
-      "&lt;"
-    )
-
-    .replace(
-      />/g,
-      "&gt;"
-    )
-
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-
-    .replace(
-      /'/g,
-      "&#039;"
-    );
 
 }
 
@@ -1139,13 +960,6 @@ function escapeHTML(
 ----------------------------------------- */
 
 function initialiseArchive() {
-
-  console.log(
-    "Initialising archive with",
-    insights.length,
-    "insights"
-  );
-
 
   createCategoryFilters();
 
@@ -1162,7 +976,5 @@ function initialiseArchive() {
 /* -----------------------------------------
    START
 ----------------------------------------- */
-
-connectGoogleFormButtons();
 
 loadInsights();

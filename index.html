@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
   <meta charset="UTF-8">
 
   <meta
@@ -14,133 +13,84 @@
 
   <meta
     name="description"
-    content="A growing collection of things people working in design wish someone had told them earlier."
+    content="A growing collection of advice from people working in design."
   >
 
   <link
     rel="stylesheet"
     href="style.css"
   >
-
 </head>
 
 
 <body>
 
-
   <!-- =========================================
-       NAVIGATION
-  ========================================== -->
-
-  <nav class="top-nav">
-
-    <a
-      href="#top"
-      class="nav-title"
-    >
-      things we wish we'd known
-    </a>
-
-
-    <div class="nav-links">
-
-      <a href="#archive">
-        Archive
-      </a>
-
-      <a href="#about">
-        About
-      </a>
-
-      <a
-        href="https://docs.google.com/forms/d/e/1FAIpQLScjiItmC0lLiyAeuG68L-sKDdghVBmpc2iqTyt22s_fOLPhBw/viewform?usp=header"
-        target="_blank"
-        rel="noopener"
-      >
-        Contribute
-      </a>
-
-    </div>
-
-  </nav>
-
-
-
-  <!-- =========================================
-       HERO
+       HERO / NAV
   ========================================== -->
 
   <header
     id="top"
-    class="site-header"
+    class="hero"
   >
 
-
-    <div class="site-title">
-
-      The Things<br>
-      We Wish We'd<br>
-      Known
-
+    <div class="hero-title">
+      things we<br>
+      wish we'd<br>
+      known
     </div>
 
 
+    <nav class="top-nav">
 
-    <div class="site-intro">
+      <a href="#archive">
+        archive
+      </a>
 
-
-      <p class="intro-description">
-
-        A growing collection of things
-        people working in design wish
-        someone had told them earlier.
-
-      </p>
-
-
-      <div class="short-rule"></div>
-
-
-      <p class="intro-question">
-
-        What knowledge<br>
-        would you pass on?
-
-      </p>
-
+      <a href="#about">
+        about
+      </a>
 
       <a
         href="https://docs.google.com/forms/d/e/1FAIpQLScjiItmC0lLiyAeuG68L-sKDdghVBmpc2iqTyt22s_fOLPhBw/viewform?usp=header"
-        class="outline-button"
         target="_blank"
         rel="noopener"
       >
-
-        Share your experience
-        <span>→</span>
-
+        leave an advice
       </a>
 
-
-    </div>
-
+    </nav>
 
 
-    <div class="hero-stat">
+    <div class="hero-intro">
 
-      <div class="stat-label">
-        Insights in the archive
+      <p>
+        A growing collection of advice<br>
+        from people working in design.
+      </p>
+
+      <p>
+        What knowledge would you pass on?
+      </p>
+
+
+      <div class="hero-actions">
+
+        <a href="#archive">
+          archive
+        </a>
+
+        <a
+          href="https://docs.google.com/forms/d/e/1FAIpQLScjiItmC0lLiyAeuG68L-sKDdghVBmpc2iqTyt22s_fOLPhBw/viewform?usp=header"
+          target="_blank"
+          rel="noopener"
+        >
+          leave your own advice
+        </a>
+
       </div>
 
-      <div
-        id="intro-count"
-        class="stat-number"
-      >
-        0
-      </div>
-
     </div>
-
 
   </header>
 
@@ -150,42 +100,39 @@
 
 
     <!-- =========================================
-         FEATURED INSIGHT
+         FEATURED
     ========================================== -->
 
     <section class="featured-section">
 
+      <div class="content-width">
 
-      <div class="featured-top">
+        <div class="small-heading">
+          FROM THE ARCHIVE
+        </div>
 
-        <div class="featured-label">
-          From the archive
+
+        <div
+          id="featured-insight"
+          class="featured-insight"
+        >
+
+          <p class="featured-quote">
+            Loading archive...
+          </p>
+
         </div>
 
 
         <button
           id="another-button"
-          class="another-button"
+          class="text-button"
           type="button"
         >
-          Another →
+          ANOTHER →
         </button>
 
       </div>
-
-
-
-      <div
-        id="featured-insight"
-        class="featured-insight"
-      >
-
-        <p class="quote">
-          Loading archive...
-        </p>
-
-      </div>
-
 
     </section>
 
@@ -201,95 +148,68 @@
     >
 
 
-      <!-- CATEGORY FILTER -->
+      <!-- FILTERS -->
 
-      <div class="filter-row">
+      <div class="archive-filters">
 
+        <div class="filter-group">
 
-        <div class="filter-heading">
+          <div class="small-heading">
+            WHAT ARE THEY TALKING ABOUT?
+          </div>
 
-          What are people<br>
-          talking about?
-
-        </div>
-
-
-        <div
-          id="category-filters"
-          class="filters"
-        >
-        </div>
-
-
-      </div>
-
-
-
-      <!-- WORKING FILTER -->
-
-      <div
-        id="working-filter-area"
-        class="filter-row"
-      >
-
-
-        <div class="filter-heading">
-
-          Who is speaking?
+          <div
+            id="category-filters"
+            class="filter-list"
+          >
+          </div>
 
         </div>
 
 
         <div
-          id="working-filters"
-          class="filters"
+          id="working-filter-area"
+          class="filter-group"
         >
-        </div>
 
+          <div class="small-heading">
+            WHO IS SPEAKING
+          </div>
+
+          <div
+            id="working-filters"
+            class="filter-list"
+          >
+          </div>
+
+        </div>
 
       </div>
 
 
 
-      <!-- STATUS -->
+      <!-- GRID -->
 
-      <div class="archive-status">
+      <div class="archive-table-wrap">
 
+        <div class="archive-table-header">
 
-        <button
-          id="clear-filters"
-          class="clear-filters"
-          type="button"
-        >
-          Clear filters
-        </button>
+          <div>
+            <span id="insight-count">0</span>
+            insights
+          </div>
 
 
-        <div class="archive-count">
-
-          <span id="insight-count">
-            0
-          </span>
-
-          <span>
-            insights shown
-          </span>
+          <button
+            id="clear-filters"
+            class="clear-button"
+            type="button"
+          >
+            clear filters
+          </button>
 
         </div>
 
-
-      </div>
-
-
-
-      <!-- =========================================
-           ARCHIVE + SIDEBAR
-      ========================================== -->
-
-      <div class="archive-layout">
-
-
-        <!-- CARDS -->
 
         <div
           id="archive-grid"
@@ -297,129 +217,109 @@
         >
         </div>
 
+      </div>
 
 
-        <!-- RIGHT COLUMN -->
-
-        <aside class="archive-sidebar">
-
-
-          <!-- CONTRIBUTE -->
-
-          <section
-            id="contribute"
-            class="sidebar-panel contribute-panel"
-          >
-
-
-            <div class="panel-label">
-              Pass something on
-            </div>
-
-
-            <h2>
-
-              What do you know
-              now that you wish
-              you'd known then?
-
-            </h2>
-
-
-            <div class="short-rule"></div>
-
-
-            <p>
-
-              Your experience might be
-              exactly what someone else
-              needs to hear.
-
-            </p>
-
-
-            <a
-              href="https://docs.google.com/forms/d/e/1FAIpQLScjiItmC0lLiyAeuG68L-sKDdghVBmpc2iqTyt22s_fOLPhBw/viewform?usp=header"
-              class="dark-button"
-              target="_blank"
-              rel="noopener"
-            >
-
-              Leave your advice
-              <span>→</span>
-
-            </a>
-
-
-          </section>
+    </section>
 
 
 
-          <!-- ABOUT -->
+    <!-- =========================================
+         CONTRIBUTE
+    ========================================== -->
 
-          <section
-            id="about"
-            class="sidebar-panel about-panel"
-          >
+    <section
+      id="contribute"
+      class="contribute-section"
+    >
 
+      <div class="contribute-main">
 
-            <div class="panel-label">
-
-              About this archive
-
-            </div>
-
-
-            <div class="short-rule"></div>
+        <div class="small-heading">
+          CONTRIBUTE
+        </div>
 
 
-            <p class="about-credit">
-
-              Collected from many,<br>
-              curated by
-              <a
-                href="mailto:anja@zachau.org"
-                class="name-link"
-              >
-                Anja Zachau
-              </a>.
-
-            </p>
+        <h2>
+          What is one thing<br>
+          you wish someone<br>
+          had told you?
+        </h2>
 
 
-            <p>
-
-              Design education teaches us how to design.
-              Working in the profession teaches us how to
-              navigate clients, money, collaboration,
-              careers and everything in between.
-
-            </p>
+        <p>
+          It can be about work, money, clients, careers,<br>
+          collaboration, education — or anything else you<br>
+          learned along the way.
+        </p>
 
 
-            <p>
-
-              A lot of that knowledge is never written
-              down. This archive collects some of it.
-
-            </p>
-
-
-            <p class="anonymous-note">
-
-              Every contribution is shared anonymously.
-
-            </p>
-
-
-          </section>
-
-
-        </aside>
-
+        <p class="anonymous">
+          Every contribution is anonymous.
+        </p>
 
       </div>
 
+
+      <div class="contribute-link-wrap">
+
+        <a
+          class="contribute-link"
+          href="https://docs.google.com/forms/d/e/1FAIpQLScjiItmC0lLiyAeuG68L-sKDdghVBmpc2iqTyt22s_fOLPhBw/viewform?usp=header"
+          target="_blank"
+          rel="noopener"
+        >
+          leave yours
+        </a>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =========================================
+         ABOUT
+    ========================================== -->
+
+    <section
+      id="about"
+      class="about-section"
+    >
+
+      <div class="small-heading">
+        ABOUT THE ARCHIVE
+      </div>
+
+
+      <div class="about-text">
+
+        <p class="about-credit">
+
+          Collected from many,<br>
+          curated by
+
+          <a href="mailto:anja@zachau.org">
+            Anja Zachau
+          </a>.
+
+        </p>
+
+
+        <p>
+          Design education teaches us how to design.
+          Working in the profession teaches us how to
+          navigate clients, money, collaboration, careers
+          and everything in between.
+        </p>
+
+
+        <p>
+          A lot of that knowledge is never written down.<br>
+          This archive collects some of it.
+        </p>
+
+      </div>
 
     </section>
 
@@ -428,37 +328,20 @@
 
 
 
-  <!-- =========================================
-       FOOTER
-  ========================================== -->
-
   <footer>
-
 
     <div>
       things we wish we'd known
     </div>
 
-
-    <div class="footer-links">
-
-      <a href="mailto:anja@zachau.org">
-        Contact
-      </a>
-
-      <a href="#top">
-        Back to top ↑
-      </a>
-
-    </div>
-
+    <a href="#top">
+      back to top ↑
+    </a>
 
   </footer>
 
 
-
   <script src="script.js"></script>
-
 
 </body>
 

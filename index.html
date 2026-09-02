@@ -25,20 +25,22 @@
 
 <body>
 
-  <!-- =========================================
-       HERO / NAV
-  ========================================== -->
+  <!-- HERO -->
 
   <header
     id="top"
     class="hero"
   >
 
-    <div class="hero-title">
+    <a
+      href="#top"
+      class="hero-title"
+    >
       things we<br>
       wish we'd<br>
-      known
-    </div>
+      known about<br>
+      design
+    </a>
 
 
     <nav class="top-nav">
@@ -74,7 +76,7 @@
       </p>
 
 
-      <div class="hero-actions">
+      <div class="hero-links">
 
         <a href="#archive">
           archive
@@ -99,15 +101,13 @@
   <main>
 
 
-    <!-- =========================================
-         FEATURED
-    ========================================== -->
+    <!-- FEATURED -->
 
     <section class="featured-section">
 
-      <div class="content-width">
+      <div class="featured-inner">
 
-        <div class="small-heading">
+        <div class="eyebrow">
           FROM THE ARCHIVE
         </div>
 
@@ -126,7 +126,7 @@
 
         <button
           id="another-button"
-          class="text-button"
+          class="plain-button"
           type="button"
         >
           ANOTHER →
@@ -138,9 +138,7 @@
 
 
 
-    <!-- =========================================
-         ARCHIVE
-    ========================================== -->
+    <!-- ARCHIVE -->
 
     <section
       id="archive"
@@ -148,13 +146,12 @@
     >
 
 
-      <!-- FILTERS -->
-
       <div class="archive-filters">
 
-        <div class="filter-group">
 
-          <div class="small-heading">
+        <div class="filter-block">
+
+          <div class="eyebrow">
             WHAT ARE THEY TALKING ABOUT?
           </div>
 
@@ -167,12 +164,13 @@
         </div>
 
 
+
         <div
           id="working-filter-area"
-          class="filter-group"
+          class="filter-block"
         >
 
-          <div class="small-heading">
+          <div class="eyebrow">
             WHO IS SPEAKING
           </div>
 
@@ -184,39 +182,34 @@
 
         </div>
 
+
       </div>
 
 
 
-      <!-- GRID -->
+      <div class="archive-topline">
 
-      <div class="archive-table-wrap">
-
-        <div class="archive-table-header">
-
-          <div>
-            <span id="insight-count">0</span>
-            insights
-          </div>
-
-
-          <button
-            id="clear-filters"
-            class="clear-button"
-            type="button"
-          >
-            clear filters
-          </button>
-
+        <div>
+          <span id="insight-count">0</span>
+          insights
         </div>
 
-
-        <div
-          id="archive-grid"
-          class="archive-grid"
+        <button
+          id="clear-filters"
+          class="clear-button"
+          type="button"
         >
-        </div>
+          clear filters
+        </button>
 
+      </div>
+
+
+
+      <div
+        id="archive-grid"
+        class="archive-grid"
+      >
       </div>
 
 
@@ -224,18 +217,16 @@
 
 
 
-    <!-- =========================================
-         CONTRIBUTE
-    ========================================== -->
+    <!-- CONTRIBUTE -->
 
     <section
       id="contribute"
       class="contribute-section"
     >
 
-      <div class="contribute-main">
+      <div class="contribute-copy">
 
-        <div class="small-heading">
+        <div class="eyebrow">
           CONTRIBUTE
         </div>
 
@@ -254,17 +245,16 @@
         </p>
 
 
-        <p class="anonymous">
+        <p class="anonymous-note">
           Every contribution is anonymous.
         </p>
 
       </div>
 
 
-      <div class="contribute-link-wrap">
+      <div class="contribute-action">
 
         <a
-          class="contribute-link"
           href="https://docs.google.com/forms/d/e/1FAIpQLScjiItmC0lLiyAeuG68L-sKDdghVBmpc2iqTyt22s_fOLPhBw/viewform?usp=header"
           target="_blank"
           rel="noopener"
@@ -278,31 +268,26 @@
 
 
 
-    <!-- =========================================
-         ABOUT
-    ========================================== -->
+    <!-- ABOUT -->
 
     <section
       id="about"
       class="about-section"
     >
 
-      <div class="small-heading">
+      <div class="eyebrow">
         ABOUT THE ARCHIVE
       </div>
 
 
-      <div class="about-text">
+      <div class="about-copy">
 
         <p class="about-credit">
-
           Collected from many,<br>
           curated by
-
           <a href="mailto:anja@zachau.org">
             Anja Zachau
           </a>.
-
         </p>
 
 

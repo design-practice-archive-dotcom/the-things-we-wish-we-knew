@@ -1,206 +1,309 @@
 :root {
   --green: #b9e99f;
+
   --text: #342b24;
-  --line: rgba(52, 43, 36, 0.55);
-  --cream: #f3f0e5;
+
+  --line:
+    rgba(52, 43, 36, 0.52);
+
+  --cream:
+    #f3f0e5;
 
   --mono:
+    "IBM Plex Mono",
     "Courier New",
     Courier,
     monospace;
 
-  --side: 3.2vw;
+  --side:
+    3.2vw;
 }
 
 
-/* -----------------------------------------
+
+/* =========================================
    GLOBAL
------------------------------------------ */
+========================================= */
 
 * {
   box-sizing: border-box;
 }
 
+
 html {
   scroll-behavior: smooth;
 }
 
+
 body {
   margin: 0;
 
-  background: var(--green);
-  color: var(--text);
+  background:
+    var(--green);
 
-  font-family: var(--mono);
+  color:
+    var(--text);
 
-  font-size: 16px;
-  line-height: 1.3;
+  font-family:
+    var(--mono);
 
-  font-weight: 400;
+  font-size:
+    16px;
 
-  -webkit-font-smoothing: antialiased;
+  line-height:
+    1.35;
+
+  font-weight:
+    400;
+
+  -webkit-font-smoothing:
+    antialiased;
+
+  text-rendering:
+    optimizeLegibility;
 }
+
 
 a {
   color: inherit;
+
   text-decoration: none;
 }
 
+
 button {
-  font: inherit;
+  font-family:
+    var(--mono);
+
   color: inherit;
 }
 
 
 
-/* -----------------------------------------
+/* =========================================
    HERO
------------------------------------------ */
+========================================= */
 
 .hero {
-  position: relative;
+  position:
+    relative;
 
-  height: 55vw;
+  height:
+    55vw;
 
-  min-height: 520px;
-  max-height: 830px;
+  min-height:
+    540px;
+
+  max-height:
+    830px;
 
   border-bottom:
-    1px solid var(--line);
+    1px solid
+    var(--line);
 }
 
 
-.hero-title {
-  position: absolute;
 
-  left: 2.8vw;
-  top: 3.2vw;
+/* TITLE */
+
+.hero-title {
+  position:
+    absolute;
+
+  left:
+    2.8vw;
+
+  top:
+    3.2vw;
 
   font-size:
-    clamp(1.8rem, 2.35vw, 2.85rem);
+    clamp(
+      1.9rem,
+      2.35vw,
+      2.9rem
+    );
 
-  line-height: 1.06;
+  line-height:
+    1.04;
 
-  letter-spacing: 0.035em;
+  letter-spacing:
+    0.01em;
 
-  font-weight: 400;
+  font-weight:
+    400;
 }
 
 
 .hero-title strong {
-  font-weight: 700;
+  font-weight:
+    700;
 }
 
 
-/* navigation deliberately bolder */
+
+/* TOP NAV */
 
 .top-nav {
-  position: absolute;
+  position:
+    absolute;
 
-  top: 1.6vw;
-  right: 3.4vw;
+  top:
+    1.8vw;
 
-  display: flex;
+  right:
+    3.4vw;
 
-  gap: 5.4vw;
+  display:
+    flex;
+
+  gap:
+    5vw;
 
   font-size:
-    clamp(0.66rem, 0.68vw, 0.78rem);
+    clamp(
+      0.66rem,
+      0.7vw,
+      0.79rem
+    );
 
-  font-weight: 700;
+  font-weight:
+    600;
+}
+
+
+.top-nav a {
+  padding-bottom:
+    2px;
 }
 
 
 .top-nav a:hover {
-  text-decoration: underline;
+  text-decoration:
+    underline;
 
-  text-underline-offset: 3px;
+  text-underline-offset:
+    4px;
 }
 
 
-/* introduction */
+
+/* INTRO */
 
 .hero-intro {
-  position: absolute;
+  position:
+    absolute;
 
-  left: 60.2%;
-  top: 59%;
+  left:
+    60.2%;
 
-  width: 32%;
+  top:
+    59%;
 
-  max-width: 470px;
+  width:
+    33%;
+
+  max-width:
+    480px;
 }
 
 
 .hero-intro p {
   margin:
-    0 0 1.6rem;
+    0 0 1.7rem;
 
   font-size:
-    clamp(0.92rem, 1.02vw, 1.12rem);
+    clamp(
+      0.92rem,
+      1.02vw,
+      1.12rem
+    );
 
-  line-height: 1.3;
-
-  font-weight: 400;
+  line-height:
+    1.34;
 }
 
 
-/* make the question slightly more important */
+.hero-description {
+  font-weight:
+    400;
+}
 
-.hero-intro p:nth-child(2) {
-  font-weight: 700;
+
+.hero-question {
+  font-weight:
+    600;
 }
 
 
 .hero-links {
-  margin-top: 4vw;
+  margin-top:
+    4.3vw;
 
-  display: flex;
+  display:
+    flex;
 
-  justify-content: space-between;
+  justify-content:
+    space-between;
 
-  gap: 2rem;
+  align-items:
+    center;
+
+  gap:
+    2rem;
 
   font-size:
-    clamp(0.65rem, 0.68vw, 0.78rem);
+    clamp(
+      0.66rem,
+      0.7vw,
+      0.8rem
+    );
 
-  font-weight: 700;
+  font-weight:
+    600;
 }
 
 
 .hero-links a {
-  text-decoration: underline;
+  text-decoration:
+    underline;
 
-  text-underline-offset: 3px;
+  text-underline-offset:
+    4px;
 }
 
 
 
-/* -----------------------------------------
-   SECTION LABELS
------------------------------------------ */
+/* =========================================
+   SMALL SECTION LABELS
+========================================= */
 
 .eyebrow {
-  font-family: var(--mono);
-
   font-size:
-    clamp(0.64rem, 0.66vw, 0.76rem);
+    clamp(
+      0.66rem,
+      0.68vw,
+      0.78rem
+    );
 
-  font-weight: 700;
+  font-weight:
+    700;
 
-  line-height: 1;
+  line-height:
+    1.1;
 
-  letter-spacing: 0.015em;
+  letter-spacing:
+    0.015em;
 }
 
 
 
-/* -----------------------------------------
+/* =========================================
    FEATURED
------------------------------------------ */
+========================================= */
 
 .featured-section {
-  min-height: 420px;
+  min-height:
+    430px;
 
   padding:
     5.7vw
@@ -208,798 +311,1132 @@ button {
     5vw;
 
   border-bottom:
-    1px solid var(--line);
+    1px solid
+    var(--line);
 }
 
 
 .featured-inner {
-  width: 88%;
+  width:
+    88%;
+
+  max-width:
+    1250px;
 }
 
 
 .featured-insight {
-  margin-top: 1.8rem;
+  margin-top:
+    1.8rem;
 }
 
 
-/*
-  Featured advice stays regular.
-  This contrast with the bold labels is important.
-*/
+
+/* THE ADVICE IS THE MAIN VOICE */
 
 .featured-quote {
-  max-width: 1150px;
+  max-width:
+    1120px;
 
-  margin: 0;
+  margin:
+    0;
 
   font-size:
-    clamp(1.5rem, 1.95vw, 2.25rem);
+    clamp(
+      1.55rem,
+      2vw,
+      2.35rem
+    );
 
-  line-height: 1.12;
+  line-height:
+    1.16;
 
-  letter-spacing: 0.012em;
+  letter-spacing:
+    -0.015em;
 
-  font-weight: 400;
+  font-weight:
+    400;
 }
 
 
 .featured-quote.long {
   font-size:
-    clamp(1.25rem, 1.6vw, 1.8rem);
+    clamp(
+      1.28rem,
+      1.65vw,
+      1.9rem
+    );
 
-  line-height: 1.18;
+  line-height:
+    1.2;
 }
 
 
 .featured-quote.very-long {
   font-size:
-    clamp(1.08rem, 1.35vw, 1.5rem);
+    clamp(
+      1.08rem,
+      1.4vw,
+      1.55rem
+    );
 
-  line-height: 1.24;
+  line-height:
+    1.26;
 }
 
 
+
+/* FEATURED METADATA */
+
 .featured-meta {
-  margin-top: 3.4rem;
+  margin-top:
+    3.3rem;
 
   font-size:
-    clamp(0.65rem, 0.68vw, 0.78rem);
+    clamp(
+      0.68rem,
+      0.71vw,
+      0.81rem
+    );
 
-  line-height: 1.35;
+  line-height:
+    1.4;
 
-  font-weight: 400;
+  font-weight:
+    500;
 }
 
 
 .featured-categories {
-  margin-top: 0.9rem;
+  margin-top:
+    0.9rem;
 
-  display: flex;
+  display:
+    flex;
 
-  gap: 1rem;
+  gap:
+    1rem;
 
-  flex-wrap: wrap;
+  flex-wrap:
+    wrap;
 }
 
 
 .featured-category {
-  font-size: 0.62rem;
+  font-size:
+    0.64rem;
 
-  font-weight: 700;
+  font-weight:
+    700;
 
-  text-transform: uppercase;
+  text-transform:
+    uppercase;
 }
 
 
+.featured-category::before {
+  content:
+    "[■] ";
+}
+
+
+
+/* ANOTHER BUTTON */
+
 .plain-button {
-  margin-top: 2.7rem;
+  margin-top:
+    2.8rem;
 
-  padding: 0;
+  padding:
+    0;
 
-  border: 0;
+  border:
+    0;
 
-  background: transparent;
+  background:
+    transparent;
 
-  cursor: pointer;
-
-  font-family: var(--mono);
+  cursor:
+    pointer;
 
   font-size:
-    clamp(0.62rem, 0.65vw, 0.74rem);
+    clamp(
+      0.65rem,
+      0.68vw,
+      0.78rem
+    );
 
-  font-weight: 700;
+  font-weight:
+    700;
 }
 
 
 .plain-button:hover {
-  text-decoration: underline;
+  text-decoration:
+    underline;
 
-  text-underline-offset: 3px;
+  text-underline-offset:
+    4px;
 }
 
 
 
-/* -----------------------------------------
+/* =========================================
    ARCHIVE
------------------------------------------ */
+========================================= */
 
 .archive-section {
   padding:
-    4.4vw
+    4.5vw
     var(--side)
     6.3vw;
 
   border-bottom:
-    1px solid var(--line);
+    1px solid
+    var(--line);
 }
 
 
 
-/* FILTERS */
+/* =========================================
+   FILTERS
+========================================= */
 
 .archive-filters {
-  width: 92%;
+  width:
+    92%;
 
   margin:
-    0 auto 2.5vw;
+    0 auto
+    3vw;
 
-  display: grid;
+  display:
+    grid;
 
   grid-template-columns:
     1fr 1fr;
 
-  gap: 10vw;
+  gap:
+    10vw;
 }
 
 
 .filter-list {
-  margin-top: 1rem;
+  margin-top:
+    1rem;
 
-  display: flex;
+  display:
+    flex;
 
-  flex-direction: column;
+  flex-direction:
+    column;
 
-  align-items: flex-start;
+  align-items:
+    flex-start;
 
-  gap: 3px;
+  gap:
+    4px;
 }
 
 
 .filter {
-  padding: 1px 0;
+  padding:
+    1px 0;
 
-  border: 0;
+  border:
+    0;
 
-  background: none;
+  background:
+    transparent;
 
-  cursor: pointer;
-
-  font-family: var(--mono);
+  cursor:
+    pointer;
 
   font-size:
-    clamp(0.67rem, 0.72vw, 0.82rem);
+    clamp(
+      0.7rem,
+      0.73vw,
+      0.84rem
+    );
 
-  line-height: 1.35;
+  line-height:
+    1.4;
 
-  font-weight: 400;
+  font-weight:
+    400;
 
-  text-align: left;
+  text-align:
+    left;
 }
 
 
 .filter::before {
-  content: "[ ] ";
-}
+  content:
+    "[ ] ";
 
-
-/*
-  active filter becomes visibly bolder,
-  rather than relying only on the dot
-*/
-
-.filter.active {
-  font-weight: 700;
-}
-
-
-.filter.active::before {
-  content: "[■] ";
+  font-weight:
+    500;
 }
 
 
 .filter:hover {
-  text-decoration: underline;
+  text-decoration:
+    underline;
 
-  text-underline-offset: 2px;
+  text-underline-offset:
+    3px;
+}
+
+
+
+/* ACTIVE FILTER */
+
+.filter.active {
+  font-weight:
+    700;
+}
+
+
+.filter.active::before {
+  content:
+    "[■] ";
+
+  font-weight:
+    700;
 }
 
 
 .filter-count {
-  margin-left: 5px;
+  margin-left:
+    6px;
 
-  opacity: 0.52;
+  opacity:
+    0.48;
 
-  font-weight: 400;
+  font-weight:
+    400;
 }
 
 
 .hidden {
-  display: none !important;
+  display:
+    none !important;
 }
 
 
 
-/* -----------------------------------------
+/* =========================================
    ARCHIVE TOP LINE
------------------------------------------ */
+========================================= */
 
 .archive-topline {
-  width: 94%;
+  width:
+    94%;
 
-  margin: 0 auto;
+  margin:
+    0 auto;
 
-  min-height: 34px;
+  min-height:
+    36px;
 
-  display: flex;
+  display:
+    flex;
 
-  align-items: center;
+  align-items:
+    center;
 
-  justify-content: space-between;
+  justify-content:
+    space-between;
 
-  font-size: 0.64rem;
+  font-size:
+    0.66rem;
+}
 
-  font-weight: 700;
+
+.archive-count {
+  font-weight:
+    600;
 }
 
 
 .clear-button {
-  padding: 0;
+  padding:
+    0;
 
-  border: 0;
+  border:
+    0;
 
-  background: none;
+  background:
+    transparent;
 
-  cursor: pointer;
+  cursor:
+    pointer;
 
-  font-size: 0.62rem;
+  font-size:
+    0.64rem;
 
-  font-weight: 400;
+  font-weight:
+    400;
 }
 
 
 .clear-button:hover {
-  text-decoration: underline;
+  text-decoration:
+    underline;
+
+  text-underline-offset:
+    3px;
 }
 
 
 
-/* -----------------------------------------
+/* =========================================
    ARCHIVE GRID
------------------------------------------ */
+========================================= */
 
 .archive-grid {
-  width: 94%;
+  width:
+    94%;
 
-  margin: 0 auto;
+  margin:
+    0 auto;
 
-  display: grid;
+  display:
+    grid;
 
   grid-template-columns:
-    repeat(3, minmax(0, 1fr));
+    repeat(
+      3,
+      minmax(0, 1fr)
+    );
 
   /*
-    One continuous gradient over
-    the complete three-column grid.
+     IMPORTANT:
+     this gradient belongs to the WHOLE grid,
+     not to each individual box.
   */
 
   background:
     linear-gradient(
       90deg,
-      rgba(185, 233, 159, 0.20) 0%,
-      rgba(215, 236, 187, 0.44) 28%,
-      rgba(239, 239, 213, 0.78) 64%,
-      rgba(243, 240, 229, 0.98) 100%
+
+      rgba(
+        185,
+        233,
+        159,
+        0.16
+      ) 0%,
+
+      rgba(
+        209,
+        235,
+        181,
+        0.42
+      ) 28%,
+
+      rgba(
+        234,
+        239,
+        207,
+        0.72
+      ) 59%,
+
+      rgba(
+        243,
+        240,
+        229,
+        0.97
+      ) 100%
     );
 
   border-top:
-    1px solid var(--line);
+    1px solid
+    var(--line);
 
   border-left:
-    1px solid var(--line);
+    1px solid
+    var(--line);
 }
 
+
+
+/* =========================================
+   INDIVIDUAL CARD
+========================================= */
 
 .insight-card {
-  position: relative;
+  position:
+    relative;
 
-  min-height: 315px;
+  min-height:
+    320px;
 
   padding:
-    13px
-    13px
-    11px;
+    14px
+    14px
+    12px;
 
-  display: flex;
+  display:
+    flex;
 
-  flex-direction: column;
+  flex-direction:
+    column;
 
-  background: transparent;
+  background:
+    transparent;
 
   border-right:
-    1px solid var(--line);
+    1px solid
+    var(--line);
 
   border-bottom:
-    1px solid var(--line);
+    1px solid
+    var(--line);
 }
 
 
-/* card number */
+
+/* NUMBER */
 
 .card-number {
-  position: absolute;
+  position:
+    absolute;
 
-  top: 10px;
-  right: 12px;
+  top:
+    11px;
 
-  font-size: 0.62rem;
+  right:
+    13px;
 
-  font-weight: 700;
+  font-size:
+    0.63rem;
+
+  font-weight:
+    600;
 }
 
 
-/* advice = primary content */
+
+/* ADVICE */
 
 .card-advice {
-  width: 80%;
+  width:
+    82%;
 
   margin:
-    32px
+    34px
     0
-    36px;
+    38px;
 
   font-size:
-    clamp(0.98rem, 1.06vw, 1.18rem);
+    clamp(
+      1rem,
+      1.08vw,
+      1.22rem
+    );
 
-  line-height: 1.22;
+  line-height:
+    1.25;
 
-  font-weight: 400;
+  letter-spacing:
+    -0.012em;
 
-  overflow-wrap: anywhere;
+  font-weight:
+    400;
+
+  overflow-wrap:
+    anywhere;
 }
 
 
-/* LONG TEXT */
+
+/* =========================================
+   LONG ADVICE
+========================================= */
 
 .insight-card.long {
-  min-height: 355px;
+  min-height:
+    365px;
 }
 
 
-.insight-card.long .card-advice {
-  width: 85%;
+.insight-card.long
+.card-advice {
+  width:
+    86%;
 
   font-size:
-    clamp(0.86rem, 0.94vw, 1.03rem);
+    clamp(
+      0.88rem,
+      0.95vw,
+      1.06rem
+    );
 
-  line-height: 1.26;
+  line-height:
+    1.3;
 }
 
 
 .insight-card.very-long {
-  min-height: 415px;
+  min-height:
+    425px;
 }
 
 
-.insight-card.very-long .card-advice {
-  width: 90%;
+.insight-card.very-long
+.card-advice {
+  width:
+    91%;
 
   font-size:
-    clamp(0.78rem, 0.84vw, 0.94rem);
+    clamp(
+      0.8rem,
+      0.86vw,
+      0.96rem
+    );
 
-  line-height: 1.32;
+  line-height:
+    1.35;
 }
 
 
 
-/* -----------------------------------------
+/* =========================================
    CARD FOOTER
------------------------------------------ */
+========================================= */
 
 .card-footer {
-  margin-top: auto;
+  margin-top:
+    auto;
 
-  padding-top: 10px;
+  padding-top:
+    11px;
 
   border-top:
-    1px solid var(--line);
+    1px solid
+    var(--line);
 
-  display: grid;
+  display:
+    grid;
 
   grid-template-columns:
-    1.35fr 0.65fr;
+    1.35fr
+    0.65fr;
 
-  gap: 10px;
+  gap:
+    12px;
 }
 
 
-/*
-  Role is one of the main bold moments
-*/
+
+/* ROLE = STRONG */
 
 .card-role {
-  font-size: 0.66rem;
+  font-size:
+    0.69rem;
 
-  font-weight: 700;
+  font-weight:
+    700;
 
-  line-height: 1.2;
+  line-height:
+    1.3;
 }
 
+
+
+/* SECONDARY INFO = MEDIUM */
 
 .card-experience,
 .card-salary {
-  font-size: 0.61rem;
+  font-size:
+    0.62rem;
 
-  line-height: 1.32;
+  line-height:
+    1.4;
 
-  font-weight: 400;
+  font-weight:
+    500;
+}
+
+
+.card-experience {
+  margin-top:
+    3px;
 }
 
 
 .card-salary {
-  margin-top: 3px;
+  margin-top:
+    4px;
+
+  font-weight:
+    600;
 }
 
 
+
+/* CATEGORIES */
+
 .card-category-list {
-  display: flex;
+  display:
+    flex;
 
-  flex-direction: column;
+  flex-direction:
+    column;
 
-  gap: 2px;
+  align-items:
+    flex-start;
+
+  gap:
+    3px;
 }
 
 
 .card-category {
-  font-size: 0.59rem;
+  font-size:
+    0.6rem;
 
-  font-weight: 700;
+  line-height:
+    1.25;
 
-  text-transform: uppercase;
+  font-weight:
+    700;
+
+  text-transform:
+    uppercase;
 }
 
 
 .card-category::before {
-  content: "[■] ";
+  content:
+    "[■] ";
 }
 
 
 
-/* -----------------------------------------
+/* =========================================
    CONTRIBUTE
------------------------------------------ */
+========================================= */
 
 .contribute-section {
-  min-height: 390px;
+  min-height:
+    410px;
 
   padding:
-    2.7vw
+    2.8vw
     5.5vw
-    3.5vw;
+    3.8vw;
 
-  display: grid;
+  display:
+    grid;
 
   grid-template-columns:
-    1fr 0.4fr;
+    1fr
+    0.4fr;
 
   border-bottom:
-    1px solid var(--line);
+    1px solid
+    var(--line);
 }
 
-
-/*
-  Main question stays regular,
-  which makes CONTRIBUTE and CTA stand out.
-*/
 
 .contribute-copy h2 {
   margin:
-    1.8rem 0 1.7rem;
+    1.9rem
+    0
+    1.8rem;
 
-  max-width: 650px;
+  max-width:
+    680px;
 
   font-size:
-    clamp(2.1rem, 3.6vw, 4rem);
+    clamp(
+      2.15rem,
+      3.55vw,
+      4.05rem
+    );
 
-  font-weight: 400;
+  font-weight:
+    400;
 
-  line-height: 1.02;
+  line-height:
+    1.04;
 
-  letter-spacing: 0.018em;
+  letter-spacing:
+    -0.025em;
 }
 
 
 .contribute-copy p {
-  margin: 0 0 1rem;
+  margin:
+    0 0 1rem;
 
-  max-width: 620px;
+  max-width:
+    610px;
 
   font-size:
-    clamp(0.86rem, 0.94vw, 1.04rem);
+    clamp(
+      0.88rem,
+      0.95vw,
+      1.05rem
+    );
 
-  line-height: 1.3;
+  line-height:
+    1.38;
 
-  font-weight: 400;
+  font-weight:
+    400;
 }
 
 
 .anonymous-note {
   margin-top:
-    1.7rem !important;
+    1.9rem !important;
 
-  font-weight: 700 !important;
+  font-size:
+    0.76rem !important;
+
+  font-weight:
+    600 !important;
 }
 
 
 .contribute-action {
-  display: flex;
+  display:
+    flex;
 
-  align-items: flex-end;
+  align-items:
+    flex-end;
 
-  justify-content: flex-end;
+  justify-content:
+    flex-end;
 
-  padding-bottom: 1rem;
+  padding-bottom:
+    1rem;
 }
 
 
 .contribute-action a {
-  font-family: var(--mono);
-
   font-size:
-    clamp(0.84rem, 0.9vw, 1rem);
+    clamp(
+      0.85rem,
+      0.9vw,
+      1rem
+    );
 
-  font-weight: 700;
+  font-weight:
+    700;
 
-  text-decoration: underline;
+  text-decoration:
+    underline;
 
-  text-underline-offset: 3px;
+  text-underline-offset:
+    4px;
 }
 
 
 
-/* -----------------------------------------
+/* =========================================
    ABOUT
------------------------------------------ */
+========================================= */
 
 .about-section {
-  min-height: 390px;
+  min-height:
+    410px;
 
   padding:
-    2.6vw
+    2.8vw
     5.5vw
     5vw;
 }
 
 
 .about-copy {
-  width: 48%;
+  width:
+    48%;
 
-  max-width: 650px;
+  max-width:
+    650px;
 
-  margin-top: 2.5rem;
+  margin-top:
+    2.7rem;
 }
 
 
 .about-copy p {
-  margin: 0 0 1.25rem;
+  margin:
+    0 0 1.3rem;
 
   font-size:
-    clamp(0.86rem, 0.94vw, 1.04rem);
+    clamp(
+      0.88rem,
+      0.95vw,
+      1.05rem
+    );
 
-  line-height: 1.3;
+  line-height:
+    1.38;
 
-  font-weight: 400;
+  font-weight:
+    400;
 }
 
 
-/*
-  Credit gets its own hierarchy
-*/
-
 .about-credit {
   font-size:
-    clamp(1.05rem, 1.2vw, 1.38rem)
-    !important;
+    clamp(
+      1rem,
+      1.12vw,
+      1.28rem
+    ) !important;
 
   line-height:
-    1.24 !important;
+    1.32 !important;
 
   font-weight:
-    700 !important;
+    500 !important;
 }
 
 
 .about-credit a {
-  text-decoration: underline;
+  font-weight:
+    700;
 
-  text-underline-offset: 3px;
+  text-decoration:
+    underline;
 
-  font-weight: 700;
+  text-underline-offset:
+    4px;
 }
 
 
 
-/* -----------------------------------------
-   EMPTY
------------------------------------------ */
+/* =========================================
+   EMPTY / ERROR
+========================================= */
 
 .empty-state {
   grid-column:
     1 / -1;
 
-  min-height: 220px;
+  min-height:
+    230px;
 
-  padding: 25px;
+  padding:
+    28px;
 
   border-right:
-    1px solid var(--line);
+    1px solid
+    var(--line);
 
   border-bottom:
-    1px solid var(--line);
+    1px solid
+    var(--line);
 
-  font-size: 0.95rem;
+  font-size:
+    0.9rem;
+
+  font-weight:
+    500;
 }
 
 
 
-/* -----------------------------------------
+/* =========================================
    FOOTER
------------------------------------------ */
+========================================= */
 
 footer {
-  min-height: 62px;
+  min-height:
+    64px;
 
   padding:
     16px
     5.5vw;
 
-  display: flex;
+  display:
+    flex;
 
-  justify-content: space-between;
+  align-items:
+    center;
 
-  align-items: center;
+  justify-content:
+    space-between;
 
   border-top:
-    1px solid var(--line);
+    1px solid
+    var(--line);
 
-  font-size: 0.65rem;
+  font-size:
+    0.66rem;
 
-  font-weight: 700;
+  font-weight:
+    600;
 }
 
 
 footer a:hover {
-  text-decoration: underline;
+  text-decoration:
+    underline;
 
-  text-underline-offset: 2px;
+  text-underline-offset:
+    3px;
 }
 
 
 
-/* -----------------------------------------
+/* =========================================
    TABLET
------------------------------------------ */
+========================================= */
 
-@media (max-width: 900px) {
+@media (
+  max-width: 900px
+) {
 
   .hero {
-    min-height: 640px;
+    min-height:
+      650px;
 
-    height: auto;
+    height:
+      auto;
   }
 
 
   .hero-title {
-    font-size: 2.1rem;
+    font-size:
+      2.15rem;
   }
 
 
   .hero-intro {
-    left: 52%;
+    left:
+      52%;
 
-    top: 57%;
+    top:
+      57%;
 
-    width: 42%;
+    width:
+      42%;
   }
 
 
   .archive-grid {
     grid-template-columns:
-      repeat(2, minmax(0, 1fr));
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
   }
 
 
   .about-copy {
-    width: 65%;
+    width:
+      65%;
   }
 
 }
 
 
 
-/* -----------------------------------------
+/* =========================================
    MOBILE
------------------------------------------ */
+========================================= */
 
-@media (max-width: 600px) {
+@media (
+  max-width: 600px
+) {
 
   :root {
-    --side: 5vw;
+    --side:
+      5vw;
   }
 
 
   body {
-    font-size: 14px;
+    font-size:
+      15px;
   }
+
 
 
   /* HERO */
 
   .hero {
-    min-height: 650px;
+    min-height:
+      650px;
   }
 
 
   .hero-title {
-    left: 5vw;
+    left:
+      5vw;
 
-    top: 28px;
+    top:
+      28px;
 
-    font-size: 1.9rem;
+    font-size:
+      1.95rem;
   }
 
 
   .top-nav {
-    top: 30px;
+    top:
+      30px;
 
-    right: 5vw;
+    right:
+      5vw;
 
-    gap: 14px;
+    gap:
+      15px;
 
-    font-size: 0.58rem;
+    font-size:
+      0.58rem;
   }
 
 
-  .top-nav a:first-child {
-    display: none;
+  .top-nav
+  a:first-child {
+    display:
+      none;
   }
 
 
   .hero-intro {
-    left: 5vw;
+    left:
+      5vw;
 
-    right: 5vw;
+    right:
+      5vw;
 
-    bottom: 65px;
+    bottom:
+      65px;
 
-    top: auto;
+    top:
+      auto;
 
-    width: auto;
+    width:
+      auto;
   }
 
 
   .hero-intro p {
-    font-size: 0.9rem;
+    font-size:
+      0.92rem;
   }
 
 
   .hero-links {
-    justify-content: flex-start;
+    justify-content:
+      flex-start;
 
-    gap: 30px;
+    gap:
+      30px;
 
-    margin-top: 40px;
+    margin-top:
+      40px;
 
-    font-size: 0.65rem;
+    font-size:
+      0.67rem;
   }
 
 
@@ -1007,7 +1444,8 @@ footer a:hover {
   /* FEATURED */
 
   .featured-section {
-    min-height: 390px;
+    min-height:
+      400px;
 
     padding:
       55px
@@ -1016,21 +1454,25 @@ footer a:hover {
 
 
   .featured-inner {
-    width: 100%;
+    width:
+      100%;
   }
 
 
   .featured-quote,
   .featured-quote.long,
   .featured-quote.very-long {
-    font-size: 1.2rem;
+    font-size:
+      1.24rem;
 
-    line-height: 1.24;
+    line-height:
+      1.28;
   }
 
 
   .featured-meta {
-    font-size: 0.7rem;
+    font-size:
+      0.72rem;
   }
 
 
@@ -1046,39 +1488,69 @@ footer a:hover {
 
 
   .archive-filters {
-    width: 100%;
+    width:
+      100%;
 
-    grid-template-columns: 1fr;
+    grid-template-columns:
+      1fr;
 
-    gap: 35px;
+    gap:
+      36px;
 
-    margin-bottom: 35px;
+    margin-bottom:
+      38px;
   }
 
 
   .archive-topline,
   .archive-grid {
-    width: 100%;
+    width:
+      100%;
   }
 
 
   .filter {
-    font-size: 0.76rem;
+    font-size:
+      0.78rem;
   }
 
 
 
-  /* CARDS */
+  /* MOBILE GRID */
 
   .archive-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns:
+      1fr;
+
+    /*
+       Because there is only one column,
+       the gradient becomes vertical.
+    */
 
     background:
       linear-gradient(
         180deg,
-        rgba(185, 233, 159, 0.2) 0%,
-        rgba(239, 239, 213, 0.78) 65%,
-        rgba(243, 240, 229, 0.98) 100%
+
+        rgba(
+          185,
+          233,
+          159,
+          0.16
+        ) 0%,
+
+        rgba(
+          234,
+          239,
+          207,
+          0.72
+        ) 62%,
+
+        rgba(
+          243,
+          240,
+          229,
+          0.97
+        ) 100%
       );
   }
 
@@ -1086,34 +1558,49 @@ footer a:hover {
   .insight-card,
   .insight-card.long,
   .insight-card.very-long {
-    min-height: auto;
+    min-height:
+      auto;
 
-    padding: 16px;
+    padding:
+      16px;
   }
 
 
   .card-advice,
-  .insight-card.long .card-advice,
-  .insight-card.very-long .card-advice {
-    width: 92%;
+  .insight-card.long
+  .card-advice,
+  .insight-card.very-long
+  .card-advice {
+    width:
+      92%;
 
-    min-height: 150px;
+    min-height:
+      155px;
 
-    font-size: 1.05rem;
+    font-size:
+      1.06rem;
 
-    line-height: 1.26;
+    line-height:
+      1.3;
   }
 
 
   .card-role {
-    font-size: 0.72rem;
+    font-size:
+      0.72rem;
   }
 
 
   .card-experience,
-  .card-salary,
+  .card-salary {
+    font-size:
+      0.66rem;
+  }
+
+
   .card-category {
-    font-size: 0.65rem;
+    font-size:
+      0.64rem;
   }
 
 
@@ -1121,9 +1608,11 @@ footer a:hover {
   /* CONTRIBUTE */
 
   .contribute-section {
-    display: block;
+    display:
+      block;
 
-    min-height: 430px;
+    min-height:
+      440px;
 
     padding:
       45px
@@ -1132,21 +1621,26 @@ footer a:hover {
 
 
   .contribute-copy h2 {
-    font-size: 2.45rem;
+    font-size:
+      2.45rem;
   }
 
 
   .contribute-copy p {
-    font-size: 0.94rem;
+    font-size:
+      0.95rem;
   }
 
 
   .contribute-action {
-    margin-top: 45px;
+    margin-top:
+      45px;
 
-    padding: 0;
+    padding:
+      0;
 
-    justify-content: flex-start;
+    justify-content:
+      flex-start;
   }
 
 
@@ -1162,12 +1656,14 @@ footer a:hover {
 
 
   .about-copy {
-    width: 100%;
+    width:
+      100%;
   }
 
 
   .about-copy p {
-    font-size: 0.94rem;
+    font-size:
+      0.95rem;
   }
 
 }

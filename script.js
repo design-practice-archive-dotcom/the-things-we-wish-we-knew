@@ -98,7 +98,9 @@ function loadInsights() {
     };
 
 
-  document.body.appendChild(script);
+  document.body.appendChild(
+    script
+  );
 
 }
 
@@ -106,13 +108,38 @@ function loadInsights() {
 
 function showError() {
 
-  archiveGrid.innerHTML = `
+  if (archiveGrid) {
 
-    <div class="empty-state">
-      The archive is temporarily unavailable.
-    </div>
+    archiveGrid.innerHTML = `
 
-  `;
+      <div class="empty-state">
+        The archive is temporarily unavailable.
+      </div>
+
+    `;
+
+  }
+
+
+  if (insightCount) {
+
+    insightCount.textContent =
+      "0";
+
+  }
+
+
+  if (featuredInsight) {
+
+    featuredInsight.innerHTML = `
+
+      <p class="featured-quote">
+        The archive is temporarily unavailable.
+      </p>
+
+    `;
+
+  }
 
 }
 
@@ -132,6 +159,7 @@ function clean(value) {
     return "";
 
   }
+
 
   return String(value).trim();
 
@@ -165,7 +193,9 @@ const categoryDefinitions = [
 
   {
     label: "Career",
-    terms: ["career"]
+    terms: [
+      "career"
+    ]
   },
 
   {
@@ -196,7 +226,9 @@ const categoryDefinitions = [
 
   {
     label: "Making",
-    terms: ["making"]
+    terms: [
+      "making"
+    ]
   },
 
   {
@@ -209,12 +241,16 @@ const categoryDefinitions = [
 
   {
     label: "Education",
-    terms: ["education"]
+    terms: [
+      "education"
+    ]
   },
 
   {
     label: "Other",
-    terms: ["other"]
+    terms: [
+      "other"
+    ]
   }
 
 ];
@@ -224,23 +260,30 @@ const categoryDefinitions = [
 function getCategories(insight) {
 
   const raw =
-    key(insight.category);
+    key(
+      insight.category
+    );
 
 
   if (!raw) {
+
     return [];
+
   }
 
 
-  const result = [];
+  const result =
+    [];
 
 
   categoryDefinitions.forEach(
     definition => {
 
+
       const found =
         definition.terms.some(
           term => {
+
 
             const regex =
               new RegExp(
@@ -248,7 +291,10 @@ function getCategories(insight) {
                 "i"
               );
 
-            return regex.test(raw);
+
+            return regex.test(
+              raw
+            );
 
           }
         );
@@ -279,7 +325,9 @@ function getCategories(insight) {
   }
 
 
-  return unique(result);
+  return unique(
+    result
+  );
 
 }
 
@@ -344,22 +392,30 @@ const workingDefinitions = [
 
 
 
-function getWorkingTypes(insight) {
+function getWorkingTypes(
+  insight
+) {
 
   const raw =
-    key(insight.workingAs);
+    key(
+      insight.workingAs
+    );
 
 
   if (!raw) {
+
     return [];
+
   }
 
 
-  const result = [];
+  const result =
+    [];
 
 
   workingDefinitions.forEach(
     definition => {
+
 
       const found =
         definition.terms.some(
@@ -395,7 +451,9 @@ function getWorkingTypes(insight) {
   }
 
 
-  return unique(result);
+  return unique(
+    result
+  );
 
 }
 
@@ -410,6 +468,7 @@ function unique(values) {
   const used =
     new Set();
 
+
   const result =
     [];
 
@@ -417,8 +476,10 @@ function unique(values) {
   values.forEach(
     value => {
 
+
       const cleanValue =
         clean(value);
+
 
       const cleanKey =
         key(cleanValue);
@@ -429,7 +490,10 @@ function unique(values) {
         !used.has(cleanKey)
       ) {
 
-        used.add(cleanKey);
+        used.add(
+          cleanKey
+        );
+
 
         result.push(
           cleanValue
@@ -453,23 +517,31 @@ function unique(values) {
 
 function getAvailableCategories() {
 
-  const values = [];
+  const values =
+    [];
 
 
   insights.forEach(
     insight => {
 
-      getCategories(insight)
+
+      getCategories(
+        insight
+      )
         .forEach(
           category =>
-            values.push(category)
+            values.push(
+              category
+            )
         );
 
     }
   );
 
 
-  return unique(values);
+  return unique(
+    values
+  );
 
 }
 
@@ -477,23 +549,31 @@ function getAvailableCategories() {
 
 function getAvailableWorkingTypes() {
 
-  const values = [];
+  const values =
+    [];
 
 
   insights.forEach(
     insight => {
 
-      getWorkingTypes(insight)
+
+      getWorkingTypes(
+        insight
+      )
         .forEach(
           type =>
-            values.push(type)
+            values.push(
+              type
+            )
         );
 
     }
   );
 
 
-  return unique(values);
+  return unique(
+    values
+  );
 
 }
 
@@ -503,9 +583,13 @@ function getAvailableWorkingTypes() {
    COUNTS
 ----------------------------------------- */
 
-function countCategory(category) {
+function countCategory(
+  category
+) {
 
-  if (category === "ALL") {
+  if (
+    category === "ALL"
+  ) {
 
     return insights.length;
 
@@ -530,9 +614,13 @@ function countCategory(category) {
 
 
 
-function countWorking(type) {
+function countWorking(
+  type
+) {
 
-  if (type === "ALL") {
+  if (
+    type === "ALL"
+  ) {
 
     return insights.length;
 
@@ -563,6 +651,13 @@ function countWorking(type) {
 
 function createCategoryFilters() {
 
+  if (!categoryFilters) {
+
+    return;
+
+  }
+
+
   categoryFilters.innerHTML =
     "";
 
@@ -590,6 +685,7 @@ function createCategoryFilters() {
   getAvailableCategories()
     .forEach(
       category => {
+
 
         addFilter({
 
@@ -621,6 +717,16 @@ function createCategoryFilters() {
 
 function createWorkingFilters() {
 
+  if (
+    !workingFilters ||
+    !workingFilterArea
+  ) {
+
+    return;
+
+  }
+
+
   const types =
     getAvailableWorkingTypes();
 
@@ -631,6 +737,7 @@ function createWorkingFilters() {
       .classList.add(
         "hidden"
       );
+
 
     return;
 
@@ -670,6 +777,7 @@ function createWorkingFilters() {
   types.forEach(
     type => {
 
+
       addFilter({
 
         container:
@@ -685,7 +793,9 @@ function createWorkingFilters() {
           "working",
 
         count:
-          countWorking(type)
+          countWorking(
+            type
+          )
 
       });
 
@@ -716,6 +826,7 @@ function addFilter({
 
   button.type =
     "button";
+
 
   button.className =
     "filter";
@@ -770,8 +881,7 @@ function addFilter({
 
 
       if (
-        type ===
-        "category"
+        type === "category"
       ) {
 
         selectedCategory =
@@ -781,8 +891,7 @@ function addFilter({
 
 
       if (
-        type ===
-        "working"
+        type === "working"
       ) {
 
         selectedWorkingAs =
@@ -822,11 +931,15 @@ function getFilteredInsights() {
 
 
       const categories =
-        getCategories(insight);
+        getCategories(
+          insight
+        );
 
 
       const workingTypes =
-        getWorkingTypes(insight);
+        getWorkingTypes(
+          insight
+        );
 
 
       const categoryMatch =
@@ -874,23 +987,31 @@ function getFilteredInsights() {
 
 
 /* -----------------------------------------
-   LENGTH
+   LONG TEXT
 ----------------------------------------- */
 
-function getLengthClass(advice) {
+function getLengthClass(
+  advice
+) {
 
   const length =
-    clean(advice).length;
+    clean(
+      advice
+    ).length;
 
 
-  if (length > 390) {
+  if (
+    length > 390
+  ) {
 
     return "very-long";
 
   }
 
 
-  if (length > 220) {
+  if (
+    length > 220
+  ) {
 
     return "long";
 
@@ -909,6 +1030,13 @@ function getLengthClass(advice) {
 
 function displayArchive() {
 
+  if (!archiveGrid) {
+
+    return;
+
+  }
+
+
   const filtered =
     getFilteredInsights();
 
@@ -917,8 +1045,12 @@ function displayArchive() {
     "";
 
 
-  insightCount.textContent =
-    filtered.length;
+  if (insightCount) {
+
+    insightCount.textContent =
+      filtered.length;
+
+  }
 
 
   if (!filtered.length) {
@@ -930,6 +1062,7 @@ function displayArchive() {
       </div>
 
     `;
+
 
     return;
 
@@ -962,11 +1095,15 @@ function displayArchive() {
 
 
       const categories =
-        getCategories(insight);
+        getCategories(
+          insight
+        );
 
 
       const workingTypes =
-        getWorkingTypes(insight);
+        getWorkingTypes(
+          insight
+        );
 
 
       const categoryHTML =
@@ -976,7 +1113,9 @@ function displayArchive() {
 
               <span class="card-category">
 
-                ${escapeHTML(category)}
+                ${escapeHTML(
+                  category
+                )}
 
               </span>
 
@@ -986,7 +1125,9 @@ function displayArchive() {
 
 
       const salary =
-        clean(insight.salary);
+        clean(
+          insight.salary
+        );
 
 
       card.innerHTML = `
@@ -1109,6 +1250,13 @@ function displayArchive() {
 
 function showRandomInsight() {
 
+  if (!featuredInsight) {
+
+    return;
+
+  }
+
+
   const available =
     getFilteredInsights();
 
@@ -1122,6 +1270,7 @@ function showRandomInsight() {
       </p>
 
     `;
+
 
     return;
 
@@ -1138,18 +1287,24 @@ function showRandomInsight() {
 
 
   const workingTypes =
-    getWorkingTypes(insight);
+    getWorkingTypes(
+      insight
+    );
 
 
   const categories =
-    getCategories(insight);
+    getCategories(
+      insight
+    );
 
 
   const metaParts =
     [];
 
 
-  if (insight.role) {
+  if (
+    insight.role
+  ) {
 
     metaParts.push(
       insight.role
@@ -1200,7 +1355,9 @@ function showRandomInsight() {
 
           <span class="featured-category">
 
-            ${escapeHTML(category)}
+            ${escapeHTML(
+              category
+            )}
 
           </span>
 
@@ -1252,36 +1409,51 @@ function showRandomInsight() {
 
 
 /* -----------------------------------------
-   CLEAR
+   CLEAR FILTERS
 ----------------------------------------- */
 
-clearFilters.addEventListener(
-  "click",
-  () => {
+if (clearFilters) {
 
-    selectedCategory =
-      "ALL";
-
-    selectedWorkingAs =
-      "ALL";
-
-    createCategoryFilters();
-
-    createWorkingFilters();
-
-    displayArchive();
-
-    showRandomInsight();
-
-  }
-);
+  clearFilters.addEventListener(
+    "click",
+    () => {
 
 
+      selectedCategory =
+        "ALL";
 
-anotherButton.addEventListener(
-  "click",
-  showRandomInsight
-);
+
+      selectedWorkingAs =
+        "ALL";
+
+
+      createCategoryFilters();
+
+      createWorkingFilters();
+
+      displayArchive();
+
+      showRandomInsight();
+
+    }
+  );
+
+}
+
+
+
+/* -----------------------------------------
+   ANOTHER
+----------------------------------------- */
+
+if (anotherButton) {
+
+  anotherButton.addEventListener(
+    "click",
+    showRandomInsight
+  );
+
+}
 
 
 
@@ -1289,20 +1461,27 @@ anotherButton.addEventListener(
    HELPERS
 ----------------------------------------- */
 
-function splitFallback(value) {
+function splitFallback(
+  value
+) {
 
   return clean(value)
     .split(
       /\s*(?:,|;|\||&|\+|\band\b)\s*/i
     )
-    .map(item => clean(item))
+    .map(
+      item =>
+        clean(item)
+    )
     .filter(Boolean);
 
 }
 
 
 
-function titleCase(value) {
+function titleCase(
+  value
+) {
 
   return clean(value)
     .toLowerCase()
@@ -1316,7 +1495,9 @@ function titleCase(value) {
 
 
 
-function escapeRegExp(value) {
+function escapeRegExp(
+  value
+) {
 
   return String(value)
     .replace(
@@ -1328,7 +1509,9 @@ function escapeRegExp(value) {
 
 
 
-function escapeHTML(value) {
+function escapeHTML(
+  value
+) {
 
   return String(
     value ?? ""
@@ -1364,7 +1547,7 @@ function escapeHTML(value) {
 
 
 /* -----------------------------------------
-   INIT
+   INITIALISE
 ----------------------------------------- */
 
 function initialiseArchive() {
@@ -1380,5 +1563,9 @@ function initialiseArchive() {
 }
 
 
+
+/* -----------------------------------------
+   START
+----------------------------------------- */
 
 loadInsights();

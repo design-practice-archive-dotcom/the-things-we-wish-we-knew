@@ -1,233 +1,126 @@
-/* =========================================
-   DATA SOURCE
-========================================= */
-
 const DATA_URL =
   "https://script.google.com/macros/s/AKfycbxfHNB1tTeQVdKz5e3aZZrM1cCAIk9lKNYygpDoPFPPP4OnbuRQ7oL410Mv9SeZd-hUHg/exec";
-
 
 
 let insights = [];
 
 let selectedCategory = "ALL";
-
 let selectedWorkingAs = "ALL";
 
 
-
-/* =========================================
-   ELEMENTS
-========================================= */
-
 const archiveGrid =
-  document.getElementById(
-    "archive-grid"
-  );
-
+  document.getElementById("archive-grid");
 
 const insightCount =
-  document.getElementById(
-    "insight-count"
-  );
-
-
-const introCount =
-  document.getElementById(
-    "intro-count"
-  );
-
+  document.getElementById("insight-count");
 
 const featuredInsight =
-  document.getElementById(
-    "featured-insight"
-  );
-
+  document.getElementById("featured-insight");
 
 const anotherButton =
-  document.getElementById(
-    "another-button"
-  );
-
+  document.getElementById("another-button");
 
 const categoryFilters =
-  document.getElementById(
-    "category-filters"
-  );
-
+  document.getElementById("category-filters");
 
 const workingFilters =
-  document.getElementById(
-    "working-filters"
-  );
-
+  document.getElementById("working-filters");
 
 const workingFilterArea =
-  document.getElementById(
-    "working-filter-area"
-  );
-
+  document.getElementById("working-filter-area");
 
 const clearFilters =
-  document.getElementById(
-    "clear-filters"
-  );
+  document.getElementById("clear-filters");
 
 
 
 /* =========================================
-   LOAD GOOGLE SHEET DATA
+   LOAD
 ========================================= */
 
-async function loadInsights() {
+function loadInsights() {
+
+  const callbackName =
+    "archiveCallback_" + Date.now();
 
 
-  try {
+  const script =
+    document.createElement("script");
 
 
-    const callbackName =
-      "archiveCallback_" +
-      Date.now();
+  window[callbackName] =
+    function(data) {
+
+      delete window[callbackName];
+
+      script.remove();
 
 
-    const script =
-      document.createElement(
-        "script"
-      );
+      if (!Array.isArray(data)) {
+
+        showError();
+
+        return;
+
+      }
 
 
-    window[callbackName] =
-      function(data) {
+      insights =
+        data.filter(
+          item =>
+            item &&
+            item.advice
+        );
 
 
-        delete window[
-          callbackName
-        ];
+      initialiseArchive();
+
+    };
 
 
-        script.remove();
+  script.src =
+    DATA_URL +
+    "?callback=" +
+    callbackName +
+    "&t=" +
+    Date.now();
 
 
-        if (
-          !Array.isArray(data)
-        ) {
+  script.onerror =
+    function() {
 
-          console.error(
-            "Archive data is not an array."
-          );
+      delete window[callbackName];
 
-          showLoadError();
+      script.remove();
 
-          return;
+      showError();
 
-        }
+    };
 
 
-        insights =
-          data.filter(
-            insight =>
-              insight &&
-              insight.advice
-          );
+  document.body.appendChild(script);
 
-
-        initialiseArchive();
-
-      };
+}
 
 
 
-    script.src =
-      DATA_URL +
-      "?callback=" +
-      callbackName +
-      "&t=" +
-      Date.now();
+function showError() {
 
-
-    script.onerror =
-      function() {
-
-
-        delete window[
-          callbackName
-        ];
-
-
-        script.remove();
-
-
-        showLoadError();
-
-      };
-
-
-    document.body.appendChild(
-      script
-    );
-
-
-  } catch (error) {
-
-
-    console.error(
-      "Archive loading error:",
-      error
-    );
-
-
-    showLoadError();
-
-  }
+  archiveGrid.innerHTML = `
+    <div class="empty-state">
+      The archive is temporarily unavailable.
+    </div>
+  `;
 
 }
 
 
 
 /* =========================================
-   LOAD ERROR
+   HELPERS
 ========================================= */
 
-function showLoadError() {
-
-
-  if (archiveGrid) {
-
-    archiveGrid.innerHTML = `
-
-      <div class="empty-state">
-        The archive is temporarily unavailable.
-      </div>
-
-    `;
-
-  }
-
-
-  if (insightCount) {
-
-    insightCount.textContent =
-      "0";
-
-  }
-
-
-  if (introCount) {
-
-    introCount.textContent =
-      "0";
-
-  }
-
-}
-
-
-
-/* =========================================
-   TEXT HELPERS
-========================================= */
-
-function cleanText(value) {
-
+function clean(value) {
 
   if (
     value === null ||
@@ -239,84 +132,124 @@ function cleanText(value) {
   }
 
 
-  return String(value)
-    .trim();
+  return String(value).trim();
+
+}
+
+
+
+function normaliseKey(value) {
+
+  return clean(value)
+    .toLowerCase()
+    .replace(/\s+/g, " ");
+
+}
+
+
+
+function uniqueLabels(values) {
+
+  const output = [];
+
+  const keys =
+    new Set();
+
+
+  values.forEach(
+    value => {
+
+      const label =
+        clean(value);
+
+      const key =
+        normaliseKey(label);
+
+
+      if (
+        label &&
+        !keys.has(key)
+      ) {
+
+        keys.add(key);
+
+        output.push(label);
+
+      }
+
+    }
+  );
+
+
+  return output;
 
 }
 
 
 
 /* =========================================
-   CATEGORY DEFINITIONS
-
-   These are the ONLY topic filters
-   generated automatically.
-
-   One answer can belong to several.
+   CATEGORIES
 ========================================= */
 
-const categoryDefinitions = [
+const categoryMap = [
 
   {
     label: "Career",
-    terms: [
+    keywords: [
       "career"
     ]
   },
 
   {
     label: "Money",
-    terms: [
+    keywords: [
       "money",
       "salary",
-      "rates",
-      "rate"
+      "rate",
+      "rates"
     ]
   },
 
   {
     label: "Clients",
-    terms: [
-      "clients",
-      "client"
+    keywords: [
+      "client",
+      "clients"
     ]
   },
 
   {
     label: "Freelance",
-    terms: [
+    keywords: [
       "freelance",
-      "freelancing",
-      "self-employed",
-      "self employed"
+      "freelancing"
     ]
   },
 
   {
     label: "Making",
-    terms: [
+    keywords: [
       "making"
     ]
   },
 
   {
     label: "Collaboration",
-    terms: [
-      "collaboration",
-      "collaborating"
+    keywords: [
+      "collaboration"
     ]
   },
 
   {
     label: "Education",
-    terms: [
+    keywords: [
       "education"
     ]
   },
 
   {
     label: "Other",
-    terms: [
+    keywords: [
       "other"
     ]
   }
@@ -325,229 +258,134 @@ const categoryDefinitions = [
 
 
 
-/* =========================================
-   GET CATEGORIES FOR ONE INSIGHT
-
-   Example:
-   "Money, Career"
-   →
-   ["Money", "Career"]
-
-   MONEY + Money also become
-   one single "Money" category.
-========================================= */
-
-function getCategories(
-  insight
-) {
-
-
-  if (
-    !insight ||
-    !insight.category
-  ) {
-
-    return [];
-
-  }
-
+function getCategories(insight) {
 
   const raw =
-    cleanText(
+    normaliseKey(
       insight.category
     );
 
 
-  const lower =
-    raw.toLowerCase();
+  if (!raw) {
+    return [];
+  }
 
 
-  const found =
-    [];
+  const matches = [];
 
 
-  categoryDefinitions
-    .forEach(
-      definition => {
+  categoryMap.forEach(
+    definition => {
 
+      const matched =
+        definition.keywords.some(
+          keyword => {
 
-        const matches =
-          definition.terms.some(
-            term => {
-
-              const escaped =
-                escapeRegExp(
-                  term
-                );
-
-
-              const regex =
-                new RegExp(
-                  `(^|[\\s,;|/&+])${escaped}(?=$|[\\s,;|/&+])`,
-                  "i"
-                );
-
-
-              return regex.test(
-                lower
+            const regex =
+              new RegExp(
+                `(^|[,;|/&+\\s])${keyword}(?=$|[,;|/&+\\s])`,
+                "i"
               );
 
-            }
-          );
+
+            return regex.test(raw);
+
+          }
+        );
 
 
-        if (matches) {
+      if (matched) {
 
-          found.push(
-            definition.label
-          );
-
-        }
+        matches.push(
+          definition.label
+        );
 
       }
-    );
+
+    }
+  );
 
 
   /*
-     Fallback for unexpected
-     custom categories.
+     If Google Forms sends something
+     unexpected, preserve it.
   */
 
-  if (
-    found.length === 0
-  ) {
-
+  if (matches.length === 0) {
 
     raw
       .split(
-        /\s*(?:,|;|\||\+|&|\band\b)\s*/i
-      )
-
-      .map(
-        value =>
-          value.trim()
+        /\s*(?:,|;|\||&|\+|\band\b)\s*/i
       )
 
       .filter(Boolean)
 
       .forEach(
-        value => {
-
-
-          const formatted =
-            titleCase(value);
-
-
-          if (
-            !found.some(
-              existing =>
-                existing
-                  .toLowerCase() ===
-                formatted
-                  .toLowerCase()
-            )
-          ) {
-
-            found.push(
-              formatted
-            );
-
-          }
-
-        }
+        item =>
+          matches.push(
+            titleCase(item)
+          )
       );
 
   }
 
 
-  return uniqueCaseInsensitive(
-    found
-  );
+  return uniqueLabels(matches);
 
 }
 
 
 
 /* =========================================
-   WORKING TYPE DEFINITIONS
-
-   IMPORTANT:
-
-   "Employed, Freelance / Independent"
-
-   becomes:
-
-   ["Employed", "Independent"]
-
-   NOT a new combined filter.
+   WORKING TYPES
 ========================================= */
 
-const workingDefinitions = [
+const workingMap = [
 
   {
-    label:
-      "Employed",
-
-    terms: [
+    label: "Employed",
+    keywords: [
       "employed",
       "employee"
     ]
   },
 
-
   {
-    label:
-      "Independent",
-
-    terms: [
+    label: "Freelance",
+    keywords: [
       "freelance",
-      "freelancer",
-      "independent",
-      "self-employed",
-      "self employed"
+      "freelancer"
     ]
   },
 
-
   {
-    label:
-      "Founder / Studio",
-
-    terms: [
+    label: "Independent / Founder",
+    keywords: [
+      "independent",
       "founder",
       "own studio",
       "studio owner"
     ]
   },
 
-
   {
-    label:
-      "Academic / Research",
-
-    terms: [
+    label: "Academic / Research",
+    keywords: [
       "academic",
-      "research",
-      "researcher"
+      "research"
     ]
   },
 
-
   {
-    label:
-      "Student",
-
-    terms: [
+    label: "Student",
+    keywords: [
       "student"
     ]
   },
 
-
   {
-    label:
-      "Other",
-
-    terms: [
+    label: "Other",
+    keywords: [
       "other"
     ]
   }
@@ -556,350 +394,128 @@ const workingDefinitions = [
 
 
 
-/* =========================================
-   GET WORKING TYPES
-========================================= */
-
-function getWorkingTypes(
-  insight
-) {
-
-
-  if (
-    !insight ||
-    !insight.workingAs
-  ) {
-
-    return [];
-
-  }
-
+function getWorkingTypes(insight) {
 
   const raw =
-    cleanText(
+    normaliseKey(
       insight.workingAs
     );
 
 
-  const lower =
-    raw.toLowerCase();
+  if (!raw) {
+    return [];
+  }
 
 
-  const found =
-    [];
+  const matches = [];
 
 
-  workingDefinitions
-    .forEach(
-      definition => {
+  workingMap.forEach(
+    definition => {
+
+      const matched =
+        definition.keywords.some(
+          keyword =>
+            raw.includes(keyword)
+        );
 
 
-        const matches =
-          definition.terms.some(
-            term =>
-              lower.includes(
-                term
-              )
-          );
+      if (matched) {
 
-
-        if (matches) {
-
-          found.push(
-            definition.label
-          );
-
-        }
+        matches.push(
+          definition.label
+        );
 
       }
-    );
+
+    }
+  );
 
 
-  /*
-     If no known working type
-     was recognised, preserve it
-     instead of throwing it away.
-  */
-
-  if (
-    found.length === 0
-  ) {
-
+  if (matches.length === 0) {
 
     raw
       .split(
-        /\s*(?:,|;|\||\+|&|\band\b)\s*/i
-      )
-
-      .map(
-        value =>
-          value.trim()
+        /\s*(?:,|;|\||&|\+|\band\b)\s*/i
       )
 
       .filter(Boolean)
 
       .forEach(
-        value =>
-          found.push(
-            value
+        item =>
+          matches.push(
+            titleCase(item)
           )
       );
 
   }
 
 
-  return uniqueCaseInsensitive(
-    found
-  );
+  return uniqueLabels(matches);
 
 }
 
 
 
 /* =========================================
-   REMOVE DUPLICATES CASE-INSENSITIVELY
-========================================= */
-
-function uniqueCaseInsensitive(
-  values
-) {
-
-
-  const map =
-    new Map();
-
-
-  values.forEach(
-    value => {
-
-
-      const clean =
-        cleanText(value);
-
-
-      if (!clean) {
-        return;
-      }
-
-
-      const key =
-        clean.toLowerCase();
-
-
-      if (
-        !map.has(key)
-      ) {
-
-        map.set(
-          key,
-          clean
-        );
-
-      }
-
-    }
-  );
-
-
-  return [
-    ...map.values()
-  ];
-
-}
-
-
-
-/* =========================================
-   AVAILABLE CATEGORY FILTERS
+   AVAILABLE FILTERS
 ========================================= */
 
 function getAvailableCategories() {
 
-
-  const categories =
-    [];
+  const all = [];
 
 
   insights.forEach(
     insight => {
 
-
-      getCategories(
-        insight
-      ).forEach(
-        category =>
-          categories.push(
-            category
-          )
-      );
-
-    }
-  );
-
-
-  const unique =
-    uniqueCaseInsensitive(
-      categories
-    );
-
-
-  /*
-     Keep filters in a sensible
-     consistent order.
-  */
-
-  const order =
-    categoryDefinitions.map(
-      item =>
-        item.label
-    );
-
-
-  return unique.sort(
-    (a, b) => {
-
-
-      const aIndex =
-        order.indexOf(a);
-
-
-      const bIndex =
-        order.indexOf(b);
-
-
-      if (
-        aIndex === -1 &&
-        bIndex === -1
-      ) {
-
-        return a.localeCompare(
-          b
+      getCategories(insight)
+        .forEach(
+          value =>
+            all.push(value)
         );
 
-      }
-
-
-      if (aIndex === -1) {
-        return 1;
-      }
-
-
-      if (bIndex === -1) {
-        return -1;
-      }
-
-
-      return (
-        aIndex -
-        bIndex
-      );
-
     }
   );
+
+
+  return uniqueLabels(all);
 
 }
 
 
-
-/* =========================================
-   AVAILABLE WORKING FILTERS
-========================================= */
 
 function getAvailableWorkingTypes() {
 
-
-  const types =
-    [];
+  const all = [];
 
 
   insights.forEach(
     insight => {
 
-
-      getWorkingTypes(
-        insight
-      ).forEach(
-        type =>
-          types.push(
-            type
-          )
-      );
-
-    }
-  );
-
-
-  const unique =
-    uniqueCaseInsensitive(
-      types
-    );
-
-
-  const order =
-    workingDefinitions.map(
-      item =>
-        item.label
-    );
-
-
-  return unique.sort(
-    (a, b) => {
-
-
-      const aIndex =
-        order.indexOf(a);
-
-
-      const bIndex =
-        order.indexOf(b);
-
-
-      if (
-        aIndex === -1 &&
-        bIndex === -1
-      ) {
-
-        return a.localeCompare(
-          b
+      getWorkingTypes(insight)
+        .forEach(
+          value =>
+            all.push(value)
         );
 
-      }
-
-
-      if (aIndex === -1) {
-        return 1;
-      }
-
-
-      if (bIndex === -1) {
-        return -1;
-      }
-
-
-      return (
-        aIndex -
-        bIndex
-      );
-
     }
   );
+
+
+  return uniqueLabels(all);
 
 }
 
 
 
 /* =========================================
-   FILTER COUNTS
+   COUNTS
 ========================================= */
 
-function getCategoryCount(
-  category
-) {
+function categoryCount(category) {
 
-
-  if (
-    category === "ALL"
-  ) {
+  if (category === "ALL") {
 
     return insights.length;
 
@@ -910,11 +526,8 @@ function getCategoryCount(
     insight =>
       getCategories(insight)
         .some(
-          value =>
-            valuesMatch(
-              value,
-              category
-            )
+          item =>
+            same(item, category)
         )
   ).length;
 
@@ -922,14 +535,9 @@ function getCategoryCount(
 
 
 
-function getWorkingCount(
-  type
-) {
+function workingCount(type) {
 
-
-  if (
-    type === "ALL"
-  ) {
+  if (type === "ALL") {
 
     return insights.length;
 
@@ -940,11 +548,8 @@ function getWorkingCount(
     insight =>
       getWorkingTypes(insight)
         .some(
-          value =>
-            valuesMatch(
-              value,
-              type
-            )
+          item =>
+            same(item, type)
         )
   ).length;
 
@@ -958,61 +563,29 @@ function getWorkingCount(
 
 function createCategoryFilters() {
 
-
-  if (!categoryFilters) {
-    return;
-  }
+  categoryFilters.innerHTML = "";
 
 
-  categoryFilters.innerHTML =
-    "";
-
-
-  createFilterButton({
-
-    container:
-      categoryFilters,
-
-    label:
-      "All",
-
-    value:
-      "ALL",
-
-    type:
-      "category",
-
-    count:
-      insights.length
-
-  });
+  createFilter(
+    categoryFilters,
+    "all",
+    "ALL",
+    "category",
+    insights.length
+  );
 
 
   getAvailableCategories()
     .forEach(
       category => {
 
-
-        createFilterButton({
-
-          container:
-            categoryFilters,
-
-          label:
-            category,
-
-          value:
-            category,
-
-          type:
-            "category",
-
-          count:
-            getCategoryCount(
-              category
-            )
-
-        });
+        createFilter(
+          categoryFilters,
+          category.toLowerCase(),
+          category,
+          "category",
+          categoryCount(category)
+        );
 
       }
     );
@@ -1023,29 +596,16 @@ function createCategoryFilters() {
 
 function createWorkingFilters() {
 
-
-  if (
-    !workingFilters ||
-    !workingFilterArea
-  ) {
-
-    return;
-
-  }
-
-
-  const types =
+  const available =
     getAvailableWorkingTypes();
 
 
   if (
-    types.length === 0
+    available.length === 0
   ) {
 
     workingFilterArea
-      .classList.add(
-        "hidden"
-      );
+      .classList.add("hidden");
 
     return;
 
@@ -1053,59 +613,31 @@ function createWorkingFilters() {
 
 
   workingFilterArea
-    .classList.remove(
-      "hidden"
-    );
+    .classList.remove("hidden");
 
 
-  workingFilters.innerHTML =
-    "";
+  workingFilters.innerHTML = "";
 
 
-  createFilterButton({
-
-    container:
-      workingFilters,
-
-    label:
-      "Everyone",
-
-    value:
-      "ALL",
-
-    type:
-      "working",
-
-    count:
-      insights.length
-
-  });
+  createFilter(
+    workingFilters,
+    "all",
+    "ALL",
+    "working",
+    insights.length
+  );
 
 
-  types.forEach(
+  available.forEach(
     type => {
 
-
-      createFilterButton({
-
-        container:
-          workingFilters,
-
-        label:
-          type,
-
-        value:
-          type,
-
-        type:
-          "working",
-
-        count:
-          getWorkingCount(
-            type
-          )
-
-      });
+      createFilter(
+        workingFilters,
+        type.toLowerCase(),
+        type,
+        "working",
+        workingCount(type)
+      );
 
     }
   );
@@ -1114,18 +646,13 @@ function createWorkingFilters() {
 
 
 
-/* =========================================
-   CREATE ONE FILTER BUTTON
-========================================= */
-
-function createFilterButton({
+function createFilter(
   container,
   label,
   value,
   type,
   count
-}) {
-
+) {
 
   const button =
     document.createElement(
@@ -1136,31 +663,32 @@ function createFilterButton({
   button.type =
     "button";
 
-
   button.className =
     "filter";
 
 
-  const isActive =
-    (
-      type ===
-        "category" &&
-      valuesMatch(
-        value,
-        selectedCategory
-      )
-    ) ||
-    (
-      type ===
-        "working" &&
-      valuesMatch(
-        value,
-        selectedWorkingAs
-      )
+  if (
+    type === "category" &&
+    same(
+      value,
+      selectedCategory
+    )
+  ) {
+
+    button.classList.add(
+      "active"
     );
 
+  }
 
-  if (isActive) {
+
+  if (
+    type === "working" &&
+    same(
+      value,
+      selectedWorkingAs
+    )
+  ) {
 
     button.classList.add(
       "active"
@@ -1171,7 +699,7 @@ function createFilterButton({
 
   button.innerHTML = `
 
-    <span class="filter-label">
+    <span>
       ${escapeHTML(label)}
     </span>
 
@@ -1188,8 +716,7 @@ function createFilterButton({
 
 
       if (
-        type ===
-        "category"
+        type === "category"
       ) {
 
         selectedCategory =
@@ -1199,8 +726,7 @@ function createFilterButton({
 
 
       if (
-        type ===
-        "working"
+        type === "working"
       ) {
 
         selectedWorkingAs =
@@ -1221,44 +747,37 @@ function createFilterButton({
   );
 
 
-  container.appendChild(
-    button
-  );
+  container.appendChild(button);
 
 }
 
 
 
 /* =========================================
-   FILTER INSIGHTS
+   FILTER LOGIC
 ========================================= */
 
 function getFilteredInsights() {
-
 
   return insights.filter(
     insight => {
 
 
       const categories =
-        getCategories(
-          insight
-        );
+        getCategories(insight);
 
 
       const workingTypes =
-        getWorkingTypes(
-          insight
-        );
+        getWorkingTypes(insight);
 
 
       const categoryMatches =
-        selectedCategory ===
-          "ALL" ||
+
+        selectedCategory === "ALL" ||
 
         categories.some(
           category =>
-            valuesMatch(
+            same(
               category,
               selectedCategory
             )
@@ -1266,12 +785,12 @@ function getFilteredInsights() {
 
 
       const workingMatches =
-        selectedWorkingAs ===
-          "ALL" ||
+
+        selectedWorkingAs === "ALL" ||
 
         workingTypes.some(
           type =>
-            valuesMatch(
+            same(
               type,
               selectedWorkingAs
             )
@@ -1291,36 +810,23 @@ function getFilteredInsights() {
 
 
 /* =========================================
-   ADVICE LENGTH
-
-   Nothing gets truncated.
-
-   We only adjust typography.
+   LONG TEXT
 ========================================= */
 
-function getLengthClass(
-  advice
-) {
-
+function getLengthClass(advice) {
 
   const length =
-    cleanText(
-      advice
-    ).length;
+    clean(advice).length;
 
 
-  if (
-    length > 320
-  ) {
+  if (length > 420) {
 
     return "very-long";
 
   }
 
 
-  if (
-    length > 190
-  ) {
+  if (length > 230) {
 
     return "long";
 
@@ -1333,100 +839,41 @@ function getLengthClass(
 
 
 
-function getFeaturedLengthClass(
-  advice
-) {
-
-
-  const length =
-    cleanText(
-      advice
-    ).length;
-
-
-  if (
-    length > 280
-  ) {
-
-    return "very-long-advice";
-
-  }
-
-
-  if (
-    length > 165
-  ) {
-
-    return "long-advice";
-
-  }
-
-
-  return "";
-
-}
-
-
-
 /* =========================================
-   DISPLAY ARCHIVE
+   DISPLAY CARDS
 ========================================= */
 
 function displayArchive() {
 
-
-  if (!archiveGrid) {
-    return;
-  }
-
-
-  const filteredInsights =
+  const filtered =
     getFilteredInsights();
 
 
-  archiveGrid.innerHTML =
-    "";
+  archiveGrid.innerHTML = "";
 
 
-  if (insightCount) {
-
-    insightCount.textContent =
-      filteredInsights.length;
-
-  }
-
-
-  if (introCount) {
-
-    introCount.textContent =
-      insights.length;
-
-  }
+  insightCount.textContent =
+    filtered.length;
 
 
   if (
-    filteredInsights.length === 0
+    filtered.length === 0
   ) {
-
 
     archiveGrid.innerHTML = `
 
       <div class="empty-state">
-
         Nothing here yet.
-
       </div>
 
     `;
-
 
     return;
 
   }
 
 
-
-  filteredInsights.forEach(
+  filtered.forEach(
     (insight, index) => {
 
 
@@ -1446,83 +893,44 @@ function displayArchive() {
         "insight-card" +
         (
           lengthClass
-            ? ` ${lengthClass}`
+            ? " " + lengthClass
             : ""
         );
 
 
-      const salary =
-        cleanText(
-          insight.salary
-        );
-
-
-      const salaryHTML =
-        salary
-          ? `
-
-            <div class="card-salary">
-
-              ${escapeHTML(
-                salary
-              )}
-
-            </div>
-
-          `
-          : "";
-
-
       const categories =
-        getCategories(
-          insight
-        );
-
-
-      const categoryHTML =
-        categories
-          .map(
-            category => `
-
-              <span class="card-category">
-
-                ${escapeHTML(
-                  category
-                )}
-
-              </span>
-
-            `
-          )
-          .join("");
+        getCategories(insight);
 
 
       const workingTypes =
-        getWorkingTypes(
-          insight
-        );
+        getWorkingTypes(insight);
 
 
-      const workingText =
-        workingTypes.join(
-          " / "
-        );
+      const salary =
+        clean(insight.salary);
+
+
+      const categoryHTML =
+        categories.map(
+          category => `
+
+            <span class="card-category">
+              ${escapeHTML(category)}
+            </span>
+
+          `
+        ).join("");
 
 
       card.innerHTML = `
-
 
         <div class="card-number">
 
           ${String(
             index + 1
-          ).padStart(
-            3,
-            "0"
-          )}
+          ).padStart(3, "0")}
 
         </div>
-
 
 
         <div class="card-advice">
@@ -1534,40 +942,63 @@ function displayArchive() {
         </div>
 
 
-
         <div class="card-footer">
 
 
-          <div class="card-role">
+          <div class="card-person">
 
-            ${escapeHTML(
-              insight.role || ""
-            )}
+            <div class="card-role">
 
-          </div>
+              ${escapeHTML(
+                insight.role || ""
+              )}
+
+            </div>
 
 
-          <div class="card-experience">
+            <div class="card-experience">
 
-            ${escapeHTML(
-              workingText
-            )}
+              ${escapeHTML(
+                workingTypes.join(" / ")
+              )}
+
+              ${
+                workingTypes.length &&
+                insight.experience
+                  ? " · "
+                  : ""
+              }
+
+              ${escapeHTML(
+                insight.experience || ""
+              )}
+
+              ${
+                insight.experience
+                  ? " in practice"
+                  : ""
+              }
+
+            </div>
+
 
             ${
-              workingText &&
-              insight.experience
-                ? " · "
+              salary
+                ? `
+
+                  <div class="card-salary">
+
+                    ${escapeHTML(
+                      salary
+                    )}
+
+                  </div>
+
+                `
                 : ""
             }
 
-            ${escapeHTML(
-              insight.experience || ""
-            )}
-
           </div>
-
-
-          ${salaryHTML}
 
 
           <div class="card-category-list">
@@ -1579,13 +1010,10 @@ function displayArchive() {
 
         </div>
 
-
       `;
 
 
-      archiveGrid.appendChild(
-        card
-      );
+      archiveGrid.appendChild(card);
 
     }
   );
@@ -1595,141 +1023,87 @@ function displayArchive() {
 
 
 /* =========================================
-   FEATURED INSIGHT
+   FEATURED
 ========================================= */
 
 function showRandomInsight() {
-
-
-  if (!featuredInsight) {
-    return;
-  }
-
 
   const available =
     getFilteredInsights();
 
 
-  if (
-    available.length === 0
-  ) {
-
+  if (!available.length) {
 
     featuredInsight.innerHTML = `
 
-      <p class="quote">
+      <p class="featured-quote">
         Nothing here yet.
       </p>
 
     `;
-
 
     return;
 
   }
 
 
-  const randomIndex =
-    Math.floor(
-      Math.random() *
-      available.length
-    );
-
-
   const insight =
     available[
-      randomIndex
+      Math.floor(
+        Math.random() *
+        available.length
+      )
     ];
 
 
-  const workingTypes =
-    getWorkingTypes(
-      insight
-    );
-
-
   const categories =
-    getCategories(
-      insight
-    );
+    getCategories(insight);
+
+
+  const workingTypes =
+    getWorkingTypes(insight);
 
 
   const lengthClass =
-    getFeaturedLengthClass(
+    getLengthClass(
       insight.advice
     );
 
 
   const categoryHTML =
-    categories
-      .map(
-        category => `
+    categories.map(
+      category => `
 
-          <span class="featured-category">
+        <span class="featured-category">
 
-            ${escapeHTML(
-              category
-            )}
+          ${escapeHTML(category)}
 
-          </span>
+        </span>
 
-        `
-      )
-      .join("");
+      `
+    ).join("");
 
 
-  const metaParts =
-    [];
+  const meta = [
 
+    insight.role,
 
-  if (insight.role) {
+    workingTypes.join(" / "),
 
-    metaParts.push(
-      insight.role
-    );
-
-  }
-
-
-  if (
-    workingTypes.length
-  ) {
-
-    metaParts.push(
-      workingTypes.join(
-        " / "
-      )
-    );
-
-  }
-
-
-  if (
     insight.experience
-  ) {
+      ? `${insight.experience} in practice`
+      : "",
 
-    metaParts.push(
-      insight.experience
-    );
-
-  }
-
-
-  if (
     insight.salary
-  ) {
 
-    metaParts.push(
-      insight.salary
-    );
-
-  }
+  ]
+  .filter(Boolean)
+  .join(" · ");
 
 
   featuredInsight.innerHTML = `
 
-
-    <p class="quote ${lengthClass}">
+    <p class="featured-quote ${lengthClass}">
 
       “${escapeHTML(
         insight.advice
@@ -1738,15 +1112,11 @@ function showRandomInsight() {
     </p>
 
 
-    <p class="meta">
+    <div class="featured-meta">
 
-      ${escapeHTML(
-        metaParts.join(
-          " · "
-        )
-      )}
+      ${escapeHTML(meta)}
 
-    </p>
+    </div>
 
 
     <div class="featured-categories">
@@ -1755,7 +1125,6 @@ function showRandomInsight() {
 
     </div>
 
-
   `;
 
 }
@@ -1763,37 +1132,24 @@ function showRandomInsight() {
 
 
 /* =========================================
-   GENERAL HELPERS
+   UTILITIES
 ========================================= */
 
-function valuesMatch(
-  a,
-  b
-) {
-
+function same(a, b) {
 
   return (
-    cleanText(a)
-      .toLowerCase() ===
-    cleanText(b)
-      .toLowerCase()
+    normaliseKey(a) ===
+    normaliseKey(b)
   );
 
 }
 
 
 
-function titleCase(
-  value
-) {
+function titleCase(value) {
 
-
-  return cleanText(
-    value
-  )
-
+  return clean(value)
     .toLowerCase()
-
     .replace(
       /\b\w/g,
       letter =>
@@ -1804,128 +1160,80 @@ function titleCase(
 
 
 
-function escapeRegExp(
-  string
-) {
+function escapeHTML(value) {
 
+  return String(
+    value ?? ""
+  )
 
-  return String(string)
-    .replace(
-      /[.*+?^${}()|[\]\\]/g,
-      "\\$&"
-    );
+  .replace(
+    /&/g,
+    "&amp;"
+  )
+
+  .replace(
+    /</g,
+    "&lt;"
+  )
+
+  .replace(
+    />/g,
+    "&gt;"
+  )
+
+  .replace(
+    /"/g,
+    "&quot;"
+  )
+
+  .replace(
+    /'/g,
+    "&#039;"
+  );
 
 }
 
 
 
 /* =========================================
-   ESCAPE HTML
+   BUTTONS
 ========================================= */
 
-function escapeHTML(
-  value
-) {
+clearFilters.addEventListener(
+  "click",
+  () => {
 
+    selectedCategory =
+      "ALL";
 
-  if (
-    value === null ||
-    value === undefined
-  ) {
+    selectedWorkingAs =
+      "ALL";
 
-    return "";
+    createCategoryFilters();
+
+    createWorkingFilters();
+
+    displayArchive();
+
+    showRandomInsight();
 
   }
+);
 
 
-  return String(value)
 
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-
-    .replace(
-      /</g,
-      "&lt;"
-    )
-
-    .replace(
-      />/g,
-      "&gt;"
-    )
-
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-
-    .replace(
-      /'/g,
-      "&#039;"
-    );
-
-}
+anotherButton.addEventListener(
+  "click",
+  showRandomInsight
+);
 
 
 
 /* =========================================
-   CLEAR FILTERS
-========================================= */
-
-if (clearFilters) {
-
-
-  clearFilters.addEventListener(
-    "click",
-    () => {
-
-
-      selectedCategory =
-        "ALL";
-
-
-      selectedWorkingAs =
-        "ALL";
-
-
-      createCategoryFilters();
-
-      createWorkingFilters();
-
-      displayArchive();
-
-      showRandomInsight();
-
-    }
-  );
-
-}
-
-
-
-/* =========================================
-   RANDOM BUTTON
-========================================= */
-
-if (anotherButton) {
-
-
-  anotherButton.addEventListener(
-    "click",
-    showRandomInsight
-  );
-
-}
-
-
-
-/* =========================================
-   INITIALISE
+   INIT
 ========================================= */
 
 function initialiseArchive() {
-
 
   createCategoryFilters();
 
@@ -1938,9 +1246,5 @@ function initialiseArchive() {
 }
 
 
-
-/* =========================================
-   START
-========================================= */
 
 loadInsights();

@@ -163,8 +163,7 @@ function showLoadingState() {
 
   if (insightCount) {
 
-    insightCount.textContent =
-      "0";
+    insightCount.textContent = "0";
 
   }
 
@@ -242,7 +241,9 @@ function parseResponseText(text) {
 
 function extractArray(value) {
 
-  if (Array.isArray(value)) {
+  if (
+    Array.isArray(value)
+  ) {
 
     return value;
 
@@ -321,8 +322,7 @@ function loadWithJSONP() {
         );
 
 
-      let finished =
-        false;
+      let finished = false;
 
 
 
@@ -364,8 +364,7 @@ function loadWithJSONP() {
             }
 
 
-            finished =
-              true;
+            finished = true;
 
 
             cleanup();
@@ -396,8 +395,7 @@ function loadWithJSONP() {
           }
 
 
-          finished =
-            true;
+          finished = true;
 
 
           clearTimeout(
@@ -441,8 +439,7 @@ function loadWithJSONP() {
           }
 
 
-          finished =
-            true;
+          finished = true;
 
 
           clearTimeout(
@@ -492,7 +489,7 @@ function loadWithJSONP() {
 
 
 /* =========================================
-   NORMALIZE DATA
+   NORMALISE DATA
 ========================================= */
 
 function useLoadedData(data) {
@@ -528,19 +525,6 @@ function normalizeInsight(raw) {
 
 
   return {
-
-    id:
-      firstValue(
-        raw,
-        [
-          "id",
-          "ID",
-          "Id",
-          "number",
-          "Number"
-        ]
-      ),
-
 
     role:
       firstValue(
@@ -747,7 +731,7 @@ function showError() {
 
 
 /* =========================================
-   CLEANING
+   CLEAN
 ========================================= */
 
 function clean(value) {
@@ -762,7 +746,9 @@ function clean(value) {
   }
 
 
-  if (Array.isArray(value)) {
+  if (
+    Array.isArray(value)
+  ) {
 
     return value
       .map(clean)
@@ -812,20 +798,15 @@ function same(
 const categoryDefinitions = [
 
   {
-    label:
-      "Career",
-
+    label: "Career",
     terms: [
       "career",
       "careers"
     ]
   },
 
-
   {
-    label:
-      "Money",
-
+    label: "Money",
     terms: [
       "money",
       "salary",
@@ -839,43 +820,31 @@ const categoryDefinitions = [
     ]
   },
 
-
   {
-    label:
-      "Clients",
-
+    label: "Clients",
     terms: [
       "client",
       "clients"
     ]
   },
 
-
   {
-    label:
-      "Freelance",
-
+    label: "Freelance",
     terms: [
       "freelance",
       "freelancing"
     ]
   },
 
-
   {
-    label:
-      "Making",
-
+    label: "Making",
     terms: [
       "making"
     ]
   },
 
-
   {
-    label:
-      "Collaboration",
-
+    label: "Collaboration",
     terms: [
       "collaboration",
       "collaborating",
@@ -883,21 +852,15 @@ const categoryDefinitions = [
     ]
   },
 
-
   {
-    label:
-      "Education",
-
+    label: "Education",
     terms: [
       "education"
     ]
   },
 
-
   {
-    label:
-      "Other",
-
+    label: "Other",
     terms: [
       "other"
     ]
@@ -979,31 +942,23 @@ function getCategories(insight) {
 const workingDefinitions = [
 
   {
-    label:
-      "Employed",
-
+    label: "Employed",
     terms: [
       "employed",
       "employee"
     ]
   },
 
-
   {
-    label:
-      "Freelance",
-
+    label: "Freelance",
     terms: [
       "freelance",
       "freelancer"
     ]
   },
 
-
   {
-    label:
-      "Independent / Founder",
-
+    label: "Independent / Founder",
     terms: [
       "independent",
       "founder",
@@ -1012,11 +967,8 @@ const workingDefinitions = [
     ]
   },
 
-
   {
-    label:
-      "Academic / Research",
-
+    label: "Academic / Research",
     terms: [
       "academic",
       "academia",
@@ -1025,21 +977,15 @@ const workingDefinitions = [
     ]
   },
 
-
   {
-    label:
-      "Student",
-
+    label: "Student",
     terms: [
       "student"
     ]
   },
 
-
   {
-    label:
-      "Other",
-
+    label: "Other",
     terms: [
       "other"
     ]
@@ -1112,7 +1058,7 @@ function getWorkingTypes(insight) {
 
 
 /* =========================================
-   TERM MATCHING
+   TERM MATCH
 ========================================= */
 
 function containsTerm(
@@ -1188,7 +1134,7 @@ function unique(values) {
 
 
 /* =========================================
-   AVAILABLE FILTER VALUES
+   FILTER VALUES
 ========================================= */
 
 function getAvailableCategories() {
@@ -1203,9 +1149,7 @@ function getAvailableCategories() {
       getCategories(insight)
         .forEach(
           category =>
-            values.push(
-              category
-            )
+            values.push(category)
         );
 
     }
@@ -1229,10 +1173,8 @@ function getAvailableWorkingTypes() {
 
       getWorkingTypes(insight)
         .forEach(
-          workingType =>
-            values.push(
-              workingType
-            )
+          type =>
+            values.push(type)
         );
 
     }
@@ -1249,9 +1191,7 @@ function getAvailableWorkingTypes() {
    COUNTS
 ========================================= */
 
-function countCategory(
-  category
-) {
+function countCategory(category) {
 
   if (
     category === "ALL"
@@ -1262,28 +1202,25 @@ function countCategory(
   }
 
 
-  return insights
-    .filter(
-      insight =>
+  return insights.filter(
+    insight =>
 
-        getCategories(insight)
-          .some(
-            item =>
-              same(
-                item,
-                category
-              )
-          )
+      getCategories(insight)
+        .some(
+          item =>
+            same(
+              item,
+              category
+            )
+        )
 
-    ).length;
+  ).length;
 
 }
 
 
 
-function countWorking(
-  type
-) {
+function countWorking(type) {
 
   if (
     type === "ALL"
@@ -1294,27 +1231,26 @@ function countWorking(
   }
 
 
-  return insights
-    .filter(
-      insight =>
+  return insights.filter(
+    insight =>
 
-        getWorkingTypes(insight)
-          .some(
-            item =>
-              same(
-                item,
-                type
-              )
-          )
+      getWorkingTypes(insight)
+        .some(
+          item =>
+            same(
+              item,
+              type
+            )
+        )
 
-    ).length;
+  ).length;
 
 }
 
 
 
 /* =========================================
-   CREATE CATEGORY FILTERS
+   FILTERS
 ========================================= */
 
 function createCategoryFilters() {
@@ -1326,8 +1262,7 @@ function createCategoryFilters() {
   }
 
 
-  categoryFilters.innerHTML =
-    "";
+  categoryFilters.innerHTML = "";
 
 
   addFilter({
@@ -1361,8 +1296,7 @@ function createCategoryFilters() {
             categoryFilters,
 
           label:
-            category
-              .toLowerCase(),
+            category.toLowerCase(),
 
           value:
             category,
@@ -1383,10 +1317,6 @@ function createCategoryFilters() {
 }
 
 
-
-/* =========================================
-   CREATE WORKING FILTERS
-========================================= */
 
 function createWorkingFilters() {
 
@@ -1456,8 +1386,7 @@ function createWorkingFilters() {
           workingFilters,
 
         label:
-          type
-            .toLowerCase(),
+          type.toLowerCase(),
 
         value:
           type,
@@ -1466,9 +1395,7 @@ function createWorkingFilters() {
           "working",
 
         count:
-          countWorking(
-            type
-          )
+          countWorking(type)
 
       });
 
@@ -1478,10 +1405,6 @@ function createWorkingFilters() {
 }
 
 
-
-/* =========================================
-   FILTER BUTTON
-========================================= */
 
 function addFilter({
   container,
@@ -1497,22 +1420,15 @@ function addFilter({
     );
 
 
-  button.type =
-    "button";
+  button.type = "button";
 
-
-  button.className =
-    "filter";
+  button.className = "filter";
 
 
   const active =
 
     (
-      type ===
-      "category"
-
-      &&
-
+      type === "category" &&
       same(
         value,
         selectedCategory
@@ -1522,11 +1438,7 @@ function addFilter({
     ||
 
     (
-      type ===
-      "working"
-
-      &&
-
+      type === "working" &&
       same(
         value,
         selectedWorkingAs
@@ -1560,8 +1472,7 @@ function addFilter({
 
 
       if (
-        type ===
-        "category"
+        type === "category"
       ) {
 
         selectedCategory =
@@ -1571,8 +1482,7 @@ function addFilter({
 
 
       if (
-        type ===
-        "working"
+        type === "working"
       ) {
 
         selectedWorkingAs =
@@ -1602,7 +1512,7 @@ function addFilter({
 
 
 /* =========================================
-   FILTER INSIGHTS
+   FILTER RESULTS
 ========================================= */
 
 function getFilteredInsights() {
@@ -1621,8 +1531,7 @@ function getFilteredInsights() {
 
       const categoryMatch =
 
-        selectedCategory ===
-        "ALL"
+        selectedCategory === "ALL"
 
         ||
 
@@ -1637,8 +1546,7 @@ function getFilteredInsights() {
 
       const workingMatch =
 
-        selectedWorkingAs ===
-        "ALL"
+        selectedWorkingAs === "ALL"
 
         ||
 
@@ -1664,12 +1572,10 @@ function getFilteredInsights() {
 
 
 /* =========================================
-   TEXT LENGTH
+   ADVICE LENGTH
 ========================================= */
 
-function getLengthClass(
-  advice
-) {
+function getLengthClass(advice) {
 
   const length =
     clean(advice).length;
@@ -1700,51 +1606,6 @@ function getLengthClass(
 
 
 /* =========================================
-   CARD ID
-========================================= */
-
-function formatId(
-  insight,
-  fallbackIndex
-) {
-
-  const raw =
-    clean(
-      insight.id
-    );
-
-
-  if (raw) {
-
-    if (
-      /^\d+$/.test(raw)
-    ) {
-
-      return raw.padStart(
-        3,
-        "0"
-      );
-
-    }
-
-
-    return raw;
-
-  }
-
-
-  return String(
-    fallbackIndex + 1
-  ).padStart(
-    3,
-    "0"
-  );
-
-}
-
-
-
-/* =========================================
    DISPLAY ARCHIVE
 ========================================= */
 
@@ -1761,8 +1622,7 @@ function displayArchive() {
     getFilteredInsights();
 
 
-  archiveGrid.innerHTML =
-    "";
+  archiveGrid.innerHTML = "";
 
 
   if (insightCount) {
@@ -1787,10 +1647,7 @@ function displayArchive() {
 
 
   filtered.forEach(
-    (
-      insight,
-      index
-    ) => {
+    insight => {
 
 
       const card =
@@ -1809,8 +1666,7 @@ function displayArchive() {
         "insight-card" +
         (
           lengthClass
-            ? " " +
-              lengthClass
+            ? ` ${lengthClass}`
             : ""
         );
 
@@ -1849,11 +1705,9 @@ function displayArchive() {
         );
 
 
-      const workingLabel =
+      const working =
         workingTypes.length
-          ? workingTypes.join(
-              " / "
-            )
+          ? workingTypes.join(" / ")
           : "";
 
 
@@ -1863,17 +1717,40 @@ function displayArchive() {
         );
 
 
+      let workingLine = "";
+
+
+      if (
+        working &&
+        experience
+      ) {
+
+        workingLine =
+          working +
+          " · " +
+          experience +
+          " in practice";
+
+      }
+
+      else if (working) {
+
+        workingLine =
+          working;
+
+      }
+
+      else if (experience) {
+
+        workingLine =
+          experience +
+          " in practice";
+
+      }
+
+
+
       card.innerHTML = `
-
-        <div class="card-number">
-          ${escapeHTML(
-            formatId(
-              insight,
-              index
-            )
-          )}
-        </div>
-
 
         <div class="card-advice-area">
 
@@ -1903,38 +1780,15 @@ function displayArchive() {
 
 
             ${
-              workingLabel
+              workingLine
                 ? `
                   <div class="card-working">
                     ${escapeHTML(
-                      workingLabel
+                      workingLine
                     )}
-                    ${
-                      experience
-                        ? " · "
-                        : ""
-                    }
-                    ${
-                      experience
-                        ? escapeHTML(
-                            experience
-                          ) +
-                          " in practice"
-                        : ""
-                    }
                   </div>
                 `
-                : (
-                  experience
-                    ? `
-                      <div class="card-experience">
-                        ${escapeHTML(
-                          experience
-                        )} in practice
-                      </div>
-                    `
-                    : ""
-                )
+                : ""
             }
 
 
@@ -2024,7 +1878,9 @@ function showRandomInsight() {
   const metaParts = [];
 
 
-  if (insight.role) {
+  if (
+    insight.role
+  ) {
 
     metaParts.push(
       insight.role
@@ -2038,9 +1894,7 @@ function showRandomInsight() {
   ) {
 
     metaParts.push(
-      workingTypes.join(
-        " / "
-      )
+      workingTypes.join(" / ")
     );
 
   }

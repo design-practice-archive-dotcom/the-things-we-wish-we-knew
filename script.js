@@ -34,9 +34,9 @@ const clearFilters =
 
 
 
-/* =========================================
-   LOAD
-========================================= */
+/* -----------------------------------------
+   LOAD DATA
+----------------------------------------- */
 
 function loadInsights() {
 
@@ -67,9 +67,9 @@ function loadInsights() {
 
       insights =
         data.filter(
-          item =>
-            item &&
-            item.advice
+          insight =>
+            insight &&
+            clean(insight.advice)
         );
 
 
@@ -107,18 +107,20 @@ function loadInsights() {
 function showError() {
 
   archiveGrid.innerHTML = `
+
     <div class="empty-state">
       The archive is temporarily unavailable.
     </div>
+
   `;
 
 }
 
 
 
-/* =========================================
-   HELPERS
-========================================= */
+/* -----------------------------------------
+   CLEAN
+----------------------------------------- */
 
 function clean(value) {
 
@@ -131,14 +133,13 @@ function clean(value) {
 
   }
 
-
   return String(value).trim();
 
 }
 
 
 
-function normaliseKey(value) {
+function key(value) {
 
   return clean(value)
     .toLowerCase()
@@ -148,71 +149,38 @@ function normaliseKey(value) {
 
 
 
-function uniqueLabels(values) {
+function same(a, b) {
 
-  const output = [];
-
-  const keys =
-    new Set();
-
-
-  values.forEach(
-    value => {
-
-      const label =
-        clean(value);
-
-      const key =
-        normaliseKey(label);
-
-
-      if (
-        label &&
-        !keys.has(key)
-      ) {
-
-        keys.add(key);
-
-        output.push(label);
-
-      }
-
-    }
-  );
-
-
-  return output;
+  return key(a) === key(b);
 
 }
 
 
 
-/* =========================================
+/* -----------------------------------------
    CATEGORIES
-========================================= */
+----------------------------------------- */
 
-const categoryMap = [
+const categoryDefinitions = [
 
   {
     label: "Career",
-    keywords: [
-      "career"
-    ]
+    terms: ["career"]
   },
 
   {
     label: "Money",
-    keywords: [
+    terms: [
       "money",
       "salary",
-      "rate",
-      "rates"
+      "rates",
+      "rate"
     ]
   },
 
   {
     label: "Clients",
-    keywords: [
+    terms: [
       "client",
       "clients"
     ]
@@ -220,7 +188,7 @@ const categoryMap = [
 
   {
     label: "Freelance",
-    keywords: [
+    terms: [
       "freelance",
       "freelancing"
     ]
@@ -228,30 +196,25 @@ const categoryMap = [
 
   {
     label: "Making",
-    keywords: [
-      "making"
-    ]
+    terms: ["making"]
   },
 
   {
     label: "Collaboration",
-    keywords: [
-      "collaboration"
+    terms: [
+      "collaboration",
+      "collaborating"
     ]
   },
 
   {
     label: "Education",
-    keywords: [
-      "education"
-    ]
+    terms: ["education"]
   },
 
   {
     label: "Other",
-    keywords: [
-      "other"
-    ]
+    terms: ["other"]
   }
 
 ];
@@ -261,9 +224,7 @@ const categoryMap = [
 function getCategories(insight) {
 
   const raw =
-    normaliseKey(
-      insight.category
-    );
+    key(insight.category);
 
 
   if (!raw) {
@@ -271,22 +232,21 @@ function getCategories(insight) {
   }
 
 
-  const matches = [];
+  const result = [];
 
 
-  categoryMap.forEach(
+  categoryDefinitions.forEach(
     definition => {
 
-      const matched =
-        definition.keywords.some(
-          keyword => {
+      const found =
+        definition.terms.some(
+          term => {
 
             const regex =
               new RegExp(
-                `(^|[,;|/&+\\s])${keyword}(?=$|[,;|/&+\\s])`,
+                `(^|[\\s,;|/&+])${escapeRegExp(term)}(?=$|[\\s,;|/&+])`,
                 "i"
               );
-
 
             return regex.test(raw);
 
@@ -294,9 +254,9 @@ function getCategories(insight) {
         );
 
 
-      if (matched) {
+      if (found) {
 
-        matches.push(
+        result.push(
           definition.label
         );
 
@@ -306,23 +266,12 @@ function getCategories(insight) {
   );
 
 
-  /*
-     If Google Forms sends something
-     unexpected, preserve it.
-  */
+  if (!result.length) {
 
-  if (matches.length === 0) {
-
-    raw
-      .split(
-        /\s*(?:,|;|\||&|\+|\band\b)\s*/i
-      )
-
-      .filter(Boolean)
-
+    splitFallback(raw)
       .forEach(
         item =>
-          matches.push(
+          result.push(
             titleCase(item)
           )
       );
@@ -330,21 +279,21 @@ function getCategories(insight) {
   }
 
 
-  return uniqueLabels(matches);
+  return unique(result);
 
 }
 
 
 
-/* =========================================
+/* -----------------------------------------
    WORKING TYPES
-========================================= */
+----------------------------------------- */
 
-const workingMap = [
+const workingDefinitions = [
 
   {
     label: "Employed",
-    keywords: [
+    terms: [
       "employed",
       "employee"
     ]
@@ -352,7 +301,7 @@ const workingMap = [
 
   {
     label: "Freelance",
-    keywords: [
+    terms: [
       "freelance",
       "freelancer"
     ]
@@ -360,7 +309,7 @@ const workingMap = [
 
   {
     label: "Independent / Founder",
-    keywords: [
+    terms: [
       "independent",
       "founder",
       "own studio",
@@ -370,22 +319,23 @@ const workingMap = [
 
   {
     label: "Academic / Research",
-    keywords: [
+    terms: [
       "academic",
-      "research"
+      "research",
+      "researcher"
     ]
   },
 
   {
     label: "Student",
-    keywords: [
+    terms: [
       "student"
     ]
   },
 
   {
     label: "Other",
-    keywords: [
+    terms: [
       "other"
     ]
   }
@@ -397,9 +347,7 @@ const workingMap = [
 function getWorkingTypes(insight) {
 
   const raw =
-    normaliseKey(
-      insight.workingAs
-    );
+    key(insight.workingAs);
 
 
   if (!raw) {
@@ -407,22 +355,24 @@ function getWorkingTypes(insight) {
   }
 
 
-  const matches = [];
+  const result = [];
 
 
-  workingMap.forEach(
+  workingDefinitions.forEach(
     definition => {
 
-      const matched =
-        definition.keywords.some(
-          keyword =>
-            raw.includes(keyword)
+      const found =
+        definition.terms.some(
+          term =>
+            raw.includes(
+              term
+            )
         );
 
 
-      if (matched) {
+      if (found) {
 
-        matches.push(
+        result.push(
           definition.label
         );
 
@@ -432,18 +382,12 @@ function getWorkingTypes(insight) {
   );
 
 
-  if (matches.length === 0) {
+  if (!result.length) {
 
-    raw
-      .split(
-        /\s*(?:,|;|\||&|\+|\band\b)\s*/i
-      )
-
-      .filter(Boolean)
-
+    splitFallback(raw)
       .forEach(
         item =>
-          matches.push(
+          result.push(
             titleCase(item)
           )
       );
@@ -451,19 +395,65 @@ function getWorkingTypes(insight) {
   }
 
 
-  return uniqueLabels(matches);
+  return unique(result);
 
 }
 
 
 
-/* =========================================
+/* -----------------------------------------
+   UNIQUE
+----------------------------------------- */
+
+function unique(values) {
+
+  const used =
+    new Set();
+
+  const result =
+    [];
+
+
+  values.forEach(
+    value => {
+
+      const cleanValue =
+        clean(value);
+
+      const cleanKey =
+        key(cleanValue);
+
+
+      if (
+        cleanValue &&
+        !used.has(cleanKey)
+      ) {
+
+        used.add(cleanKey);
+
+        result.push(
+          cleanValue
+        );
+
+      }
+
+    }
+  );
+
+
+  return result;
+
+}
+
+
+
+/* -----------------------------------------
    AVAILABLE FILTERS
-========================================= */
+----------------------------------------- */
 
 function getAvailableCategories() {
 
-  const all = [];
+  const values = [];
 
 
   insights.forEach(
@@ -471,15 +461,15 @@ function getAvailableCategories() {
 
       getCategories(insight)
         .forEach(
-          value =>
-            all.push(value)
+          category =>
+            values.push(category)
         );
 
     }
   );
 
 
-  return uniqueLabels(all);
+  return unique(values);
 
 }
 
@@ -487,7 +477,7 @@ function getAvailableCategories() {
 
 function getAvailableWorkingTypes() {
 
-  const all = [];
+  const values = [];
 
 
   insights.forEach(
@@ -495,25 +485,25 @@ function getAvailableWorkingTypes() {
 
       getWorkingTypes(insight)
         .forEach(
-          value =>
-            all.push(value)
+          type =>
+            values.push(type)
         );
 
     }
   );
 
 
-  return uniqueLabels(all);
+  return unique(values);
 
 }
 
 
 
-/* =========================================
+/* -----------------------------------------
    COUNTS
-========================================= */
+----------------------------------------- */
 
-function categoryCount(category) {
+function countCategory(category) {
 
   if (category === "ALL") {
 
@@ -524,18 +514,23 @@ function categoryCount(category) {
 
   return insights.filter(
     insight =>
+
       getCategories(insight)
         .some(
           item =>
-            same(item, category)
+            same(
+              item,
+              category
+            )
         )
+
   ).length;
 
 }
 
 
 
-function workingCount(type) {
+function countWorking(type) {
 
   if (type === "ALL") {
 
@@ -546,46 +541,76 @@ function workingCount(type) {
 
   return insights.filter(
     insight =>
+
       getWorkingTypes(insight)
         .some(
           item =>
-            same(item, type)
+            same(
+              item,
+              type
+            )
         )
+
   ).length;
 
 }
 
 
 
-/* =========================================
+/* -----------------------------------------
    CREATE FILTERS
-========================================= */
+----------------------------------------- */
 
 function createCategoryFilters() {
 
-  categoryFilters.innerHTML = "";
+  categoryFilters.innerHTML =
+    "";
 
 
-  createFilter(
-    categoryFilters,
-    "all",
-    "ALL",
-    "category",
-    insights.length
-  );
+  addFilter({
+
+    container:
+      categoryFilters,
+
+    label:
+      "all",
+
+    value:
+      "ALL",
+
+    type:
+      "category",
+
+    count:
+      insights.length
+
+  });
 
 
   getAvailableCategories()
     .forEach(
       category => {
 
-        createFilter(
-          categoryFilters,
-          category.toLowerCase(),
-          category,
-          "category",
-          categoryCount(category)
-        );
+        addFilter({
+
+          container:
+            categoryFilters,
+
+          label:
+            category.toLowerCase(),
+
+          value:
+            category,
+
+          type:
+            "category",
+
+          count:
+            countCategory(
+              category
+            )
+
+        });
 
       }
     );
@@ -596,16 +621,16 @@ function createCategoryFilters() {
 
 function createWorkingFilters() {
 
-  const available =
+  const types =
     getAvailableWorkingTypes();
 
 
-  if (
-    available.length === 0
-  ) {
+  if (!types.length) {
 
     workingFilterArea
-      .classList.add("hidden");
+      .classList.add(
+        "hidden"
+      );
 
     return;
 
@@ -613,31 +638,56 @@ function createWorkingFilters() {
 
 
   workingFilterArea
-    .classList.remove("hidden");
+    .classList.remove(
+      "hidden"
+    );
 
 
-  workingFilters.innerHTML = "";
+  workingFilters.innerHTML =
+    "";
 
 
-  createFilter(
-    workingFilters,
-    "all",
-    "ALL",
-    "working",
-    insights.length
-  );
+  addFilter({
+
+    container:
+      workingFilters,
+
+    label:
+      "all",
+
+    value:
+      "ALL",
+
+    type:
+      "working",
+
+    count:
+      insights.length
+
+  });
 
 
-  available.forEach(
+  types.forEach(
     type => {
 
-      createFilter(
-        workingFilters,
-        type.toLowerCase(),
-        type,
-        "working",
-        workingCount(type)
-      );
+      addFilter({
+
+        container:
+          workingFilters,
+
+        label:
+          type.toLowerCase(),
+
+        value:
+          type,
+
+        type:
+          "working",
+
+        count:
+          countWorking(type)
+
+      });
 
     }
   );
@@ -646,13 +696,17 @@ function createWorkingFilters() {
 
 
 
-function createFilter(
+/* -----------------------------------------
+   ONE FILTER BUTTON
+----------------------------------------- */
+
+function addFilter({
   container,
   label,
   value,
   type,
   count
-) {
+}) {
 
   const button =
     document.createElement(
@@ -667,28 +721,28 @@ function createFilter(
     "filter";
 
 
-  if (
-    type === "category" &&
-    same(
-      value,
-      selectedCategory
-    )
-  ) {
+  const active =
 
-    button.classList.add(
-      "active"
+    (
+      type === "category" &&
+      same(
+        value,
+        selectedCategory
+      )
+    )
+
+    ||
+
+    (
+      type === "working" &&
+      same(
+        value,
+        selectedWorkingAs
+      )
     );
 
-  }
 
-
-  if (
-    type === "working" &&
-    same(
-      value,
-      selectedWorkingAs
-    )
-  ) {
+  if (active) {
 
     button.classList.add(
       "active"
@@ -716,7 +770,8 @@ function createFilter(
 
 
       if (
-        type === "category"
+        type ===
+        "category"
       ) {
 
         selectedCategory =
@@ -726,7 +781,8 @@ function createFilter(
 
 
       if (
-        type === "working"
+        type ===
+        "working"
       ) {
 
         selectedWorkingAs =
@@ -747,15 +803,17 @@ function createFilter(
   );
 
 
-  container.appendChild(button);
+  container.appendChild(
+    button
+  );
 
 }
 
 
 
-/* =========================================
-   FILTER LOGIC
-========================================= */
+/* -----------------------------------------
+   FILTER INSIGHTS
+----------------------------------------- */
 
 function getFilteredInsights() {
 
@@ -771,9 +829,12 @@ function getFilteredInsights() {
         getWorkingTypes(insight);
 
 
-      const categoryMatches =
+      const categoryMatch =
 
-        selectedCategory === "ALL" ||
+        selectedCategory ===
+        "ALL"
+
+        ||
 
         categories.some(
           category =>
@@ -784,9 +845,12 @@ function getFilteredInsights() {
         );
 
 
-      const workingMatches =
+      const workingMatch =
 
-        selectedWorkingAs === "ALL" ||
+        selectedWorkingAs ===
+        "ALL"
+
+        ||
 
         workingTypes.some(
           type =>
@@ -798,8 +862,8 @@ function getFilteredInsights() {
 
 
       return (
-        categoryMatches &&
-        workingMatches
+        categoryMatch &&
+        workingMatch
       );
 
     }
@@ -809,9 +873,9 @@ function getFilteredInsights() {
 
 
 
-/* =========================================
-   LONG TEXT
-========================================= */
+/* -----------------------------------------
+   LENGTH
+----------------------------------------- */
 
 function getLengthClass(advice) {
 
@@ -819,14 +883,14 @@ function getLengthClass(advice) {
     clean(advice).length;
 
 
-  if (length > 420) {
+  if (length > 390) {
 
     return "very-long";
 
   }
 
 
-  if (length > 230) {
+  if (length > 220) {
 
     return "long";
 
@@ -839,9 +903,9 @@ function getLengthClass(advice) {
 
 
 
-/* =========================================
-   DISPLAY CARDS
-========================================= */
+/* -----------------------------------------
+   DISPLAY ARCHIVE
+----------------------------------------- */
 
 function displayArchive() {
 
@@ -849,16 +913,15 @@ function displayArchive() {
     getFilteredInsights();
 
 
-  archiveGrid.innerHTML = "";
+  archiveGrid.innerHTML =
+    "";
 
 
   insightCount.textContent =
     filtered.length;
 
 
-  if (
-    filtered.length === 0
-  ) {
+  if (!filtered.length) {
 
     archiveGrid.innerHTML = `
 
@@ -893,7 +956,7 @@ function displayArchive() {
         "insight-card" +
         (
           lengthClass
-            ? " " + lengthClass
+            ? ` ${lengthClass}`
             : ""
         );
 
@@ -906,31 +969,40 @@ function displayArchive() {
         getWorkingTypes(insight);
 
 
+      const categoryHTML =
+        categories
+          .map(
+            category => `
+
+              <span class="card-category">
+
+                ${escapeHTML(category)}
+
+              </span>
+
+            `
+          )
+          .join("");
+
+
       const salary =
         clean(insight.salary);
 
 
-      const categoryHTML =
-        categories.map(
-          category => `
-
-            <span class="card-category">
-              ${escapeHTML(category)}
-            </span>
-
-          `
-        ).join("");
-
-
       card.innerHTML = `
+
 
         <div class="card-number">
 
           ${String(
             index + 1
-          ).padStart(3, "0")}
+          ).padStart(
+            3,
+            "0"
+          )}
 
         </div>
+
 
 
         <div class="card-advice">
@@ -942,10 +1014,12 @@ function displayArchive() {
         </div>
 
 
+
         <div class="card-footer">
 
 
-          <div class="card-person">
+          <div>
+
 
             <div class="card-role">
 
@@ -959,7 +1033,9 @@ function displayArchive() {
             <div class="card-experience">
 
               ${escapeHTML(
-                workingTypes.join(" / ")
+                workingTypes.join(
+                  " / "
+                )
               )}
 
               ${
@@ -998,7 +1074,9 @@ function displayArchive() {
                 : ""
             }
 
+
           </div>
+
 
 
           <div class="card-category-list">
@@ -1010,10 +1088,13 @@ function displayArchive() {
 
         </div>
 
+
       `;
 
 
-      archiveGrid.appendChild(card);
+      archiveGrid.appendChild(
+        card
+      );
 
     }
   );
@@ -1022,9 +1103,9 @@ function displayArchive() {
 
 
 
-/* =========================================
+/* -----------------------------------------
    FEATURED
-========================================= */
+----------------------------------------- */
 
 function showRandomInsight() {
 
@@ -1056,12 +1137,76 @@ function showRandomInsight() {
     ];
 
 
+  const workingTypes =
+    getWorkingTypes(insight);
+
+
   const categories =
     getCategories(insight);
 
 
-  const workingTypes =
-    getWorkingTypes(insight);
+  const metaParts =
+    [];
+
+
+  if (insight.role) {
+
+    metaParts.push(
+      insight.role
+    );
+
+  }
+
+
+  if (
+    workingTypes.length
+  ) {
+
+    metaParts.push(
+      workingTypes.join(
+        " / "
+      )
+    );
+
+  }
+
+
+  if (
+    insight.experience
+  ) {
+
+    metaParts.push(
+      `${insight.experience} in practice`
+    );
+
+  }
+
+
+  if (
+    insight.salary
+  ) {
+
+    metaParts.push(
+      insight.salary
+    );
+
+  }
+
+
+  const categoryHTML =
+    categories
+      .map(
+        category => `
+
+          <span class="featured-category">
+
+            ${escapeHTML(category)}
+
+          </span>
+
+        `
+      )
+      .join("");
 
 
   const lengthClass =
@@ -1070,38 +1215,8 @@ function showRandomInsight() {
     );
 
 
-  const categoryHTML =
-    categories.map(
-      category => `
-
-        <span class="featured-category">
-
-          ${escapeHTML(category)}
-
-        </span>
-
-      `
-    ).join("");
-
-
-  const meta = [
-
-    insight.role,
-
-    workingTypes.join(" / "),
-
-    insight.experience
-      ? `${insight.experience} in practice`
-      : "",
-
-    insight.salary
-
-  ]
-  .filter(Boolean)
-  .join(" · ");
-
-
   featuredInsight.innerHTML = `
+
 
     <p class="featured-quote ${lengthClass}">
 
@@ -1114,7 +1229,11 @@ function showRandomInsight() {
 
     <div class="featured-meta">
 
-      ${escapeHTML(meta)}
+      ${escapeHTML(
+        metaParts.join(
+          " · "
+        )
+      )}
 
     </div>
 
@@ -1125,79 +1244,16 @@ function showRandomInsight() {
 
     </div>
 
+
   `;
 
 }
 
 
 
-/* =========================================
-   UTILITIES
-========================================= */
-
-function same(a, b) {
-
-  return (
-    normaliseKey(a) ===
-    normaliseKey(b)
-  );
-
-}
-
-
-
-function titleCase(value) {
-
-  return clean(value)
-    .toLowerCase()
-    .replace(
-      /\b\w/g,
-      letter =>
-        letter.toUpperCase()
-    );
-
-}
-
-
-
-function escapeHTML(value) {
-
-  return String(
-    value ?? ""
-  )
-
-  .replace(
-    /&/g,
-    "&amp;"
-  )
-
-  .replace(
-    /</g,
-    "&lt;"
-  )
-
-  .replace(
-    />/g,
-    "&gt;"
-  )
-
-  .replace(
-    /"/g,
-    "&quot;"
-  )
-
-  .replace(
-    /'/g,
-    "&#039;"
-  );
-
-}
-
-
-
-/* =========================================
-   BUTTONS
-========================================= */
+/* -----------------------------------------
+   CLEAR
+----------------------------------------- */
 
 clearFilters.addEventListener(
   "click",
@@ -1229,9 +1285,87 @@ anotherButton.addEventListener(
 
 
 
-/* =========================================
+/* -----------------------------------------
+   HELPERS
+----------------------------------------- */
+
+function splitFallback(value) {
+
+  return clean(value)
+    .split(
+      /\s*(?:,|;|\||&|\+|\band\b)\s*/i
+    )
+    .map(item => clean(item))
+    .filter(Boolean);
+
+}
+
+
+
+function titleCase(value) {
+
+  return clean(value)
+    .toLowerCase()
+    .replace(
+      /\b\w/g,
+      letter =>
+        letter.toUpperCase()
+    );
+
+}
+
+
+
+function escapeRegExp(value) {
+
+  return String(value)
+    .replace(
+      /[.*+?^${}()|[\]\\]/g,
+      "\\$&"
+    );
+
+}
+
+
+
+function escapeHTML(value) {
+
+  return String(
+    value ?? ""
+  )
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+
+/* -----------------------------------------
    INIT
-========================================= */
+----------------------------------------- */
 
 function initialiseArchive() {
 

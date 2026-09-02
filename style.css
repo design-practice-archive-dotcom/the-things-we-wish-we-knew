@@ -1,16 +1,16 @@
 :root {
   --green: #b9e99f;
 
-  --text: #342b24;
+  --text: #53251e;
 
   --line:
-    rgba(52, 43, 36, 0.52);
+    rgba(83, 37, 30, 0.78);
 
   --cream:
     #f3f0e5;
 
   --mono:
-    "IBM Plex Mono",
+    "Courier Prime",
     "Courier New",
     Courier,
     monospace;
@@ -51,7 +51,7 @@ body {
     16px;
 
   line-height:
-    1.35;
+    1.34;
 
   font-weight:
     400;
@@ -104,7 +104,7 @@ button {
 
 
 
-/* TITLE */
+/* HERO TITLE */
 
 .hero-title {
   position:
@@ -118,16 +118,16 @@ button {
 
   font-size:
     clamp(
-      1.9rem,
+      1.95rem,
       2.35vw,
       2.9rem
     );
 
   line-height:
-    1.04;
+    1.02;
 
   letter-spacing:
-    0.01em;
+    0.015em;
 
   font-weight:
     400;
@@ -167,13 +167,7 @@ button {
     );
 
   font-weight:
-    600;
-}
-
-
-.top-nav a {
-  padding-bottom:
-    2px;
+    700;
 }
 
 
@@ -187,7 +181,7 @@ button {
 
 
 
-/* INTRO */
+/* HERO INTRO */
 
 .hero-intro {
   position:
@@ -213,8 +207,8 @@ button {
 
   font-size:
     clamp(
-      0.92rem,
-      1.02vw,
+      0.94rem,
+      1.03vw,
       1.12rem
     );
 
@@ -231,7 +225,7 @@ button {
 
 .hero-question {
   font-weight:
-    600;
+    700;
 }
 
 
@@ -245,9 +239,6 @@ button {
   justify-content:
     space-between;
 
-  align-items:
-    center;
-
   gap:
     2rem;
 
@@ -259,7 +250,7 @@ button {
     );
 
   font-weight:
-    600;
+    700;
 }
 
 
@@ -274,15 +265,15 @@ button {
 
 
 /* =========================================
-   SMALL SECTION LABELS
+   LABELS
 ========================================= */
 
 .eyebrow {
   font-size:
     clamp(
-      0.66rem,
-      0.68vw,
-      0.78rem
+      0.68rem,
+      0.7vw,
+      0.8rem
     );
 
   font-weight:
@@ -292,7 +283,7 @@ button {
     1.1;
 
   letter-spacing:
-    0.015em;
+    0;
 }
 
 
@@ -331,9 +322,6 @@ button {
 }
 
 
-
-/* THE ADVICE IS THE MAIN VOICE */
-
 .featured-quote {
   max-width:
     1120px;
@@ -344,15 +332,15 @@ button {
   font-size:
     clamp(
       1.55rem,
-      2vw,
-      2.35rem
+      1.95vw,
+      2.3rem
     );
 
   line-height:
-    1.16;
+    1.2;
 
   letter-spacing:
-    -0.015em;
+    0.005em;
 
   font-weight:
     400;
@@ -363,12 +351,12 @@ button {
   font-size:
     clamp(
       1.28rem,
-      1.65vw,
+      1.62vw,
       1.9rem
     );
 
   line-height:
-    1.2;
+    1.24;
 }
 
 
@@ -376,17 +364,14 @@ button {
   font-size:
     clamp(
       1.08rem,
-      1.4vw,
+      1.38vw,
       1.55rem
     );
 
   line-height:
-    1.26;
+    1.3;
 }
 
-
-
-/* FEATURED METADATA */
 
 .featured-meta {
   margin-top:
@@ -394,16 +379,16 @@ button {
 
   font-size:
     clamp(
-      0.68rem,
-      0.71vw,
-      0.81rem
+      0.7rem,
+      0.72vw,
+      0.82rem
     );
 
   line-height:
     1.4;
 
   font-weight:
-    500;
+    400;
 }
 
 
@@ -424,24 +409,21 @@ button {
 
 .featured-category {
   font-size:
-    0.64rem;
+    0.66rem;
 
   font-weight:
     700;
 
   text-transform:
-    uppercase;
+    lowercase;
 }
 
 
 .featured-category::before {
   content:
-    "[■] ";
+    "[•] ";
 }
 
-
-
-/* ANOTHER BUTTON */
 
 .plain-button {
   margin-top:
@@ -461,8 +443,8 @@ button {
 
   font-size:
     clamp(
-      0.65rem,
-      0.68vw,
+      0.66rem,
+      0.69vw,
       0.78rem
     );
 
@@ -514,7 +496,8 @@ button {
     grid;
 
   grid-template-columns:
-    1fr 1fr;
+    1fr
+    1fr;
 
   gap:
     10vw;
@@ -554,8 +537,8 @@ button {
 
   font-size:
     clamp(
-      0.7rem,
-      0.73vw,
+      0.71rem,
+      0.74vw,
       0.84rem
     );
 
@@ -573,9 +556,6 @@ button {
 .filter::before {
   content:
     "[ ] ";
-
-  font-weight:
-    500;
 }
 
 
@@ -588,9 +568,6 @@ button {
 }
 
 
-
-/* ACTIVE FILTER */
-
 .filter.active {
   font-weight:
     700;
@@ -599,10 +576,7 @@ button {
 
 .filter.active::before {
   content:
-    "[■] ";
-
-  font-weight:
-    700;
+    "[•] ";
 }
 
 
@@ -611,7 +585,7 @@ button {
     6px;
 
   opacity:
-    0.48;
+    0.5;
 
   font-weight:
     400;
@@ -626,7 +600,7 @@ button {
 
 
 /* =========================================
-   ARCHIVE TOP LINE
+   ARCHIVE TOPLINE
 ========================================= */
 
 .archive-topline {
@@ -649,13 +623,13 @@ button {
     space-between;
 
   font-size:
-    0.66rem;
+    0.67rem;
 }
 
 
 .archive-count {
   font-weight:
-    600;
+    700;
 }
 
 
@@ -673,7 +647,7 @@ button {
     pointer;
 
   font-size:
-    0.64rem;
+    0.65rem;
 
   font-weight:
     400;
@@ -710,12 +684,6 @@ button {
       minmax(0, 1fr)
     );
 
-  /*
-     IMPORTANT:
-     this gradient belongs to the WHOLE grid,
-     not to each individual box.
-  */
-
   background:
     linear-gradient(
       90deg,
@@ -724,22 +692,22 @@ button {
         185,
         233,
         159,
-        0.16
+        0.20
       ) 0%,
 
       rgba(
-        209,
-        235,
+        210,
+        236,
         181,
-        0.42
-      ) 28%,
+        0.43
+      ) 30%,
 
       rgba(
         234,
         239,
         207,
-        0.72
-      ) 59%,
+        0.70
+      ) 61%,
 
       rgba(
         243,
@@ -761,7 +729,7 @@ button {
 
 
 /* =========================================
-   INDIVIDUAL CARD
+   CARD
 ========================================= */
 
 .insight-card {
@@ -769,18 +737,14 @@ button {
     relative;
 
   min-height:
-    320px;
-
-  padding:
-    14px
-    14px
-    12px;
+    390px;
 
   display:
-    flex;
+    grid;
 
-  flex-direction:
-    column;
+  grid-template-rows:
+    1fr
+    auto;
 
   background:
     transparent;
@@ -803,43 +767,59 @@ button {
     absolute;
 
   top:
-    11px;
+    18px;
 
   right:
-    13px;
+    20px;
+
+  z-index:
+    2;
 
   font-size:
-    0.63rem;
+    clamp(
+      0.9rem,
+      1vw,
+      1.1rem
+    );
 
   font-weight:
-    600;
+    400;
 }
 
 
 
-/* ADVICE */
+/* ADVICE AREA */
+
+.card-advice-area {
+  min-height:
+    300px;
+
+  padding:
+    60px
+    42px
+    45px;
+}
+
 
 .card-advice {
   width:
-    82%;
+    92%;
 
   margin:
-    34px
-    0
-    38px;
+    0;
 
   font-size:
     clamp(
-      1rem,
-      1.08vw,
-      1.22rem
+      1.24rem,
+      1.4vw,
+      1.58rem
     );
 
   line-height:
-    1.25;
+    1.32;
 
   letter-spacing:
-    -0.012em;
+    0.015em;
 
   font-weight:
     400;
@@ -850,134 +830,144 @@ button {
 
 
 
-/* =========================================
-   LONG ADVICE
-========================================= */
-
-.insight-card.long {
-  min-height:
-    365px;
-}
-
+/* LONG TEXT */
 
 .insight-card.long
 .card-advice {
   width:
-    86%;
+    94%;
 
   font-size:
     clamp(
-      0.88rem,
-      0.95vw,
-      1.06rem
+      1.05rem,
+      1.16vw,
+      1.3rem
     );
 
   line-height:
-    1.3;
-}
-
-
-.insight-card.very-long {
-  min-height:
-    425px;
+    1.36;
 }
 
 
 .insight-card.very-long
 .card-advice {
   width:
-    91%;
+    96%;
 
   font-size:
     clamp(
-      0.8rem,
-      0.86vw,
-      0.96rem
+      0.88rem,
+      0.98vw,
+      1.08rem
     );
 
   line-height:
-    1.35;
+    1.42;
 }
 
 
 
 /* =========================================
-   CARD FOOTER
+   INFO BOX
 ========================================= */
 
-.card-footer {
-  margin-top:
-    auto;
-
-  padding-top:
-    11px;
-
-  border-top:
-    1px solid
-    var(--line);
+.card-info {
+  min-height:
+    145px;
 
   display:
     grid;
 
   grid-template-columns:
-    1.35fr
-    0.65fr;
+    minmax(0, 3fr)
+    minmax(150px, 1fr);
 
-  gap:
-    12px;
+  border-top:
+    1px solid
+    var(--line);
 }
 
 
 
-/* ROLE = STRONG */
+/* LEFT META COLUMN */
+
+.card-meta {
+  padding:
+    18px
+    22px
+    20px;
+
+  border-right:
+    1px solid
+    var(--line);
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  justify-content:
+    flex-start;
+}
+
 
 .card-role {
+  margin:
+    0 0 4px;
+
   font-size:
-    0.69rem;
+    clamp(
+      0.95rem,
+      1vw,
+      1.1rem
+    );
+
+  line-height:
+    1.2;
 
   font-weight:
     700;
-
-  line-height:
-    1.3;
 }
 
 
-
-/* SECONDARY INFO = MEDIUM */
-
+.card-working,
 .card-experience,
 .card-salary {
+  margin:
+    0;
+
   font-size:
-    0.62rem;
+    clamp(
+      0.82rem,
+      0.88vw,
+      0.98rem
+    );
 
   line-height:
-    1.4;
+    1.28;
 
   font-weight:
-    500;
-}
-
-
-.card-experience {
-  margin-top:
-    3px;
+    400;
 }
 
 
 .card-salary {
   margin-top:
-    4px;
-
-  font-weight:
-    600;
+    2px;
 }
 
 
 
-/* CATEGORIES */
+/* RIGHT CATEGORY COLUMN */
 
 .card-category-list {
+  padding:
+    18px
+    18px
+    20px
+    24px;
+
   display:
     flex;
 
@@ -988,28 +978,32 @@ button {
     flex-start;
 
   gap:
-    3px;
+    13px;
 }
 
 
 .card-category {
   font-size:
-    0.6rem;
+    clamp(
+      0.83rem,
+      0.9vw,
+      1rem
+    );
 
   line-height:
-    1.25;
+    1.2;
 
   font-weight:
     700;
 
   text-transform:
-    uppercase;
+    lowercase;
 }
 
 
 .card-category::before {
   content:
-    "[■] ";
+    "[•] ";
 }
 
 
@@ -1060,10 +1054,10 @@ button {
     400;
 
   line-height:
-    1.04;
+    1.05;
 
   letter-spacing:
-    -0.025em;
+    0.005em;
 }
 
 
@@ -1076,13 +1070,13 @@ button {
 
   font-size:
     clamp(
-      0.88rem,
-      0.95vw,
-      1.05rem
+      0.9rem,
+      0.96vw,
+      1.06rem
     );
 
   line-height:
-    1.38;
+    1.4;
 
   font-weight:
     400;
@@ -1093,11 +1087,8 @@ button {
   margin-top:
     1.9rem !important;
 
-  font-size:
-    0.76rem !important;
-
   font-weight:
-    600 !important;
+    700 !important;
 }
 
 
@@ -1119,8 +1110,8 @@ button {
 .contribute-action a {
   font-size:
     clamp(
-      0.85rem,
-      0.9vw,
+      0.86rem,
+      0.91vw,
       1rem
     );
 
@@ -1169,13 +1160,13 @@ button {
 
   font-size:
     clamp(
-      0.88rem,
-      0.95vw,
-      1.05rem
+      0.9rem,
+      0.96vw,
+      1.06rem
     );
 
   line-height:
-    1.38;
+    1.4;
 
   font-weight:
     400;
@@ -1194,7 +1185,7 @@ button {
     1.32 !important;
 
   font-weight:
-    500 !important;
+    400 !important;
 }
 
 
@@ -1234,10 +1225,7 @@ button {
     var(--line);
 
   font-size:
-    0.9rem;
-
-  font-weight:
-    500;
+    0.95rem;
 }
 
 
@@ -1268,10 +1256,10 @@ footer {
     var(--line);
 
   font-size:
-    0.66rem;
+    0.67rem;
 
   font-weight:
-    600;
+    700;
 }
 
 
@@ -1326,6 +1314,21 @@ footer a:hover {
         2,
         minmax(0, 1fr)
       );
+  }
+
+
+  .card-advice-area {
+    padding:
+      55px
+      30px
+      40px;
+  }
+
+
+  .card-info {
+    grid-template-columns:
+      minmax(0, 2fr)
+      minmax(135px, 1fr);
   }
 
 
@@ -1466,13 +1469,7 @@ footer a:hover {
       1.24rem;
 
     line-height:
-      1.28;
-  }
-
-
-  .featured-meta {
-    font-size:
-      0.72rem;
+      1.3;
   }
 
 
@@ -1516,16 +1513,11 @@ footer a:hover {
 
 
 
-  /* MOBILE GRID */
+  /* ONE COLUMN */
 
   .archive-grid {
     grid-template-columns:
       1fr;
-
-    /*
-       Because there is only one column,
-       the gradient becomes vertical.
-    */
 
     background:
       linear-gradient(
@@ -1535,14 +1527,14 @@ footer a:hover {
           185,
           233,
           159,
-          0.16
+          0.20
         ) 0%,
 
         rgba(
           234,
           239,
           207,
-          0.72
+          0.70
         ) 62%,
 
         rgba(
@@ -1555,14 +1547,20 @@ footer a:hover {
   }
 
 
-  .insight-card,
-  .insight-card.long,
-  .insight-card.very-long {
+  .insight-card {
     min-height:
       auto;
+  }
+
+
+  .card-advice-area {
+    min-height:
+      260px;
 
     padding:
-      16px;
+      58px
+      22px
+      38px;
   }
 
 
@@ -1572,35 +1570,58 @@ footer a:hover {
   .insight-card.very-long
   .card-advice {
     width:
-      92%;
-
-    min-height:
-      155px;
+      94%;
 
     font-size:
-      1.06rem;
+      1.08rem;
 
     line-height:
-      1.3;
+      1.34;
+  }
+
+
+  .card-info {
+    min-height:
+      135px;
+
+    grid-template-columns:
+      2fr
+      1fr;
+  }
+
+
+  .card-meta {
+    padding:
+      16px
+      15px
+      18px;
+  }
+
+
+  .card-category-list {
+    padding:
+      16px
+      12px
+      18px
+      15px;
+
+    gap:
+      10px;
   }
 
 
   .card-role {
     font-size:
-      0.72rem;
+      0.88rem;
   }
 
 
+  .card-working,
   .card-experience,
-  .card-salary {
-    font-size:
-      0.66rem;
-  }
-
-
+  .card-salary,
   .card-category {
     font-size:
-      0.64rem;
+      0.76rem;
   }
 
 

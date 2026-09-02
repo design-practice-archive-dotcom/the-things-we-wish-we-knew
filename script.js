@@ -2,113 +2,847 @@ const DATA_URL =
   "https://script.google.com/macros/s/AKfycbxfHNB1tTeQVdKz5e3aZZrM1cCAIk9lKNYygpDoPFPPP4OnbuRQ7oL410Mv9SeZd-hUHg/exec";
 
 
-let insights = [];
+let insights =
+  [];
 
-let selectedCategory = "ALL";
-let selectedWorkingAs = "ALL";
 
+let selectedCategory =
+  "ALL";
+
+
+let selectedWorkingAs =
+  "ALL";
+
+
+
+/* =========================================
+   DOM
+========================================= */
 
 const archiveGrid =
-  document.getElementById("archive-grid");
+  document.getElementById(
+    "archive-grid"
+  );
+
 
 const insightCount =
-  document.getElementById("insight-count");
+  document.getElementById(
+    "insight-count"
+  );
+
 
 const featuredInsight =
-  document.getElementById("featured-insight");
+  document.getElementById(
+    "featured-insight"
+  );
+
 
 const anotherButton =
-  document.getElementById("another-button");
+  document.getElementById(
+    "another-button"
+  );
+
 
 const categoryFilters =
-  document.getElementById("category-filters");
+  document.getElementById(
+    "category-filters"
+  );
+
 
 const workingFilters =
-  document.getElementById("working-filters");
+  document.getElementById(
+    "working-filters"
+  );
+
 
 const workingFilterArea =
-  document.getElementById("working-filter-area");
+  document.getElementById(
+    "working-filter-area"
+  );
+
 
 const clearFilters =
-  document.getElementById("clear-filters");
+  document.getElementById(
+    "clear-filters"
+  );
 
 
 
-/* -----------------------------------------
+/* =========================================
    LOAD DATA
------------------------------------------ */
+========================================= */
 
-function loadInsights() {
+async function loadInsights() {
 
-  const callbackName =
-    "archiveCallback_" + Date.now();
-
-
-  const script =
-    document.createElement("script");
+  showLoadingState();
 
 
-  window[callbackName] =
-    function(data) {
+  /*
+     TRY 1:
+     normal fetch
+  */
 
-      delete window[callbackName];
+  try {
 
-      script.remove();
+    const response =
+      await fetch(
+        DATA_URL +
+        "?t=" +
+        Date.now(),
+        {
+          method:
+            "GET",
+
+          cache:
+            "no-store"
+        }
+      );
 
 
-      if (!Array.isArray(data)) {
+    if (!response.ok) {
 
-        showError();
+      throw new Error(
+        "HTTP " +
+        response.status
+      );
 
-        return;
+    }
+
+
+    const text =
+      await response.text();
+
+
+    const parsed =
+      parseResponseText(
+        text
+      );
+
+
+    const rows =
+      extractArray(
+        parsed
+      );
+
+
+    if (rows) {
+
+      useLoadedData(
+        rows
+      );
+
+      return;
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.warn(
+      "Normal fetch failed:",
+      error
+    );
+
+  }
+
+
+
+  /*
+     TRY 2:
+     JSONP fallback
+  */
+
+  try {
+
+    const rows =
+      await loadWithJSONP();
+
+
+    if (rows) {
+
+      useLoadedData(
+        rows
+      );
+
+      return;
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "JSONP failed:",
+      error
+    );
+
+  }
+
+
+
+  showError();
+
+}
+
+
+
+/* =========================================
+   LOADING STATE
+========================================= */
+
+function showLoadingState() {
+
+  if (
+    featuredInsight
+  ) {
+
+    featuredInsight.innerHTML = `
+
+      <p class="featured-quote">
+        Loading archive...
+      </p>
+
+    `;
+
+  }
+
+
+  if (
+    archiveGrid
+  ) {
+
+    archiveGrid.innerHTML =
+      "";
+
+  }
+
+
+  if (
+    insightCount
+  ) {
+
+    insightCount.textContent =
+      "0";
+
+  }
+
+}
+
+
+
+/* =========================================
+   PARSE FETCH RESPONSE
+========================================= */
+
+function parseResponseText(
+  text
+) {
+
+  const trimmed =
+    clean(
+      text
+    );
+
+
+  if (!trimmed) {
+
+    return null;
+
+  }
+
+
+  /*
+     Normal JSON
+  */
+
+  try {
+
+    return JSON.parse(
+      trimmed
+    );
+
+  }
+
+  catch (error) {
+
+    /*
+       Continue below.
+    */
+
+  }
+
+
+
+  /*
+     Sometimes Apps Script returns
+     callbackName([...])
+  */
+
+  const jsonpMatch =
+    trimmed.match(
+      /^[^(]+\(([\s\S]*)\)\s*;?$/
+    );
+
+
+  if (
+    jsonpMatch &&
+    jsonpMatch[1]
+  ) {
+
+    try {
+
+      return JSON.parse(
+        jsonpMatch[1]
+      );
+
+    }
+
+    catch (error) {
+
+      return null;
+
+    }
+
+  }
+
+
+  return null;
+
+}
+
+
+
+/* =========================================
+   FIND THE ARRAY
+========================================= */
+
+function extractArray(
+  value
+) {
+
+  if (
+    Array.isArray(value)
+  ) {
+
+    return value;
+
+  }
+
+
+  if (
+    !value ||
+    typeof value !== "object"
+  ) {
+
+    return null;
+
+  }
+
+
+  const possibleKeys = [
+
+    "data",
+
+    "insights",
+
+    "rows",
+
+    "results",
+
+    "items"
+
+  ];
+
+
+  for (
+    const property
+    of possibleKeys
+  ) {
+
+    if (
+      Array.isArray(
+        value[property]
+      )
+    ) {
+
+      return value[
+        property
+      ];
+
+    }
+
+  }
+
+
+  return null;
+
+}
+
+
+
+/* =========================================
+   JSONP
+========================================= */
+
+function loadWithJSONP() {
+
+  return new Promise(
+    (
+      resolve,
+      reject
+    ) => {
+
+
+      const callbackName =
+        "archiveCallback_" +
+        Date.now() +
+        "_" +
+        Math.floor(
+          Math.random() *
+          100000
+        );
+
+
+      const script =
+        document.createElement(
+          "script"
+        );
+
+
+      let finished =
+        false;
+
+
+
+      function cleanup() {
+
+        if (
+          window[
+            callbackName
+          ]
+        ) {
+
+          delete window[
+            callbackName
+          ];
+
+        }
+
+
+        if (
+          script.parentNode
+        ) {
+
+          script.remove();
+
+        }
 
       }
 
 
-      insights =
-        data.filter(
-          insight =>
-            insight &&
-            clean(insight.advice)
+
+      const timeout =
+        setTimeout(
+          () => {
+
+            if (
+              finished
+            ) {
+
+              return;
+
+            }
+
+
+            finished =
+              true;
+
+
+            cleanup();
+
+
+            reject(
+              new Error(
+                "JSONP timed out."
+              )
+            );
+
+          },
+
+          10000
         );
 
 
-      initialiseArchive();
 
-    };
+      window[
+        callbackName
+      ] =
+        function(data) {
 
+          if (
+            finished
+          ) {
 
-  script.src =
-    DATA_URL +
-    "?callback=" +
-    callbackName +
-    "&t=" +
-    Date.now();
+            return;
 
-
-  script.onerror =
-    function() {
-
-      delete window[callbackName];
-
-      script.remove();
-
-      showError();
-
-    };
+          }
 
 
-  document.body.appendChild(
-    script
+          finished =
+            true;
+
+
+          clearTimeout(
+            timeout
+          );
+
+
+          cleanup();
+
+
+          const rows =
+            extractArray(
+              data
+            );
+
+
+          if (
+            !rows
+          ) {
+
+            reject(
+              new Error(
+                "Apps Script response did not contain an array."
+              )
+            );
+
+            return;
+
+          }
+
+
+          resolve(
+            rows
+          );
+
+        };
+
+
+
+      script.onerror =
+        function() {
+
+          if (
+            finished
+          ) {
+
+            return;
+
+          }
+
+
+          finished =
+            true;
+
+
+          clearTimeout(
+            timeout
+          );
+
+
+          cleanup();
+
+
+          reject(
+            new Error(
+              "JSONP script could not be loaded."
+            )
+          );
+
+        };
+
+
+
+      const separator =
+        DATA_URL.includes("?")
+          ? "&"
+          : "?";
+
+
+      script.src =
+        DATA_URL +
+        separator +
+        "callback=" +
+        encodeURIComponent(
+          callbackName
+        ) +
+        "&t=" +
+        Date.now();
+
+
+      document.body.appendChild(
+        script
+      );
+
+    }
   );
 
 }
 
 
 
+/* =========================================
+   USE DATA
+========================================= */
+
+function useLoadedData(
+  data
+) {
+
+  insights =
+    data
+
+      .map(
+        normalizeInsight
+      )
+
+      .filter(
+        insight =>
+          insight &&
+          clean(
+            insight.advice
+          )
+      );
+
+
+  initialiseArchive();
+
+}
+
+
+
+/* =========================================
+   NORMALIZE COLUMN NAMES
+========================================= */
+
+function normalizeInsight(
+  raw
+) {
+
+  if (
+    !raw ||
+    typeof raw !== "object"
+  ) {
+
+    return null;
+
+  }
+
+
+  return {
+
+    id:
+      firstValue(
+        raw,
+        [
+          "id",
+          "ID",
+          "Id",
+          "number",
+          "Number"
+        ]
+      ),
+
+
+    role:
+      firstValue(
+        raw,
+        [
+          "role",
+          "Role",
+          "job",
+          "Job",
+          "jobTitle",
+          "Job Title",
+          "What do you do?"
+        ]
+      ),
+
+
+    workingAs:
+      firstValue(
+        raw,
+        [
+          "workingAs",
+          "working as",
+          "Working As",
+          "employment",
+          "Employment",
+          "How do you currently work?"
+        ]
+      ),
+
+
+    experience:
+      firstValue(
+        raw,
+        [
+          "experience",
+          "Experience",
+          "years",
+          "Years",
+          "How long have you been working in or around design?"
+        ]
+      ),
+
+
+    category:
+      firstValue(
+        raw,
+        [
+          "category",
+          "Category",
+          "topic",
+          "Topic",
+          "topics",
+          "Topics",
+          "What is it about?"
+        ]
+      ),
+
+
+    advice:
+      firstValue(
+        raw,
+        [
+          "advice",
+          "Advice",
+          "insight",
+          "Insight",
+          "What is your insight?"
+        ]
+      ),
+
+
+    salary:
+      firstValue(
+        raw,
+        [
+          "salary",
+          "Salary",
+          "income",
+          "Income"
+        ]
+      )
+
+  };
+
+}
+
+
+
+/* =========================================
+   GET FIRST MATCHING PROPERTY
+========================================= */
+
+function firstValue(
+  object,
+  names
+) {
+
+  for (
+    const name
+    of names
+  ) {
+
+    if (
+      Object.prototype
+        .hasOwnProperty
+        .call(
+          object,
+          name
+        )
+    ) {
+
+      const value =
+        object[
+          name
+        ];
+
+
+      if (
+        value !== null &&
+        value !== undefined &&
+        clean(value) !== ""
+      ) {
+
+        return clean(
+          value
+        );
+
+      }
+
+    }
+
+  }
+
+
+  /*
+     Second pass:
+     case-insensitive matching.
+  */
+
+  const keys =
+    Object.keys(
+      object
+    );
+
+
+  for (
+    const wanted
+    of names
+  ) {
+
+    const matchingKey =
+      keys.find(
+        item =>
+          key(item) ===
+          key(wanted)
+      );
+
+
+    if (
+      matchingKey
+    ) {
+
+      return clean(
+        object[
+          matchingKey
+        ]
+      );
+
+    }
+
+  }
+
+
+  return "";
+
+}
+
+
+
+/* =========================================
+   ERROR
+========================================= */
+
 function showError() {
 
-  if (archiveGrid) {
+  if (
+    archiveGrid
+  ) {
 
     archiveGrid.innerHTML = `
 
@@ -121,7 +855,9 @@ function showError() {
   }
 
 
-  if (insightCount) {
+  if (
+    insightCount
+  ) {
 
     insightCount.textContent =
       "0";
@@ -129,7 +865,9 @@ function showError() {
   }
 
 
-  if (featuredInsight) {
+  if (
+    featuredInsight
+  ) {
 
     featuredInsight.innerHTML = `
 
@@ -145,11 +883,13 @@ function showError() {
 
 
 
-/* -----------------------------------------
-   CLEAN
------------------------------------------ */
+/* =========================================
+   BASIC CLEANING
+========================================= */
 
-function clean(value) {
+function clean(
+  value
+) {
 
   if (
     value === null ||
@@ -161,93 +901,154 @@ function clean(value) {
   }
 
 
-  return String(value).trim();
+  if (
+    Array.isArray(
+      value
+    )
+  ) {
+
+    return value
+      .map(clean)
+      .filter(Boolean)
+      .join(", ");
+
+  }
+
+
+  return String(
+    value
+  ).trim();
 
 }
 
 
 
-function key(value) {
+function key(
+  value
+) {
 
-  return clean(value)
+  return clean(
+    value
+  )
+
     .toLowerCase()
-    .replace(/\s+/g, " ");
+
+    .replace(
+      /\s+/g,
+      " "
+    );
 
 }
 
 
 
-function same(a, b) {
+function same(
+  first,
+  second
+) {
 
-  return key(a) === key(b);
+  return (
+    key(first) ===
+    key(second)
+  );
 
 }
 
 
 
-/* -----------------------------------------
-   CATEGORIES
------------------------------------------ */
+/* =========================================
+   TOPIC DEFINITIONS
+========================================= */
 
 const categoryDefinitions = [
 
   {
-    label: "Career",
+    label:
+      "Career",
+
     terms: [
-      "career"
+      "career",
+      "careers"
     ]
   },
 
+
   {
-    label: "Money",
+    label:
+      "Money",
+
     terms: [
       "money",
       "salary",
+      "salaries",
+      "rate",
       "rates",
-      "rate"
+      "income",
+      "pricing",
+      "fee",
+      "fees"
     ]
   },
 
+
   {
-    label: "Clients",
+    label:
+      "Clients",
+
     terms: [
       "client",
       "clients"
     ]
   },
 
+
   {
-    label: "Freelance",
+    label:
+      "Freelance",
+
     terms: [
       "freelance",
       "freelancing"
     ]
   },
 
+
   {
-    label: "Making",
+    label:
+      "Making",
+
     terms: [
       "making"
     ]
   },
 
+
   {
-    label: "Collaboration",
+    label:
+      "Collaboration",
+
     terms: [
       "collaboration",
-      "collaborating"
+      "collaborating",
+      "collaborative"
     ]
   },
 
+
   {
-    label: "Education",
+    label:
+      "Education",
+
     terms: [
       "education"
     ]
   },
 
+
   {
-    label: "Other",
+    label:
+      "Other",
+
     terms: [
       "other"
     ]
@@ -257,7 +1058,13 @@ const categoryDefinitions = [
 
 
 
-function getCategories(insight) {
+/* =========================================
+   GET TOPICS
+========================================= */
+
+function getCategories(
+  insight
+) {
 
   const raw =
     key(
@@ -276,51 +1083,50 @@ function getCategories(insight) {
     [];
 
 
-  categoryDefinitions.forEach(
-    definition => {
+  categoryDefinitions
+    .forEach(
+      definition => {
 
 
-      const found =
-        definition.terms.some(
-          term => {
-
-
-            const regex =
-              new RegExp(
-                `(^|[\\s,;|/&+])${escapeRegExp(term)}(?=$|[\\s,;|/&+])`,
-                "i"
-              );
-
-
-            return regex.test(
-              raw
+        const found =
+          definition.terms
+            .some(
+              term =>
+                containsTerm(
+                  raw,
+                  term
+                )
             );
 
-          }
-        );
 
+        if (
+          found
+        ) {
 
-      if (found) {
+          result.push(
+            definition.label
+          );
 
-        result.push(
-          definition.label
-        );
+        }
 
       }
-
-    }
-  );
+    );
 
 
-  if (!result.length) {
+  if (
+    !result.length
+  ) {
 
-    splitFallback(raw)
-      .forEach(
-        item =>
-          result.push(
-            titleCase(item)
+    splitFallback(
+      raw
+    ).forEach(
+      item =>
+        result.push(
+          titleCase(
+            item
           )
-      );
+        )
+    );
 
   }
 
@@ -333,30 +1139,38 @@ function getCategories(insight) {
 
 
 
-/* -----------------------------------------
-   WORKING TYPES
------------------------------------------ */
+/* =========================================
+   WORKING TYPE DEFINITIONS
+========================================= */
 
 const workingDefinitions = [
 
   {
-    label: "Employed",
+    label:
+      "Employed",
+
     terms: [
       "employed",
       "employee"
     ]
   },
 
+
   {
-    label: "Freelance",
+    label:
+      "Freelance",
+
     terms: [
       "freelance",
       "freelancer"
     ]
   },
 
+
   {
-    label: "Independent / Founder",
+    label:
+      "Independent / Founder",
+
     terms: [
       "independent",
       "founder",
@@ -365,24 +1179,34 @@ const workingDefinitions = [
     ]
   },
 
+
   {
-    label: "Academic / Research",
+    label:
+      "Academic / Research",
+
     terms: [
       "academic",
+      "academia",
       "research",
       "researcher"
     ]
   },
 
+
   {
-    label: "Student",
+    label:
+      "Student",
+
     terms: [
       "student"
     ]
   },
 
+
   {
-    label: "Other",
+    label:
+      "Other",
+
     terms: [
       "other"
     ]
@@ -391,6 +1215,10 @@ const workingDefinitions = [
 ];
 
 
+
+/* =========================================
+   GET WORKING TYPES
+========================================= */
 
 function getWorkingTypes(
   insight
@@ -413,40 +1241,49 @@ function getWorkingTypes(
     [];
 
 
-  workingDefinitions.forEach(
-    definition => {
+  workingDefinitions
+    .forEach(
+      definition => {
 
 
-      const found =
-        definition.terms.some(
-          term =>
-            raw.includes(
-              term
-            )
-        );
+        const found =
+          definition.terms
+            .some(
+              term =>
+                raw.includes(
+                  term
+                )
+            );
 
 
-      if (found) {
+        if (
+          found
+        ) {
 
-        result.push(
-          definition.label
-        );
+          result.push(
+            definition.label
+          );
+
+        }
 
       }
-
-    }
-  );
+    );
 
 
-  if (!result.length) {
+  if (
+    !result.length
+  ) {
 
-    splitFallback(raw)
-      .forEach(
-        item =>
-          result.push(
-            titleCase(item)
+    splitFallback(
+      raw
+    ).forEach(
+      item =>
+        result.push(
+          titleCase(
+            item
           )
-      );
+        )
+    );
 
   }
 
@@ -459,11 +1296,37 @@ function getWorkingTypes(
 
 
 
-/* -----------------------------------------
-   UNIQUE
------------------------------------------ */
+/* =========================================
+   TERM MATCHING
+========================================= */
 
-function unique(values) {
+function containsTerm(
+  text,
+  term
+) {
+
+  const expression =
+    new RegExp(
+      `(^|[\\s,;|/&+])${escapeRegExp(term)}(?=$|[\\s,;|/&+])`,
+      "i"
+    );
+
+
+  return expression.test(
+    text
+  );
+
+}
+
+
+
+/* =========================================
+   UNIQUE VALUES
+========================================= */
+
+function unique(
+  values
+) {
 
   const used =
     new Set();
@@ -477,26 +1340,32 @@ function unique(values) {
     value => {
 
 
-      const cleanValue =
-        clean(value);
+      const cleaned =
+        clean(
+          value
+        );
 
 
-      const cleanKey =
-        key(cleanValue);
+      const normalized =
+        key(
+          cleaned
+        );
 
 
       if (
-        cleanValue &&
-        !used.has(cleanKey)
+        cleaned &&
+        !used.has(
+          normalized
+        )
       ) {
 
         used.add(
-          cleanKey
+          normalized
         );
 
 
         result.push(
-          cleanValue
+          cleaned
         );
 
       }
@@ -511,9 +1380,9 @@ function unique(values) {
 
 
 
-/* -----------------------------------------
-   AVAILABLE FILTERS
------------------------------------------ */
+/* =========================================
+   AVAILABLE FILTER VALUES
+========================================= */
 
 function getAvailableCategories() {
 
@@ -561,9 +1430,9 @@ function getAvailableWorkingTypes() {
         insight
       )
         .forEach(
-          type =>
+          workingType =>
             values.push(
-              type
+              workingType
             )
         );
 
@@ -579,9 +1448,9 @@ function getAvailableWorkingTypes() {
 
 
 
-/* -----------------------------------------
-   COUNTS
------------------------------------------ */
+/* =========================================
+   FILTER COUNTS
+========================================= */
 
 function countCategory(
   category
@@ -596,19 +1465,22 @@ function countCategory(
   }
 
 
-  return insights.filter(
-    insight =>
+  return insights
+    .filter(
+      insight =>
 
-      getCategories(insight)
-        .some(
-          item =>
-            same(
-              item,
-              category
-            )
+        getCategories(
+          insight
         )
+          .some(
+            item =>
+              same(
+                item,
+                category
+              )
+          )
 
-  ).length;
+    ).length;
 
 }
 
@@ -627,31 +1499,36 @@ function countWorking(
   }
 
 
-  return insights.filter(
-    insight =>
+  return insights
+    .filter(
+      insight =>
 
-      getWorkingTypes(insight)
-        .some(
-          item =>
-            same(
-              item,
-              type
-            )
+        getWorkingTypes(
+          insight
         )
+          .some(
+            item =>
+              same(
+                item,
+                type
+              )
+          )
 
-  ).length;
+    ).length;
 
 }
 
 
 
-/* -----------------------------------------
-   CREATE FILTERS
------------------------------------------ */
+/* =========================================
+   CREATE CATEGORY FILTERS
+========================================= */
 
 function createCategoryFilters() {
 
-  if (!categoryFilters) {
+  if (
+    !categoryFilters
+  ) {
 
     return;
 
@@ -693,7 +1570,8 @@ function createCategoryFilters() {
             categoryFilters,
 
           label:
-            category.toLowerCase(),
+            category
+              .toLowerCase(),
 
           value:
             category,
@@ -715,6 +1593,10 @@ function createCategoryFilters() {
 
 
 
+/* =========================================
+   CREATE WORKING FILTERS
+========================================= */
+
 function createWorkingFilters() {
 
   if (
@@ -731,13 +1613,14 @@ function createWorkingFilters() {
     getAvailableWorkingTypes();
 
 
-  if (!types.length) {
+  if (
+    !types.length
+  ) {
 
     workingFilterArea
       .classList.add(
         "hidden"
       );
-
 
     return;
 
@@ -784,7 +1667,8 @@ function createWorkingFilters() {
           workingFilters,
 
         label:
-          type.toLowerCase(),
+          type
+            .toLowerCase(),
 
         value:
           type,
@@ -806,9 +1690,9 @@ function createWorkingFilters() {
 
 
 
-/* -----------------------------------------
+/* =========================================
    ONE FILTER BUTTON
------------------------------------------ */
+========================================= */
 
 function addFilter({
   container,
@@ -835,7 +1719,11 @@ function addFilter({
   const active =
 
     (
-      type === "category" &&
+      type ===
+      "category"
+
+      &&
+
       same(
         value,
         selectedCategory
@@ -845,7 +1733,11 @@ function addFilter({
     ||
 
     (
-      type === "working" &&
+      type ===
+      "working"
+
+      &&
+
       same(
         value,
         selectedWorkingAs
@@ -853,7 +1745,9 @@ function addFilter({
     );
 
 
-  if (active) {
+  if (
+    active
+  ) {
 
     button.classList.add(
       "active"
@@ -881,7 +1775,8 @@ function addFilter({
 
 
       if (
-        type === "category"
+        type ===
+        "category"
       ) {
 
         selectedCategory =
@@ -891,7 +1786,8 @@ function addFilter({
 
 
       if (
-        type === "working"
+        type ===
+        "working"
       ) {
 
         selectedWorkingAs =
@@ -920,9 +1816,9 @@ function addFilter({
 
 
 
-/* -----------------------------------------
+/* =========================================
    FILTER INSIGHTS
------------------------------------------ */
+========================================= */
 
 function getFilteredInsights() {
 
@@ -986,9 +1882,9 @@ function getFilteredInsights() {
 
 
 
-/* -----------------------------------------
-   LONG TEXT
------------------------------------------ */
+/* =========================================
+   LONG TEXT CLASS
+========================================= */
 
 function getLengthClass(
   advice
@@ -1024,13 +1920,64 @@ function getLengthClass(
 
 
 
-/* -----------------------------------------
+/* =========================================
+   FORMAT CARD ID
+========================================= */
+
+function formatId(
+  insight,
+  fallbackIndex
+) {
+
+  const raw =
+    clean(
+      insight.id
+    );
+
+
+  if (
+    raw
+  ) {
+
+    if (
+      /^\d+$/.test(
+        raw
+      )
+    ) {
+
+      return raw.padStart(
+        3,
+        "0"
+      );
+
+    }
+
+
+    return raw;
+
+  }
+
+
+  return String(
+    fallbackIndex + 1
+  ).padStart(
+    3,
+    "0"
+  );
+
+}
+
+
+
+/* =========================================
    DISPLAY ARCHIVE
------------------------------------------ */
+========================================= */
 
 function displayArchive() {
 
-  if (!archiveGrid) {
+  if (
+    !archiveGrid
+  ) {
 
     return;
 
@@ -1045,7 +1992,9 @@ function displayArchive() {
     "";
 
 
-  if (insightCount) {
+  if (
+    insightCount
+  ) {
 
     insightCount.textContent =
       filtered.length;
@@ -1053,7 +2002,9 @@ function displayArchive() {
   }
 
 
-  if (!filtered.length) {
+  if (
+    !filtered.length
+  ) {
 
     archiveGrid.innerHTML = `
 
@@ -1063,14 +2014,16 @@ function displayArchive() {
 
     `;
 
-
     return;
 
   }
 
 
   filtered.forEach(
-    (insight, index) => {
+    (
+      insight,
+      index
+    ) => {
 
 
       const card =
@@ -1089,7 +2042,8 @@ function displayArchive() {
         "insight-card" +
         (
           lengthClass
-            ? ` ${lengthClass}`
+            ? " " +
+              lengthClass
             : ""
         );
 
@@ -1112,11 +2066,9 @@ function displayArchive() {
             category => `
 
               <span class="card-category">
-
                 ${escapeHTML(
                   category
                 )}
-
               </span>
 
             `
@@ -1130,85 +2082,66 @@ function displayArchive() {
         );
 
 
+      const experienceParts =
+        [];
+
+
+      if (
+        workingTypes.length
+      ) {
+
+        experienceParts.push(
+          workingTypes.join(
+            " / "
+          )
+        );
+
+      }
+
+
+      if (
+        insight.experience
+      ) {
+
+        experienceParts.push(
+          insight.experience +
+          " in practice"
+        );
+
+      }
+
+
       card.innerHTML = `
 
-
         <div class="card-number">
-
-          ${String(
-            index + 1
-          ).padStart(
-            3,
-            "0"
+          ${escapeHTML(
+            formatId(
+              insight,
+              index
+            )
           )}
-
         </div>
-
 
 
         <div class="card-advice">
-
           “${escapeHTML(
             insight.advice
           )}”
-
         </div>
-
 
 
         <div class="card-footer">
 
-
           <div>
 
-
-            <div class="card-role">
-
-              ${escapeHTML(
-                insight.role || ""
-              )}
-
-            </div>
-
-
-            <div class="card-experience">
-
-              ${escapeHTML(
-                workingTypes.join(
-                  " / "
-                )
-              )}
-
-              ${
-                workingTypes.length &&
-                insight.experience
-                  ? " · "
-                  : ""
-              }
-
-              ${escapeHTML(
-                insight.experience || ""
-              )}
-
-              ${
-                insight.experience
-                  ? " in practice"
-                  : ""
-              }
-
-            </div>
-
-
             ${
-              salary
+              insight.role
                 ? `
 
-                  <div class="card-salary">
-
+                  <div class="card-role">
                     ${escapeHTML(
-                      salary
+                      insight.role
                     )}
-
                   </div>
 
                 `
@@ -1216,19 +2149,45 @@ function displayArchive() {
             }
 
 
-          </div>
+            ${
+              experienceParts.length
+                ? `
 
+                  <div class="card-experience">
+                    ${escapeHTML(
+                      experienceParts.join(
+                        " · "
+                      )
+                    )}
+                  </div>
+
+                `
+                : ""
+            }
+
+
+            ${
+              salary
+                ? `
+
+                  <div class="card-salary">
+                    ${escapeHTML(
+                      salary
+                    )}
+                  </div>
+
+                `
+                : ""
+            }
+
+          </div>
 
 
           <div class="card-category-list">
-
             ${categoryHTML}
-
           </div>
 
-
         </div>
-
 
       `;
 
@@ -1244,13 +2203,15 @@ function displayArchive() {
 
 
 
-/* -----------------------------------------
-   FEATURED
------------------------------------------ */
+/* =========================================
+   FEATURED ADVICE
+========================================= */
 
 function showRandomInsight() {
 
-  if (!featuredInsight) {
+  if (
+    !featuredInsight
+  ) {
 
     return;
 
@@ -1261,7 +2222,9 @@ function showRandomInsight() {
     getFilteredInsights();
 
 
-  if (!available.length) {
+  if (
+    !available.length
+  ) {
 
     featuredInsight.innerHTML = `
 
@@ -1270,7 +2233,6 @@ function showRandomInsight() {
       </p>
 
     `;
-
 
     return;
 
@@ -1331,7 +2293,8 @@ function showRandomInsight() {
   ) {
 
     metaParts.push(
-      `${insight.experience} in practice`
+      insight.experience +
+      " in practice"
     );
 
   }
@@ -1354,11 +2317,9 @@ function showRandomInsight() {
         category => `
 
           <span class="featured-category">
-
             ${escapeHTML(
               category
             )}
-
           </span>
 
         `
@@ -1374,33 +2335,41 @@ function showRandomInsight() {
 
   featuredInsight.innerHTML = `
 
-
     <p class="featured-quote ${lengthClass}">
-
       “${escapeHTML(
         insight.advice
       )}”
-
     </p>
 
 
-    <div class="featured-meta">
+    ${
+      metaParts.length
+        ? `
 
-      ${escapeHTML(
-        metaParts.join(
-          " · "
-        )
-      )}
+          <div class="featured-meta">
+            ${escapeHTML(
+              metaParts.join(
+                " · "
+              )
+            )}
+          </div>
 
-    </div>
+        `
+        : ""
+    }
 
 
-    <div class="featured-categories">
+    ${
+      categories.length
+        ? `
 
-      ${categoryHTML}
+          <div class="featured-categories">
+            ${categoryHTML}
+          </div>
 
-    </div>
-
+        `
+        : ""
+    }
 
   `;
 
@@ -1408,11 +2377,13 @@ function showRandomInsight() {
 
 
 
-/* -----------------------------------------
+/* =========================================
    CLEAR FILTERS
------------------------------------------ */
+========================================= */
 
-if (clearFilters) {
+if (
+  clearFilters
+) {
 
   clearFilters.addEventListener(
     "click",
@@ -1442,11 +2413,13 @@ if (clearFilters) {
 
 
 
-/* -----------------------------------------
+/* =========================================
    ANOTHER
------------------------------------------ */
+========================================= */
 
-if (anotherButton) {
+if (
+  anotherButton
+) {
 
   anotherButton.addEventListener(
     "click",
@@ -1457,23 +2430,32 @@ if (anotherButton) {
 
 
 
-/* -----------------------------------------
+/* =========================================
    HELPERS
------------------------------------------ */
+========================================= */
 
 function splitFallback(
   value
 ) {
 
-  return clean(value)
+  return clean(
+    value
+  )
+
     .split(
       /\s*(?:,|;|\||&|\+|\band\b)\s*/i
     )
+
     .map(
       item =>
-        clean(item)
+        clean(
+          item
+        )
     )
-    .filter(Boolean);
+
+    .filter(
+      Boolean
+    );
 
 }
 
@@ -1483,12 +2465,17 @@ function titleCase(
   value
 ) {
 
-  return clean(value)
+  return clean(
+    value
+  )
+
     .toLowerCase()
+
     .replace(
       /\b\w/g,
       letter =>
-        letter.toUpperCase()
+        letter
+          .toUpperCase()
     );
 
 }
@@ -1499,11 +2486,12 @@ function escapeRegExp(
   value
 ) {
 
-  return String(value)
-    .replace(
-      /[.*+?^${}()|[\]\\]/g,
-      "\\$&"
-    );
+  return String(
+    value
+  ).replace(
+    /[.*+?^${}()|[\]\\]/g,
+    "\\$&"
+  );
 
 }
 
@@ -1546,9 +2534,9 @@ function escapeHTML(
 
 
 
-/* -----------------------------------------
+/* =========================================
    INITIALISE
------------------------------------------ */
+========================================= */
 
 function initialiseArchive() {
 
@@ -1564,8 +2552,8 @@ function initialiseArchive() {
 
 
 
-/* -----------------------------------------
+/* =========================================
    START
------------------------------------------ */
+========================================= */
 
 loadInsights();

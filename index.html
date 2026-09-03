@@ -42,20 +42,33 @@
 <body>
 
 
-  <!-- FIXED NAVIGATION -->
+  <!-- =====================================
+       FIXED / MOVING NAVIGATION
+  ====================================== -->
 
-  <nav class="top-nav">
+  <nav
+    id="moving-nav"
+    class="moving-nav"
+  >
 
     <a href="#library">
       library
     </a>
 
-    <a href="#about">
-      about
-    </a>
-
     <a href="#contribute">
       contribute
+    </a>
+
+  </nav>
+
+
+  <nav
+    id="about-nav"
+    class="about-nav"
+  >
+
+    <a href="#about">
+      about
     </a>
 
   </nav>
@@ -86,69 +99,60 @@
 
 
 
-    <!-- CAROUSEL -->
+    <!-- HERO CAROUSEL -->
 
     <div class="hero-carousel">
 
-      <div class="carousel-label">
-        from the library
-      </div>
 
+      <div class="carousel-content">
 
-      <div
-        id="carousel-stage"
-        class="carousel-stage"
-      >
-
-        <button
-          id="previous-button"
-          class="carousel-arrow carousel-arrow-left"
-          type="button"
-          aria-label="Previous advice"
-        >
-          ←
-        </button>
-
-
-        <div class="carousel-window">
-
-          <div
-            id="carousel-track"
-            class="carousel-track"
-          ></div>
-
+        <div class="carousel-label">
+          FROM THE LIBRARY
         </div>
 
 
-        <button
-          id="next-button"
-          class="carousel-arrow carousel-arrow-right"
-          type="button"
-          aria-label="Next advice"
+        <div
+          id="carousel-stage"
+          class="carousel-stage"
         >
-          →
-        </button>
-
-      </div>
 
 
-      <div class="hero-actions">
+          <button
+            id="previous-button"
+            class="carousel-arrow carousel-arrow-left"
+            type="button"
+            aria-label="Previous advice"
+          >
+            ←
+          </button>
 
-        <a
-          href="#library"
-          class="hero-button hero-button-filled"
-        >
-          library
-        </a>
 
-        <a
-          href="https://docs.google.com/forms/d/e/1FAIpQLScjiItmC0lLiyAeuG68L-sKDdghVBmpc2iqTyt22s_fOLPhBw/viewform?usp=header"
-          class="hero-button hero-button-outline"
-          target="_blank"
-          rel="noopener"
-        >
-          contribute
-        </a>
+
+          <div
+            id="carousel-window"
+            class="carousel-window"
+          >
+
+            <div
+              id="carousel-track"
+              class="carousel-track"
+            ></div>
+
+          </div>
+
+
+
+          <button
+            id="next-button"
+            class="carousel-arrow carousel-arrow-right"
+            type="button"
+            aria-label="Next advice"
+          >
+            →
+          </button>
+
+
+        </div>
 
       </div>
 
@@ -156,11 +160,11 @@
 
 
 
-    <!-- DESCRIPTION -->
+    <!-- HERO DESCRIPTION -->
 
     <p class="hero-description">
       A growing collection of advice<br>
-      from people working in design.
+      from people working in design
     </p>
 
 
@@ -183,14 +187,17 @@
 
       <div class="library-heading">
 
+
         <div>
+
           <div class="eyebrow">
-            library
+            LIBRARY
           </div>
 
           <p>
             Advice from people working in design.
           </p>
+
         </div>
 
 
@@ -198,6 +205,7 @@
           <span id="insight-count">0</span>
           entries
         </div>
+
 
       </div>
 
@@ -211,7 +219,7 @@
         <div class="filter-block">
 
           <div class="filter-heading">
-            what are they talking about?
+            WHAT ARE THEY TALKING ABOUT?
           </div>
 
           <div
@@ -229,7 +237,7 @@
         >
 
           <div class="filter-heading">
-            who is speaking?
+            WHO IS SPEAKING?
           </div>
 
           <div
@@ -279,10 +287,12 @@
       class="contribute-section"
     >
 
+
       <div class="contribute-copy">
 
+
         <div class="eyebrow">
-          contribute
+          CONTRIBUTE
         </div>
 
 
@@ -304,6 +314,7 @@
           Every contribution is anonymous.
         </p>
 
+
       </div>
 
 
@@ -321,6 +332,7 @@
 
       </div>
 
+
     </section>
 
 
@@ -334,12 +346,14 @@
       class="about-section"
     >
 
+
       <div class="eyebrow">
-        about the library
+        ABOUT THE LIBRARY
       </div>
 
 
       <div class="about-copy">
+
 
         <p class="about-credit">
           Collected from many,<br>
@@ -360,7 +374,9 @@
           This library collects some of it.
         </p>
 
+
       </div>
+
 
     </section>
 
@@ -380,6 +396,7 @@
     </a>
 
   </footer>
+
 
 
   <script src="script.js"></script>

@@ -7,18 +7,20 @@ let insights = [];
 let selectedCategory = "ALL";
 let selectedWorkingAs = "ALL";
 
+let carouselIndex = 0;
+let carouselLocked = false;
 
-const archiveGrid =
-  document.getElementById("archive-grid");
+
+
+/* =========================================
+   DOM
+========================================= */
+
+const libraryGrid =
+  document.getElementById("library-grid");
 
 const insightCount =
   document.getElementById("insight-count");
-
-const featuredInsight =
-  document.getElementById("featured-insight");
-
-const anotherButton =
-  document.getElementById("another-button");
 
 const categoryFilters =
   document.getElementById("category-filters");
@@ -32,16 +34,22 @@ const workingFilterArea =
 const clearFilters =
   document.getElementById("clear-filters");
 
+const carouselTrack =
+  document.getElementById("carousel-track");
+
+const previousButton =
+  document.getElementById("previous-button");
+
+const nextButton =
+  document.getElementById("next-button");
+
 
 
 /* =========================================
-   LOAD
+   LOAD DATA
 ========================================= */
 
 async function loadInsights() {
-
-  showLoadingState();
-
 
   try {
 
@@ -67,8 +75,10 @@ async function loadInsights() {
     const text =
       await response.text();
 
+
     const parsed =
       parseResponseText(text);
+
 
     const rows =
       extractArray(parsed);
@@ -92,7 +102,6 @@ async function loadInsights() {
     );
 
   }
-
 
 
   try {
@@ -128,28 +137,7 @@ async function loadInsights() {
 
 
 /* =========================================
-   LOADING
-========================================= */
-
-function showLoadingState() {
-
-  featuredInsight.innerHTML = `
-    <p class="featured-quote">
-      Loading archive...
-    </p>
-  `;
-
-
-  archiveGrid.innerHTML = "";
-
-  insightCount.textContent = "0";
-
-}
-
-
-
-/* =========================================
-   RESPONSE
+   PARSE
 ========================================= */
 
 function parseResponseText(text) {
@@ -176,21 +164,21 @@ function parseResponseText(text) {
   }
 
 
-  const jsonpMatch =
+  const match =
     trimmed.match(
       /^[^(]+\(([\s\S]*)\)\s*;?$/
     );
 
 
   if (
-    jsonpMatch &&
-    jsonpMatch[1]
+    match &&
+    match[1]
   ) {
 
     try {
 
       return JSON.parse(
-        jsonpMatch[1]
+        match[1]
       );
 
     }
@@ -231,7 +219,7 @@ function extractArray(value) {
   }
 
 
-  const possibleKeys = [
+  const keys = [
     "data",
     "insights",
     "rows",
@@ -242,7 +230,7 @@ function extractArray(value) {
 
   for (
     const property
-    of possibleKeys
+    of keys
   ) {
 
     if (
@@ -265,7 +253,7 @@ function extractArray(value) {
 
 
 /* =========================================
-   JSONP FALLBACK
+   JSONP
 ========================================= */
 
 function loadWithJSONP() {
@@ -333,6 +321,7 @@ function loadWithJSONP() {
             );
 
           },
+
           10000
         );
 
@@ -391,9 +380,16 @@ function loadWithJSONP() {
         };
 
 
+      const separator =
+        DATA_URL.includes("?")
+          ? "&"
+          : "?";
+
+
       script.src =
         DATA_URL +
-        "?callback=" +
+        separator +
+        "callback=" +
         encodeURIComponent(
           callbackName
         ) +
@@ -414,9 +410,6 @@ function loadWithJSONP() {
 
 /* =========================================
    NORMALISE
-
-   Timestamp/date fields are intentionally
-   NOT included.
 ========================================= */
 
 function useLoadedData(data) {
@@ -425,13 +418,13 @@ function useLoadedData(data) {
     data
       .map(normalizeInsight)
       .filter(
-        insight =>
-          insight &&
-          clean(insight.advice)
+        item =>
+          item &&
+          clean(item.advice)
       );
 
 
-  initialiseArchive();
+  initialiseLibrary();
 
 }
 
@@ -538,9 +531,11 @@ function normalizeInsight(raw) {
 
 
 
-/* =========================================
-   PROPERTY FINDER
-========================================= */
+/*
+  Important:
+  no date, timestamp, number or ID
+  is imported or displayed.
+*/
 
 function firstValue(
   object,
@@ -589,7 +584,7 @@ function firstValue(
     of names
   ) {
 
-    const matchingKey =
+    const match =
       keys.find(
         item =>
           key(item) ===
@@ -597,10 +592,10 @@ function firstValue(
       );
 
 
-    if (matchingKey) {
+    if (match) {
 
       return clean(
-        object[matchingKey]
+        object[match]
       );
 
     }
@@ -615,34 +610,7 @@ function firstValue(
 
 
 /* =========================================
-   ERROR
-========================================= */
-
-function showError() {
-
-  archiveGrid.innerHTML = `
-    <div class="empty-state">
-      The archive is temporarily unavailable.
-    </div>
-  `;
-
-
-  insightCount.textContent =
-    "0";
-
-
-  featuredInsight.innerHTML = `
-    <p class="featured-quote">
-      The archive is temporarily unavailable.
-    </p>
-  `;
-
-}
-
-
-
-/* =========================================
-   CLEAN
+   CLEANING
 ========================================= */
 
 function clean(value) {
@@ -679,10 +647,7 @@ function key(value) {
 
   return clean(value)
     .toLowerCase()
-    .replace(
-      /\s+/g,
-      " "
-    );
+    .replace(/\s+/g, " ");
 
 }
 
@@ -697,17 +662,14 @@ function same(a, b) {
 
 
 /* =========================================
-   TOPICS
+   CATEGORIES
 ========================================= */
 
 const categoryDefinitions = [
 
   {
     label: "Career",
-    terms: [
-      "career",
-      "careers"
-    ]
+    terms: ["career", "careers"]
   },
 
   {
@@ -715,22 +677,18 @@ const categoryDefinitions = [
     terms: [
       "money",
       "salary",
-      "salaries",
-      "rate",
-      "rates",
       "income",
       "pricing",
       "fee",
-      "fees"
+      "fees",
+      "rate",
+      "rates"
     ]
   },
 
   {
     label: "Clients",
-    terms: [
-      "client",
-      "clients"
-    ]
+    terms: ["client", "clients"]
   },
 
   {
@@ -743,9 +701,7 @@ const categoryDefinitions = [
 
   {
     label: "Making",
-    terms: [
-      "making"
-    ]
+    terms: ["making"]
   },
 
   {
@@ -759,16 +715,12 @@ const categoryDefinitions = [
 
   {
     label: "Education",
-    terms: [
-      "education"
-    ]
+    terms: ["education"]
   },
 
   {
     label: "Other",
-    terms: [
-      "other"
-    ]
+    terms: ["other"]
   }
 
 ];
@@ -781,7 +733,11 @@ function getCategories(insight) {
     key(insight.category);
 
 
-  if (!raw) return [];
+  if (!raw) {
+
+    return [];
+
+  }
 
 
   const result = [];
@@ -833,7 +789,7 @@ function getCategories(insight) {
 
 
 /* =========================================
-   WORK TYPE
+   WORKING TYPE
 ========================================= */
 
 const workingDefinitions = [
@@ -876,16 +832,12 @@ const workingDefinitions = [
 
   {
     label: "Student",
-    terms: [
-      "student"
-    ]
+    terms: ["student"]
   },
 
   {
     label: "Other",
-    terms: [
-      "other"
-    ]
+    terms: ["other"]
   }
 
 ];
@@ -898,7 +850,11 @@ function getWorkingTypes(insight) {
     key(insight.workingAs);
 
 
-  if (!raw) return [];
+  if (!raw) {
+
+    return [];
+
+  }
 
 
   const result = [];
@@ -934,68 +890,7 @@ function getWorkingTypes(insight) {
 
 
 /* =========================================
-   HELPERS
-========================================= */
-
-function containsTerm(
-  text,
-  term
-) {
-
-  const expression =
-    new RegExp(
-      `(^|[\\s,;|/&+])${escapeRegExp(term)}(?=$|[\\s,;|/&+])`,
-      "i"
-    );
-
-
-  return expression.test(text);
-
-}
-
-
-
-function unique(values) {
-
-  const used = new Set();
-
-  const result = [];
-
-
-  values.forEach(
-    value => {
-
-
-      const cleaned =
-        clean(value);
-
-      const normalized =
-        key(cleaned);
-
-
-      if (
-        cleaned &&
-        !used.has(normalized)
-      ) {
-
-        used.add(normalized);
-
-        result.push(cleaned);
-
-      }
-
-    }
-  );
-
-
-  return result;
-
-}
-
-
-
-/* =========================================
-   FILTER DATA
+   FILTER VALUES
 ========================================= */
 
 function getAvailableCategories() {
@@ -1045,6 +940,10 @@ function getAvailableWorkingTypes() {
 }
 
 
+
+/* =========================================
+   COUNTS
+========================================= */
 
 function countCategory(category) {
 
@@ -1101,7 +1000,7 @@ function countWorking(type) {
 
 
 /* =========================================
-   BUILD FILTERS
+   FILTERS
 ========================================= */
 
 function createCategoryFilters() {
@@ -1110,11 +1009,22 @@ function createCategoryFilters() {
 
 
   addFilter({
-    container: categoryFilters,
-    label: "all",
-    value: "ALL",
-    type: "category",
-    count: insights.length
+
+    container:
+      categoryFilters,
+
+    label:
+      "all",
+
+    value:
+      "ALL",
+
+    type:
+      "category",
+
+    count:
+      insights.length
+
   });
 
 
@@ -1123,11 +1033,22 @@ function createCategoryFilters() {
       category => {
 
         addFilter({
-          container: categoryFilters,
-          label: category.toLowerCase(),
-          value: category,
-          type: "category",
-          count: countCategory(category)
+
+          container:
+            categoryFilters,
+
+          label:
+            category.toLowerCase(),
+
+          value:
+            category,
+
+          type:
+            "category",
+
+          count:
+            countCategory(category)
+
         });
 
       }
@@ -1145,29 +1066,42 @@ function createWorkingFilters() {
 
   if (!types.length) {
 
-    workingFilterArea.classList.add(
-      "hidden"
-    );
+    workingFilterArea
+      .classList.add(
+        "hidden"
+      );
 
     return;
 
   }
 
 
-  workingFilterArea.classList.remove(
-    "hidden"
-  );
+  workingFilterArea
+    .classList.remove(
+      "hidden"
+    );
 
 
   workingFilters.innerHTML = "";
 
 
   addFilter({
-    container: workingFilters,
-    label: "all",
-    value: "ALL",
-    type: "working",
-    count: insights.length
+
+    container:
+      workingFilters,
+
+    label:
+      "all",
+
+    value:
+      "ALL",
+
+    type:
+      "working",
+
+    count:
+      insights.length
+
   });
 
 
@@ -1175,11 +1109,22 @@ function createWorkingFilters() {
     type => {
 
       addFilter({
-        container: workingFilters,
-        label: type.toLowerCase(),
-        value: type,
-        type: "working",
-        count: countWorking(type)
+
+        container:
+          workingFilters,
+
+        label:
+          type.toLowerCase(),
+
+        value:
+          type,
+
+        type:
+          "working",
+
+        count:
+          countWorking(type)
+
       });
 
     }
@@ -1203,9 +1148,12 @@ function addFilter({
     );
 
 
-  button.type = "button";
+  button.type =
+    "button";
 
-  button.className = "filter";
+
+  button.className =
+    "filter";
 
 
   const active =
@@ -1216,7 +1164,9 @@ function addFilter({
         selectedCategory
       )
     )
+
     ||
+
     (
       type === "working" &&
       same(
@@ -1239,6 +1189,7 @@ function addFilter({
     <span>
       ${escapeHTML(label)}
     </span>
+
     <span class="filter-count">
       ${count}
     </span>
@@ -1274,24 +1225,20 @@ function addFilter({
 
       createWorkingFilters();
 
-      displayArchive();
-
-      showRandomInsight();
+      displayLibrary();
 
     }
   );
 
 
-  container.appendChild(
-    button
-  );
+  container.appendChild(button);
 
 }
 
 
 
 /* =========================================
-   FILTER RESULTS
+   FILTERED LIBRARY
 ========================================= */
 
 function getFilteredInsights() {
@@ -1310,7 +1257,9 @@ function getFilteredInsights() {
 
       const categoryMatch =
         selectedCategory === "ALL"
+
         ||
+
         categories.some(
           category =>
             same(
@@ -1322,7 +1271,9 @@ function getFilteredInsights() {
 
       const workingMatch =
         selectedWorkingAs === "ALL"
+
         ||
+
         workingTypes.some(
           type =>
             same(
@@ -1345,7 +1296,7 @@ function getFilteredInsights() {
 
 
 /* =========================================
-   TEXT LENGTH
+   LENGTH
 ========================================= */
 
 function getLengthClass(advice) {
@@ -1375,16 +1326,17 @@ function getLengthClass(advice) {
 
 
 /* =========================================
-   ARCHIVE CARDS
+   LIBRARY CARDS
 ========================================= */
 
-function displayArchive() {
+function displayLibrary() {
 
   const filtered =
     getFilteredInsights();
 
 
-  archiveGrid.innerHTML = "";
+  libraryGrid.innerHTML = "";
+
 
   insightCount.textContent =
     filtered.length;
@@ -1392,7 +1344,7 @@ function displayArchive() {
 
   if (!filtered.length) {
 
-    archiveGrid.innerHTML = `
+    libraryGrid.innerHTML = `
       <div class="empty-state">
         Nothing here yet.
       </div>
@@ -1420,7 +1372,7 @@ function displayArchive() {
 
 
       card.className =
-        "insight-card" +
+        "library-card" +
         (
           lengthClass
             ? ` ${lengthClass}`
@@ -1453,34 +1405,36 @@ function displayArchive() {
       const role =
         clean(insight.role);
 
-      const salary =
-        clean(insight.salary);
-
-      const experience =
-        clean(insight.experience);
 
       const working =
         workingTypes.join(" / ");
 
 
-      const secondaryParts = [];
+      const experience =
+        clean(insight.experience);
+
+
+      const salary =
+        clean(insight.salary);
+
+
+      const secondary = [];
 
 
       if (working) {
 
-        secondaryParts.push(
-          working
-        );
+        secondary.push(working);
 
       }
 
 
+      /*
+        "in practice" deliberately removed.
+      */
+
       if (experience) {
 
-        secondaryParts.push(
-          experience +
-          " in practice"
-        );
+        secondary.push(experience);
 
       }
 
@@ -1500,6 +1454,7 @@ function displayArchive() {
 
         <div class="card-info">
 
+
           <div class="card-meta">
 
             ${
@@ -1512,12 +1467,13 @@ function displayArchive() {
                 : ""
             }
 
+
             ${
-              secondaryParts.length
+              secondary.length
                 ? `
                   <div class="card-working">
                     ${escapeHTML(
-                      secondaryParts.join(
+                      secondary.join(
                         " · "
                       )
                     )}
@@ -1525,6 +1481,7 @@ function displayArchive() {
                 `
                 : ""
             }
+
 
             ${
               salary
@@ -1543,13 +1500,171 @@ function displayArchive() {
             ${categoryHTML}
           </div>
 
+
         </div>
 
       `;
 
 
-      archiveGrid.appendChild(
-        card
+      libraryGrid.appendChild(card);
+
+    }
+  );
+
+}
+
+
+
+/* =========================================
+   CAROUSEL
+========================================= */
+
+function buildCarousel() {
+
+  carouselTrack.innerHTML = "";
+
+
+  if (!insights.length) {
+
+    carouselTrack.innerHTML = `
+      <div class="carousel-slide active">
+        <p class="carousel-advice">
+          The library is currently empty.
+        </p>
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  insights.forEach(
+    (insight, index) => {
+
+
+      const slide =
+        document.createElement(
+          "article"
+        );
+
+
+      const lengthClass =
+        getLengthClass(
+          insight.advice
+        );
+
+
+      slide.className =
+        "carousel-slide" +
+        (
+          index === 0
+            ? " active"
+            : ""
+        ) +
+        (
+          lengthClass
+            ? ` ${lengthClass}`
+            : ""
+        );
+
+
+      const categories =
+        getCategories(insight);
+
+
+      const workingTypes =
+        getWorkingTypes(insight);
+
+
+      const meta = [];
+
+
+      if (insight.role) {
+
+        meta.push(
+          insight.role
+        );
+
+      }
+
+
+      if (workingTypes.length) {
+
+        meta.push(
+          workingTypes.join(" / ")
+        );
+
+      }
+
+
+      if (insight.experience) {
+
+        meta.push(
+          insight.experience
+        );
+
+      }
+
+
+      if (insight.salary) {
+
+        meta.push(
+          insight.salary
+        );
+
+      }
+
+
+      slide.innerHTML = `
+
+        <p class="carousel-advice">
+          “${escapeHTML(
+            insight.advice
+          )}”
+        </p>
+
+
+        ${
+          meta.length
+            ? `
+              <div class="carousel-meta">
+                ${escapeHTML(
+                  meta.join(" · ")
+                )}
+              </div>
+            `
+            : ""
+        }
+
+
+        ${
+          categories.length
+            ? `
+              <div class="carousel-categories">
+
+                ${categories
+                  .map(
+                    category => `
+                      <span>
+                        ${escapeHTML(
+                          category.toLowerCase()
+                        )}
+                      </span>
+                    `
+                  )
+                  .join("")}
+
+              </div>
+            `
+            : ""
+        }
+
+      `;
+
+
+      carouselTrack.appendChild(
+        slide
       );
 
     }
@@ -1560,175 +1675,351 @@ function displayArchive() {
 
 
 /* =========================================
-   FEATURED
+   SLIDE ANIMATION
 ========================================= */
 
-function showRandomInsight() {
+function moveCarousel(direction) {
 
-  const available =
-    getFilteredInsights();
-
-
-  if (!available.length) {
-
-    featuredInsight.innerHTML = `
-      <p class="featured-quote">
-        Nothing here yet.
-      </p>
-    `;
+  if (
+    carouselLocked ||
+    insights.length < 2
+  ) {
 
     return;
 
   }
 
 
-  const insight =
-    available[
-      Math.floor(
-        Math.random() *
-        available.length
-      )
-    ];
+  carouselLocked = true;
 
 
-  const workingTypes =
-    getWorkingTypes(insight);
-
-
-  const categories =
-    getCategories(insight);
-
-
-  const metaParts = [];
-
-
-  if (insight.role) {
-
-    metaParts.push(
-      insight.role
+  const slides =
+    Array.from(
+      carouselTrack
+        .querySelectorAll(
+          ".carousel-slide"
+        )
     );
+
+
+  const oldIndex =
+    carouselIndex;
+
+
+  if (direction === 1) {
+
+    carouselIndex =
+      (
+        carouselIndex + 1
+      ) % slides.length;
+
+  }
+
+  else {
+
+    carouselIndex =
+      (
+        carouselIndex - 1 +
+        slides.length
+      ) % slides.length;
 
   }
 
 
-  if (workingTypes.length) {
+  const current =
+    slides[oldIndex];
 
-    metaParts.push(
-      workingTypes.join(" / ")
-    );
+
+  const next =
+    slides[carouselIndex];
+
+
+  next.classList.remove(
+    "active",
+    "exit-left",
+    "enter-left"
+  );
+
+
+  /*
+    Next advice comes from the right.
+  */
+
+  if (direction === 1) {
+
+    next.style.transition = "none";
+
+    next.style.transform =
+      "translateX(110%)";
+
+    next.style.opacity =
+      "0";
+
+  }
+
+  /*
+    Previous advice comes from the left.
+  */
+
+  else {
+
+    next.style.transition = "none";
+
+    next.style.transform =
+      "translateX(-110%)";
+
+    next.style.opacity =
+      "0";
 
   }
 
 
-  if (insight.experience) {
+  requestAnimationFrame(
+    () => {
 
-    metaParts.push(
-      insight.experience +
-      " in practice"
-    );
-
-  }
+      requestAnimationFrame(
+        () => {
 
 
-  if (insight.salary) {
+          next.style.transition = "";
 
-    metaParts.push(
-      insight.salary
-    );
+          next.style.transform = "";
 
-  }
+          next.style.opacity = "";
 
 
-  const categoryHTML =
-    categories
-      .map(
-        category => `
-          <span class="featured-category">
-            ${escapeHTML(
-              category.toLowerCase()
-            )}
-          </span>
-        `
-      )
-      .join("");
+          if (direction === 1) {
+
+            current.classList.add(
+              "exit-left"
+            );
+
+          }
+
+          else {
+
+            current.style.transform =
+              "translateX(110%)";
+
+            current.style.opacity =
+              "0";
+
+          }
 
 
-  const lengthClass =
-    getLengthClass(
-      insight.advice
-    );
+          current.classList.remove(
+            "active"
+          );
 
 
-  featuredInsight.innerHTML = `
+          next.classList.add(
+            "active"
+          );
 
-    <p class="featured-quote ${lengthClass}">
-      “${escapeHTML(
-        insight.advice
-      )}”
-    </p>
 
-    ${
-      metaParts.length
-        ? `
-          <div class="featured-meta">
-            ${escapeHTML(
-              metaParts.join(" · ")
-            )}
-          </div>
-        `
-        : ""
+          setTimeout(
+            () => {
+
+
+              current.classList.remove(
+                "exit-left"
+              );
+
+
+              current.style.transform =
+                "";
+
+              current.style.opacity =
+                "";
+
+
+              carouselLocked =
+                false;
+
+            },
+
+            650
+          );
+
+        }
+      );
+
     }
-
-    ${
-      categories.length
-        ? `
-          <div class="featured-categories">
-            ${categoryHTML}
-          </div>
-        `
-        : ""
-    }
-
-  `;
+  );
 
 }
 
 
 
+/* BUTTONS */
+
+nextButton.addEventListener(
+  "click",
+  () => moveCarousel(1)
+);
+
+
+previousButton.addEventListener(
+  "click",
+  () => moveCarousel(-1)
+);
+
+
+
+/* KEYBOARD SUPPORT */
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+
+    if (
+      event.key ===
+      "ArrowRight"
+    ) {
+
+      moveCarousel(1);
+
+    }
+
+
+    if (
+      event.key ===
+      "ArrowLeft"
+    ) {
+
+      moveCarousel(-1);
+
+    }
+
+  }
+);
+
+
+
 /* =========================================
-   BUTTONS
+   CLEAR FILTERS
 ========================================= */
 
 clearFilters.addEventListener(
   "click",
   () => {
 
-    selectedCategory = "ALL";
 
-    selectedWorkingAs = "ALL";
+    selectedCategory =
+      "ALL";
+
+
+    selectedWorkingAs =
+      "ALL";
+
 
     createCategoryFilters();
 
     createWorkingFilters();
 
-    displayArchive();
-
-    showRandomInsight();
+    displayLibrary();
 
   }
 );
 
 
-anotherButton.addEventListener(
-  "click",
-  showRandomInsight
-);
+
+/* =========================================
+   ERROR
+========================================= */
+
+function showError() {
+
+  libraryGrid.innerHTML = `
+    <div class="empty-state">
+      The library is temporarily unavailable.
+    </div>
+  `;
+
+
+  carouselTrack.innerHTML = `
+    <div class="carousel-slide active">
+
+      <p class="carousel-advice">
+        The library is temporarily unavailable.
+      </p>
+
+    </div>
+  `;
+
+
+  insightCount.textContent =
+    "0";
+
+}
 
 
 
 /* =========================================
    HELPERS
 ========================================= */
+
+function containsTerm(
+  text,
+  term
+) {
+
+  const expression =
+    new RegExp(
+      `(^|[\\s,;|/&+])${escapeRegExp(term)}(?=$|[\\s,;|/&+])`,
+      "i"
+    );
+
+
+  return expression.test(text);
+
+}
+
+
+
+function unique(values) {
+
+  const used =
+    new Set();
+
+
+  const result =
+    [];
+
+
+  values.forEach(
+    value => {
+
+
+      const cleaned =
+        clean(value);
+
+
+      const normalized =
+        key(cleaned);
+
+
+      if (
+        cleaned &&
+        !used.has(normalized)
+      ) {
+
+        used.add(normalized);
+
+        result.push(cleaned);
+
+      }
+
+    }
+  );
+
+
+  return result;
+
+}
+
+
 
 function splitFallback(value) {
 
@@ -1737,7 +2028,8 @@ function splitFallback(value) {
       /\s*(?:,|;|\||&|\+|\band\b)\s*/i
     )
     .map(
-      item => clean(item)
+      item =>
+        clean(item)
     )
     .filter(Boolean);
 
@@ -1787,20 +2079,25 @@ function escapeHTML(value) {
 
 
 /* =========================================
-   START
+   INITIALISE
 ========================================= */
 
-function initialiseArchive() {
+function initialiseLibrary() {
 
   createCategoryFilters();
 
   createWorkingFilters();
 
-  displayArchive();
+  displayLibrary();
 
-  showRandomInsight();
+  buildCarousel();
 
 }
 
+
+
+/* =========================================
+   START
+========================================= */
 
 loadInsights();

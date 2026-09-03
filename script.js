@@ -34,11 +34,15 @@ const workingFilterArea =
 const clearFilters =
   document.getElementById("clear-filters");
 
+
 const carouselTrack =
   document.getElementById("carousel-track");
 
 const carouselStage =
   document.getElementById("carousel-stage");
+
+const carouselWindow =
+  document.getElementById("carousel-window");
 
 const previousButton =
   document.getElementById("previous-button");
@@ -46,8 +50,12 @@ const previousButton =
 const nextButton =
   document.getElementById("next-button");
 
-const topNav =
-  document.querySelector(".top-nav");
+
+const movingNav =
+  document.getElementById("moving-nav");
+
+const aboutNav =
+  document.getElementById("about-nav");
 
 
 
@@ -143,7 +151,7 @@ async function loadInsights() {
 
 
 /* =========================================
-   PARSE RESPONSE
+   PARSE
 ========================================= */
 
 function parseResponseText(text) {
@@ -166,7 +174,9 @@ function parseResponseText(text) {
   }
 
   catch (error) {
+
     /* continue */
+
   }
 
 
@@ -203,10 +213,6 @@ function parseResponseText(text) {
 }
 
 
-
-/* =========================================
-   EXTRACT ARRAY
-========================================= */
 
 function extractArray(value) {
 
@@ -419,7 +425,7 @@ function loadWithJSONP() {
 
 
 /* =========================================
-   NORMALISE
+   NORMALISE DATA
 ========================================= */
 
 function useLoadedData(data) {
@@ -614,7 +620,7 @@ function firstValue(
 
 
 /* =========================================
-   CLEANING
+   HELPERS
 ========================================= */
 
 function clean(value) {
@@ -918,7 +924,7 @@ function getWorkingTypes(insight) {
 
 
 /* =========================================
-   AVAILABLE FILTERS
+   FILTERS
 ========================================= */
 
 function getAvailableCategories() {
@@ -968,10 +974,6 @@ function getAvailableWorkingTypes() {
 }
 
 
-
-/* =========================================
-   COUNTS
-========================================= */
 
 function countCategory(category) {
 
@@ -1026,10 +1028,6 @@ function countWorking(type) {
 }
 
 
-
-/* =========================================
-   BUILD FILTERS
-========================================= */
 
 function createCategoryFilters() {
 
@@ -1354,7 +1352,7 @@ function getLengthClass(advice) {
 
 
 /* =========================================
-   DISPLAY LIBRARY
+   LIBRARY
 ========================================= */
 
 function displayLibrary() {
@@ -1609,15 +1607,12 @@ function buildCarousel() {
         );
 
 
-      const categories =
-        getCategories(insight);
-
-
       const workingTypes =
         getWorkingTypes(insight);
 
 
-      const meta = [];
+      const meta =
+        [];
 
 
       if (
@@ -1666,6 +1661,10 @@ function buildCarousel() {
       }
 
 
+      /*
+        No categories in hero.
+      */
+
       slide.innerHTML = `
 
         <p class="carousel-advice">
@@ -1684,29 +1683,6 @@ function buildCarousel() {
                     " · "
                   )
                 )}
-              </div>
-            `
-            : ""
-        }
-
-
-        ${
-          categories.length
-            ? `
-              <div class="carousel-categories">
-
-                ${categories
-                  .map(
-                    category => `
-                      <span>
-                        ${escapeHTML(
-                          category.toLowerCase()
-                        )}
-                      </span>
-                    `
-                  )
-                  .join("")}
-
               </div>
             `
             : ""
@@ -1789,111 +1765,203 @@ function moveCarousel(direction) {
     slides[carouselIndex];
 
 
-  next.classList.remove(
-    "active",
-    "exit-left"
+  /*
+    Reset both slides first.
+  */
+
+  current.classList.remove(
+    "enter-right",
+    "enter-active"
   );
 
 
-  next.style.transition =
-    "none";
+  next.classList.remove(
+    "active",
+    "exit-left",
+    "enter-active"
+  );
 
 
-  next.style.transform =
+  /*
+    NEXT:
+    current flies left,
+    new slide enters from right.
+  */
+
+  if (
     direction === 1
-      ? "translateX(110%)"
-      : "translateX(-110%)";
+  ) {
+
+    next.classList.add(
+      "enter-right"
+    );
 
 
-  next.style.opacity =
-    "0";
+    requestAnimationFrame(
+      () => {
 
+        requestAnimationFrame(
+          () => {
 
-  requestAnimationFrame(
-    () => {
-
-      requestAnimationFrame(
-        () => {
-
-
-          next.style.transition =
-            "";
-
-          next.style.transform =
-            "";
-
-          next.style.opacity =
-            "";
-
-
-          if (
-            direction === 1
-          ) {
 
             current.classList.add(
               "exit-left"
             );
 
-          }
 
-          else {
+            current.classList.remove(
+              "active"
+            );
+
+
+            next.classList.remove(
+              "enter-right"
+            );
+
+
+            next.classList.add(
+              "enter-active"
+            );
+
+
+            setTimeout(
+              () => {
+
+
+                current.classList.remove(
+                  "exit-left"
+                );
+
+
+                next.classList.remove(
+                  "enter-active"
+                );
+
+
+                next.classList.add(
+                  "active"
+                );
+
+
+                carouselLocked =
+                  false;
+
+              },
+
+              800
+            );
+
+          }
+        );
+
+      }
+    );
+
+  }
+
+
+  /*
+    PREVIOUS:
+    reverse direction.
+  */
+
+  else {
+
+    next.style.transition =
+      "none";
+
+
+    next.style.transform =
+      "translateX(-75vw)";
+
+
+    next.style.opacity =
+      "0";
+
+
+    requestAnimationFrame(
+      () => {
+
+        requestAnimationFrame(
+          () => {
+
+
+            next.style.transition =
+              "transform 760ms cubic-bezier(0.72,0,0.28,1), opacity 350ms ease";
+
+
+            next.style.transform =
+              "translateX(0)";
+
+
+            next.style.opacity =
+              "1";
+
+
+            current.style.transition =
+              "transform 760ms cubic-bezier(0.72,0,0.28,1), opacity 500ms ease 160ms";
+
 
             current.style.transform =
-              "translateX(110%)";
+              "translateX(75vw)";
+
 
             current.style.opacity =
               "0";
 
+
+            setTimeout(
+              () => {
+
+
+                current.classList.remove(
+                  "active"
+                );
+
+
+                current.style.transition =
+                  "";
+
+                current.style.transform =
+                  "";
+
+                current.style.opacity =
+                  "";
+
+
+                next.style.transition =
+                  "";
+
+                next.style.transform =
+                  "";
+
+                next.style.opacity =
+                  "";
+
+                next.classList.add(
+                  "active"
+                );
+
+
+                carouselLocked =
+                  false;
+
+              },
+
+              800
+            );
+
           }
+        );
 
+      }
+    );
 
-          current.classList.remove(
-            "active"
-          );
-
-
-          next.classList.add(
-            "active"
-          );
-
-
-          setTimeout(
-            () => {
-
-
-              current.classList.remove(
-                "exit-left"
-              );
-
-
-              current.style.transform =
-                "";
-
-              current.style.opacity =
-                "";
-
-
-              carouselLocked =
-                false;
-
-            },
-
-            650
-          );
-
-        }
-      );
-
-    }
-  );
+  }
 
 }
 
 
-
-/* =========================================
-   CAROUSEL BUTTONS
-========================================= */
 
 nextButton.addEventListener(
   "click",
@@ -1938,6 +2006,94 @@ document.addEventListener(
 
 
 /* =========================================
+   HERO ADVICE GRADIENT
+========================================= */
+
+function initialiseAdviceGradient() {
+
+  if (!carouselWindow) {
+
+    return;
+
+  }
+
+
+  const canHover =
+    window.matchMedia(
+      "(hover: hover) and (pointer: fine)"
+    ).matches;
+
+
+  if (!canHover) {
+
+    return;
+
+  }
+
+
+  carouselWindow.addEventListener(
+    "pointerenter",
+    event => {
+
+      updateAdviceGradient(
+        event
+      );
+
+
+      carouselWindow.style.setProperty(
+        "--advice-opacity",
+        "1"
+      );
+
+    }
+  );
+
+
+  carouselWindow.addEventListener(
+    "pointermove",
+    updateAdviceGradient
+  );
+
+
+  carouselWindow.addEventListener(
+    "pointerleave",
+    () => {
+
+      carouselWindow.style.setProperty(
+        "--advice-opacity",
+        "0"
+      );
+
+    }
+  );
+
+}
+
+
+
+function updateAdviceGradient(event) {
+
+  const rect =
+    carouselWindow
+      .getBoundingClientRect();
+
+
+  carouselWindow.style.setProperty(
+    "--advice-x",
+    `${event.clientX - rect.left}px`
+  );
+
+
+  carouselWindow.style.setProperty(
+    "--advice-y",
+    `${event.clientY - rect.top}px`
+  );
+
+}
+
+
+
+/* =========================================
    ARROW GRADIENT
 ========================================= */
 
@@ -1970,25 +2126,15 @@ function initialiseArrowGradient() {
         .getBoundingClientRect();
 
 
-    const x =
-      event.clientX -
-      rect.left;
-
-
-    const y =
-      event.clientY -
-      rect.top;
-
-
     carouselStage.style.setProperty(
       "--arrow-x",
-      `${x}px`
+      `${event.clientX - rect.left}px`
     );
 
 
     carouselStage.style.setProperty(
       "--arrow-y",
-      `${y}px`
+      `${event.clientY - rect.top}px`
     );
 
   }
@@ -2000,7 +2146,7 @@ function initialiseArrowGradient() {
 
 
     carouselStage.style.setProperty(
-      "--arrow-gradient-opacity",
+      "--arrow-opacity",
       "1"
     );
 
@@ -2010,46 +2156,38 @@ function initialiseArrowGradient() {
   function hideGradient() {
 
     carouselStage.style.setProperty(
-      "--arrow-gradient-opacity",
+      "--arrow-opacity",
       "0"
     );
 
   }
 
 
-  previousButton.addEventListener(
-    "pointerenter",
-    showGradient
-  );
+  [
+    previousButton,
+    nextButton
+  ].forEach(
+    button => {
 
 
-  nextButton.addEventListener(
-    "pointerenter",
-    showGradient
-  );
+      button.addEventListener(
+        "pointerenter",
+        showGradient
+      );
 
 
-  previousButton.addEventListener(
-    "pointermove",
-    updateGradient
-  );
+      button.addEventListener(
+        "pointermove",
+        updateGradient
+      );
 
 
-  nextButton.addEventListener(
-    "pointermove",
-    updateGradient
-  );
+      button.addEventListener(
+        "pointerleave",
+        hideGradient
+      );
 
-
-  previousButton.addEventListener(
-    "pointerleave",
-    hideGradient
-  );
-
-
-  nextButton.addEventListener(
-    "pointerleave",
-    hideGradient
+    }
   );
 
 }
@@ -2057,63 +2195,244 @@ function initialiseArrowGradient() {
 
 
 /* =========================================
-   NAV BACKGROUND
+   LIBRARY SPOTLIGHT
 ========================================= */
 
-function updateNavigationBackground() {
+function initialiseLibrarySpotlight() {
 
-  if (!topNav) {
+  if (!libraryGrid) {
 
     return;
 
   }
 
 
-  const navRect =
-    topNav.getBoundingClientRect();
+  const canHover =
+    window.matchMedia(
+      "(hover: hover) and (pointer: fine)"
+    ).matches;
 
 
-  const sampleX =
-    navRect.left +
-    navRect.width / 2;
+  if (!canHover) {
+
+    return;
+
+  }
 
 
-  const sampleY =
-    navRect.top +
-    navRect.height / 2;
+  libraryGrid.addEventListener(
+    "pointerenter",
+    event => {
+
+
+      updateLibrarySpotlight(
+        event
+      );
+
+
+      libraryGrid.style.setProperty(
+        "--spotlight-opacity",
+        "1"
+      );
+
+    }
+  );
+
+
+  libraryGrid.addEventListener(
+    "pointermove",
+    updateLibrarySpotlight
+  );
+
+
+  libraryGrid.addEventListener(
+    "pointerleave",
+    () => {
+
+
+      libraryGrid.style.setProperty(
+        "--spotlight-opacity",
+        "0"
+      );
+
+    }
+  );
+
+}
+
+
+
+function updateLibrarySpotlight(event) {
+
+  const rect =
+    libraryGrid
+      .getBoundingClientRect();
+
+
+  const x =
+    event.clientX -
+    rect.left;
+
+
+  const y =
+    event.clientY -
+    rect.top;
+
+
+  libraryGrid.style.setProperty(
+    "--mouse-x",
+    `${x}px`
+  );
+
+
+  libraryGrid.style.setProperty(
+    "--mouse-y",
+    `${y}px`
+  );
+
+}
+
+
+
+/* =========================================
+   MOVING NAVIGATION
+========================================= */
+
+/*
+  The buttons only move vertically.
+
+  At top of page:
+  under the advice.
+
+  As page scrolls:
+  they travel upward.
+
+  Then they stop at 22px
+  and remain fixed.
+*/
+
+function updateMovingNavigation() {
+
+  if (
+    !movingNav
+  ) {
+
+    return;
+
+  }
+
+
+  const viewportHeight =
+    window.innerHeight;
+
+
+  const startY =
+    viewportHeight * 0.76;
+
+
+  const finalY =
+    22;
 
 
   /*
-    Temporarily ignore the nav itself so
-    we can see which section is underneath.
+    Complete the movement over roughly
+    the first 62% of one viewport.
   */
 
-  topNav.style.pointerEvents =
-    "none";
+  const travelDistance =
+    viewportHeight * 0.62;
 
 
-  const elementBelow =
-    document.elementFromPoint(
-      sampleX,
-      sampleY
+  const progress =
+    Math.min(
+      1,
+      Math.max(
+        0,
+        window.scrollY /
+        travelDistance
+      )
     );
 
 
-  topNav.style.pointerEvents =
-    "";
+  const currentY =
+    startY +
+    (
+      finalY -
+      startY
+    ) *
+    progress;
 
 
-  const yellowSection =
-    elementBelow
-      ? elementBelow.closest(
+  movingNav.style.setProperty(
+    "--nav-top",
+    `${currentY}px`
+  );
+
+}
+
+
+
+/* =========================================
+   NAV SECTION COLOUR
+========================================= */
+
+function updateNavigationBackgrounds() {
+
+  [
+    movingNav,
+    aboutNav
+  ].forEach(
+    nav => {
+
+
+      if (!nav) return;
+
+
+      const rect =
+        nav.getBoundingClientRect();
+
+
+      const x =
+        rect.left +
+        rect.width / 2;
+
+
+      const y =
+        Math.max(
+          1,
+          rect.top +
+          rect.height / 2
+        );
+
+
+      nav.style.pointerEvents =
+        "none";
+
+
+      const below =
+        document.elementFromPoint(
+          x,
+          y
+        );
+
+
+      nav.style.pointerEvents =
+        "";
+
+
+      const yellow =
+        below &&
+        below.closest(
           ".library-section, .about-section"
-        )
-      : null;
+        );
 
 
-  topNav.classList.toggle(
-    "on-yellow",
-    Boolean(yellowSection)
+      nav.classList.toggle(
+        "on-yellow",
+        Boolean(yellow)
+      );
+
+    }
   );
 
 }
@@ -2195,7 +2514,9 @@ function containsTerm(
     );
 
 
-  return expression.test(text);
+  return expression.test(
+    text
+  );
 
 }
 
@@ -2342,12 +2663,22 @@ function initialiseLibrary() {
 
 
 /* =========================================
-   NAV LISTENERS
+   SCROLL / RESIZE
 ========================================= */
+
+function updatePageInteractions() {
+
+  updateMovingNavigation();
+
+  updateNavigationBackgrounds();
+
+}
+
+
 
 window.addEventListener(
   "scroll",
-  updateNavigationBackground,
+  updatePageInteractions,
   {
     passive: true
   }
@@ -2356,7 +2687,7 @@ window.addEventListener(
 
 window.addEventListener(
   "resize",
-  updateNavigationBackground
+  updatePageInteractions
 );
 
 
@@ -2365,8 +2696,12 @@ window.addEventListener(
    START
 ========================================= */
 
+initialiseAdviceGradient();
+
 initialiseArrowGradient();
 
-updateNavigationBackground();
+initialiseLibrarySpotlight();
+
+updatePageInteractions();
 
 loadInsights();

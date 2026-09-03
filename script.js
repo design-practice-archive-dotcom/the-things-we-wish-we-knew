@@ -797,6 +797,8 @@ const workingDefinitions = [
     terms: [
       "independent",
       "founder",
+      "founder / own studio",
+      "founder/own studio",
       "own studio",
       "studio owner",
       "studio founder"

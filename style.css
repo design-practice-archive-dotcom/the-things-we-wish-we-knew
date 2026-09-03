@@ -1,12 +1,18 @@
 :root {
+
   --green: #b9e99f;
+  --yellow: #f6fe6a;
+
   --text: #53251e;
 
   --line:
-    rgba(83, 37, 30, 0.72);
+    rgba(83, 37, 30, 0.6);
 
   --soft-line:
-    rgba(83, 37, 30, 0.48);
+    rgba(83, 37, 30, 0.42);
+
+  --button-light:
+    #f7f5ea;
 
   --mono:
     "Courier Prime",
@@ -14,9 +20,7 @@
     Courier,
     monospace;
 
-  --side: 3.2vw;
 }
-
 
 
 /* =========================================
@@ -34,31 +38,76 @@ html {
 
 
 body {
+
   margin: 0;
 
   background: var(--green);
+
   color: var(--text);
 
   font-family: var(--mono);
 
-  font-size: 16px;
-  line-height: 1.34;
+  font-size: 18px;
+
+  line-height: 1.4;
 
   font-weight: 400;
 
   -webkit-font-smoothing: antialiased;
+
 }
 
 
 a {
   color: inherit;
-  text-decoration: none;
 }
 
 
 button {
-  font-family: var(--mono);
+  font-family: inherit;
   color: inherit;
+}
+
+
+
+/* =========================================
+   FIXED NAV
+========================================= */
+
+.top-nav {
+
+  position: fixed;
+
+  top: 28px;
+  right: 4vw;
+
+  z-index: 1000;
+
+  display: flex;
+
+  gap: clamp(34px, 5vw, 80px);
+
+  font-size:
+    clamp(0.82rem, 0.9vw, 1rem);
+
+}
+
+
+.top-nav a {
+
+  color: var(--text);
+
+  text-decoration: underline;
+
+  text-underline-offset: 3px;
+
+}
+
+
+.top-nav a:hover {
+
+  text-decoration-thickness: 2px;
+
 }
 
 
@@ -68,285 +117,559 @@ button {
 ========================================= */
 
 .hero {
+
   position: relative;
 
-  height: 55vw;
+  min-height: 100vh;
 
-  min-height: 540px;
-  max-height: 830px;
+  background: var(--green);
 
-  border-bottom:
-    1px solid var(--line);
+  overflow: hidden;
+
 }
 
 
+
+/* TITLE */
+
 .hero-title {
+
   position: absolute;
 
-  left: 2.8vw;
-  top: 3.2vw;
+  top: 56px;
+  left: 2.5vw;
+
+  color: var(--text);
+
+  text-decoration: none;
 
   font-size:
-    clamp(1.95rem, 2.35vw, 2.9rem);
+    clamp(2rem, 3vw, 3.7rem);
 
-  line-height: 1.02;
+  line-height: 1.1;
+
+  letter-spacing: 0.01em;
 
   font-weight: 400;
+
 }
 
 
 .hero-title strong {
+
   font-weight: 700;
+
 }
 
 
-.top-nav {
+
+/* DESCRIPTION BOTTOM LEFT */
+
+.hero-description {
+
   position: absolute;
 
-  top: 1.8vw;
-  right: 3.4vw;
-
-  display: flex;
-
-  gap: 5vw;
-
-  font-size:
-    clamp(0.66rem, 0.7vw, 0.79rem);
-
-  font-weight: 700;
-}
-
-
-.top-nav a:hover {
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-
-
-.hero-intro {
-  position: absolute;
-
-  left: 60.2%;
-  top: 59%;
-
-  width: 33%;
-  max-width: 480px;
-}
-
-
-.hero-intro p {
-  margin: 0 0 1.7rem;
-
-  font-size:
-    clamp(0.94rem, 1.03vw, 1.12rem);
-
-  line-height: 1.34;
-}
-
-
-.hero-question {
-  font-weight: 700;
-}
-
-
-.hero-links {
-  margin-top: 4.3vw;
-
-  display: flex;
-
-  justify-content: space-between;
-
-  gap: 2rem;
-
-  font-size:
-    clamp(0.66rem, 0.7vw, 0.8rem);
-
-  font-weight: 700;
-}
-
-
-.hero-links a {
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-
-
-
-/* =========================================
-   LABELS
-========================================= */
-
-.eyebrow {
-  font-size:
-    clamp(0.68rem, 0.7vw, 0.8rem);
-
-  line-height: 1.1;
-
-  font-weight: 700;
-}
-
-
-
-/* =========================================
-   FEATURED
-========================================= */
-
-.featured-section {
-  min-height: 430px;
-
-  padding:
-    5.7vw
-    6.2vw
-    5vw;
-
-  border-bottom:
-    1px solid var(--line);
-}
-
-
-.featured-inner {
-  width: 88%;
-  max-width: 1250px;
-}
-
-
-.featured-insight {
-  margin-top: 1.8rem;
-}
-
-
-.featured-quote {
-  max-width: 1120px;
+  left: 2.5vw;
+  bottom: 6vh;
 
   margin: 0;
 
-  font-size:
-    clamp(1.55rem, 1.95vw, 2.3rem);
-
-  line-height: 1.2;
-
-  font-weight: 400;
-}
-
-
-.featured-quote.long {
-  font-size:
-    clamp(1.28rem, 1.62vw, 1.9rem);
-
-  line-height: 1.24;
-}
-
-
-.featured-quote.very-long {
-  font-size:
-    clamp(1.08rem, 1.38vw, 1.55rem);
-
-  line-height: 1.3;
-}
-
-
-.featured-meta {
-  margin-top: 3.3rem;
+  max-width: 390px;
 
   font-size:
-    clamp(0.7rem, 0.72vw, 0.82rem);
+    clamp(1.15rem, 1.45vw, 1.55rem);
 
-  line-height: 1.4;
+  line-height: 1.32;
+
 }
 
 
-.featured-categories {
-  margin-top: 0.9rem;
 
-  display: flex;
+/* =========================================
+   HERO CAROUSEL
+========================================= */
 
-  gap: 1rem;
+.hero-carousel {
 
-  flex-wrap: wrap;
+  position: absolute;
+
+  left: 39%;
+  right: 5vw;
+
+  top: 34%;
+
+  min-width: 0;
+
 }
 
 
-.featured-category {
-  font-size: 0.66rem;
+.carousel-label {
+
+  margin-left: 7%;
+
+  margin-bottom: 28px;
+
+  font-size:
+    clamp(0.82rem, 0.9vw, 1rem);
 
   font-weight: 700;
 
   text-transform: lowercase;
+
 }
 
 
-.featured-category::before {
-  content: "[•] ";
+
+/* CAROUSEL STAGE */
+
+.carousel-stage {
+
+  position: relative;
+
+  display: grid;
+
+  grid-template-columns:
+    55px
+    minmax(0, 1fr)
+    55px;
+
+  align-items: center;
+
 }
 
 
-.plain-button {
-  margin-top: 2.8rem;
 
-  padding: 0;
+/* WINDOW */
+
+.carousel-window {
+
+  position: relative;
+
+  overflow: hidden;
+
+  min-height: 300px;
+
+}
+
+
+
+/* TRACK */
+
+.carousel-track {
+
+  width: 100%;
+
+  min-height: 300px;
+
+  position: relative;
+
+}
+
+
+
+/* INDIVIDUAL SLIDE */
+
+.carousel-slide {
+
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+
+  padding:
+    0
+    2vw;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: flex-start;
+
+  opacity: 0;
+
+  transform:
+    translateX(110%);
+
+  transition:
+    transform 600ms cubic-bezier(0.65, 0, 0.35, 1),
+    opacity 350ms ease;
+
+  pointer-events: none;
+
+}
+
+
+.carousel-slide.active {
+
+  opacity: 1;
+
+  transform:
+    translateX(0);
+
+  pointer-events: auto;
+
+}
+
+
+.carousel-slide.exit-left {
+
+  opacity: 0;
+
+  transform:
+    translateX(-110%);
+
+}
+
+
+.carousel-slide.enter-left {
+
+  opacity: 0;
+
+  transform:
+    translateX(-110%);
+
+}
+
+
+
+/* ADVICE */
+
+.carousel-advice {
+
+  margin: 0;
+
+  max-width: 850px;
+
+  font-size:
+    clamp(1.55rem, 2.25vw, 2.55rem);
+
+  line-height: 1.32;
+
+  font-weight: 400;
+
+}
+
+
+.carousel-slide.long
+.carousel-advice {
+
+  font-size:
+    clamp(1.3rem, 1.85vw, 2rem);
+
+}
+
+
+.carousel-slide.very-long
+.carousel-advice {
+
+  font-size:
+    clamp(1.12rem, 1.55vw, 1.7rem);
+
+}
+
+
+
+/* CREDENTIALS */
+
+.carousel-meta {
+
+  margin-top: 42px;
+
+  max-width: 750px;
+
+  font-size:
+    clamp(0.84rem, 0.94vw, 1.05rem);
+
+  line-height: 1.35;
+
+}
+
+
+.carousel-role {
+
+  font-weight: 700;
+
+}
+
+
+.carousel-categories {
+
+  margin-top: 10px;
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 10px 22px;
+
+  font-size:
+    clamp(0.82rem, 0.9vw, 1rem);
+
+  font-weight: 700;
+
+  text-transform: lowercase;
+
+}
+
+
+
+/* ARROWS */
+
+.carousel-arrow {
 
   border: 0;
+
+  padding: 10px;
 
   background: transparent;
 
   cursor: pointer;
 
   font-size:
-    clamp(0.66rem, 0.69vw, 0.78rem);
+    1.5rem;
 
-  font-weight: 700;
+  line-height: 1;
+
+}
+
+
+.carousel-arrow:hover {
+
+  transform: scale(1.15);
+
+}
+
+
+
+/* HERO CTA BUTTONS */
+
+.hero-actions {
+
+  margin-top: 35px;
+  margin-left: 7%;
+
+  display: flex;
+
+  gap: 24px;
+
+}
+
+
+.hero-button {
+
+  min-width: 135px;
+
+  padding:
+    12px
+    28px;
+
+  display: inline-flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  border:
+    1px solid var(--text);
+
+  border-radius: 999px;
+
+  text-decoration: none;
+
+  font-size:
+    clamp(0.85rem, 0.9vw, 1rem);
+
+  transition:
+    background 180ms ease,
+    color 180ms ease;
+
+}
+
+
+.hero-button-filled {
+
+  background:
+    var(--button-light);
+
+  color:
+    var(--text);
+
+  border-color:
+    var(--button-light);
+
+}
+
+
+.hero-button-outline {
+
+  background:
+    transparent;
+
+  color:
+    var(--text);
+
+}
+
+
+.hero-button-filled:hover {
+
+  background:
+    var(--text);
+
+  color:
+    var(--button-light);
+
+  border-color:
+    var(--text);
+
+}
+
+
+.hero-button-outline:hover {
+
+  background:
+    var(--text);
+
+  color:
+    var(--green);
+
 }
 
 
 
 /* =========================================
-   ARCHIVE
+   GENERIC LABEL
 ========================================= */
 
-.archive-section {
-  padding:
-    4.5vw
-    var(--side)
-    6.3vw;
+.eyebrow {
 
-  border-bottom:
-    1px solid var(--line);
+  font-size:
+    clamp(0.85rem, 0.92vw, 1rem);
+
+  line-height: 1.2;
+
+  font-weight: 700;
+
+  text-transform: lowercase;
+
 }
 
 
 
-/* FILTERS */
+/* =========================================
+   LIBRARY
+========================================= */
 
-.archive-filters {
-  width: 92%;
+.library-section {
+
+  background:
+    var(--yellow);
+
+  padding:
+    clamp(65px, 7vw, 110px)
+    4vw
+    clamp(90px, 9vw, 150px);
+
+}
+
+
+
+/* HEADING */
+
+.library-heading {
+
+  margin-bottom: 55px;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: flex-start;
+
+  gap: 40px;
+
+}
+
+
+.library-heading p {
 
   margin:
-    0 auto 3vw;
+    10px 0 0;
+
+  font-size:
+    clamp(1rem, 1.2vw, 1.3rem);
+
+}
+
+
+.library-count {
+
+  font-size:
+    clamp(0.9rem, 1vw, 1.1rem);
+
+}
+
+
+
+/* =========================================
+   FILTERS
+========================================= */
+
+.library-filters {
+
+  margin-bottom: 55px;
 
   display: grid;
 
   grid-template-columns:
     1fr 1fr;
 
-  gap: 10vw;
+  gap: 9vw;
+
 }
 
 
-.filter-list {
-  margin-top: 1rem;
+.filter-heading {
 
-  display: flex;
+  margin-bottom: 18px;
 
-  flex-direction: column;
+  font-size:
+    clamp(0.9rem, 1vw, 1.1rem);
 
-  align-items: flex-start;
+  font-weight: 700;
 
-  gap: 4px;
+  text-transform: lowercase;
+
+}
+
+
+
+/*
+  Filters are arranged into columns,
+  rather than becoming one long list.
+*/
+
+.filter-columns {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap:
+    8px
+    28px;
+
 }
 
 
 .filter {
-  padding: 1px 0;
+
+  width: fit-content;
+
+  padding: 2px 0;
 
   border: 0;
 
@@ -354,141 +677,129 @@ button {
 
   cursor: pointer;
 
+  text-align: left;
+
   font-size:
-    clamp(0.71rem, 0.74vw, 0.84rem);
+    clamp(0.9rem, 1vw, 1.1rem);
 
   line-height: 1.4;
 
-  font-weight: 400;
-
-  text-align: left;
 }
 
 
 .filter::before {
+
   content: "[ ] ";
+
 }
 
 
 .filter.active {
+
   font-weight: 700;
+
 }
 
 
 .filter.active::before {
+
   content: "[•] ";
+
+}
+
+
+.filter:hover {
+
+  text-decoration: underline;
+
+  text-underline-offset: 3px;
+
 }
 
 
 .filter-count {
-  margin-left: 6px;
 
-  opacity: 0.5;
+  margin-left: 5px;
+
+  opacity: 0.55;
+
+  font-size: 0.85em;
+
 }
 
 
 .hidden {
+
   display: none !important;
+
 }
 
 
 
-/* ARCHIVE TOPLINE */
+/* CLEAR */
 
-.archive-topline {
-  width: 94%;
+.library-controls {
 
-  margin: 0 auto;
-
-  min-height: 36px;
+  margin-bottom: 16px;
 
   display: flex;
 
-  align-items: center;
+  justify-content: flex-end;
 
-  justify-content: space-between;
-
-  font-size: 0.67rem;
-}
-
-
-.archive-count {
-  font-weight: 700;
 }
 
 
 .clear-button {
-  padding: 0;
 
   border: 0;
+
+  padding: 0;
 
   background: transparent;
 
   cursor: pointer;
 
-  font-size: 0.65rem;
+  font-size: 0.9rem;
+
+  text-decoration: underline;
+
+  text-underline-offset: 3px;
+
 }
 
 
 
 /* =========================================
-   ARCHIVE GRID
+   LIBRARY GRID
 ========================================= */
 
-.archive-grid {
-  width: 94%;
+.library-grid {
 
-  margin: 0 auto;
+  width: 100%;
 
   display: grid;
 
   grid-template-columns:
     repeat(3, minmax(0, 1fr));
 
-  /*
-    All cards in one row naturally share
-    the same height.
-  */
-
   align-items: stretch;
-
-
-  /*
-    Continuous background across grid.
-  */
-
-  background:
-    linear-gradient(
-      90deg,
-
-      rgba(185, 233, 159, 0.20) 0%,
-
-      rgba(210, 236, 181, 0.43) 30%,
-
-      rgba(234, 239, 207, 0.70) 61%,
-
-      rgba(243, 240, 229, 0.97) 100%
-    );
 
   border-top:
     1px solid var(--line);
 
   border-left:
     1px solid var(--line);
+
 }
 
 
 
 /* =========================================
-   CARD
-
-   IMPORTANT:
-   NO fixed footer height.
-   NO absolute positioning.
-   NO timestamp.
+   LIBRARY CARD
 ========================================= */
 
-.insight-card {
+.library-card {
+
   min-width: 0;
 
   min-height: 430px;
@@ -497,21 +808,17 @@ button {
 
   flex-direction: column;
 
-  background: transparent;
-
   border-right:
     1px solid var(--line);
 
   border-bottom:
     1px solid var(--line);
+
 }
 
 
 
-/*
-  Force-hide anything left over
-  from older versions.
-*/
+/* HIDE ANY LEGACY TIMESTAMP ETC */
 
 .card-number,
 .card-date,
@@ -519,219 +826,164 @@ button {
 .timestamp,
 .date,
 .insight-date {
+
   display: none !important;
+
 }
 
 
 
-/* =========================================
-   ADVICE AREA
-========================================= */
+/* ADVICE */
 
 .card-advice-area {
-  min-width: 0;
 
   flex:
     1 1 auto;
 
   padding:
-    34px
+    35px
     32px
-    36px;
+    42px;
 
-  display: block;
 }
 
 
 .card-advice {
-  width: 100%;
-
-  max-width: 100%;
 
   margin: 0;
 
+  width: 100%;
+
   font-size:
-    clamp(1.14rem, 1.27vw, 1.44rem);
+    clamp(1.2rem, 1.45vw, 1.6rem);
 
-  line-height: 1.34;
-
-  font-weight: 400;
+  line-height: 1.38;
 
   overflow-wrap: break-word;
 
-  word-break: normal;
-
-  hyphens: auto;
 }
 
 
-
-/*
-  Long advice becomes progressively
-  smaller rather than overflowing.
-*/
-
-.insight-card.long
+.library-card.long
 .card-advice {
-  font-size:
-    clamp(0.98rem, 1.07vw, 1.18rem);
 
-  line-height: 1.4;
+  font-size:
+    clamp(1.05rem, 1.2vw, 1.3rem);
+
 }
 
 
-.insight-card.very-long
+.library-card.very-long
 .card-advice {
-  font-size:
-    clamp(0.83rem, 0.91vw, 1rem);
 
-  line-height: 1.44;
+  font-size:
+    clamp(0.92rem, 1.05vw, 1.12rem);
+
 }
 
 
 
-/* =========================================
-   CREDENTIALS AREA
-========================================= */
+/* CARD CREDENTIALS */
 
 .card-info {
+
   position: relative;
 
   flex:
     0 0 auto;
 
-  min-width: 0;
-
-  /*
-    Padding above leaves room
-    for the inset separator.
-  */
-
   padding:
-    19px
-    20px
-    18px;
+    22px
+    25px
+    24px;
 
   display: grid;
 
   grid-template-columns:
     minmax(0, 1fr)
-    minmax(82px, auto);
+    minmax(100px, auto);
 
-  column-gap: 20px;
+  gap: 24px;
 
-  align-items: start;
 }
 
 
-
-/*
-  Short, light separator.
-
-  It deliberately does NOT touch
-  either side of the card.
-*/
-
 .card-info::before {
+
   content: "";
 
   position: absolute;
 
   top: 0;
 
-  left: 18px;
-  right: 18px;
+  left: 24px;
+
+  right: 24px;
 
   height: 1px;
 
   background:
     var(--soft-line);
 
-  transform:
-    scaleY(0.7);
-
-  transform-origin:
-    center;
-}
-
-
-
-/* LEFT CREDENTIALS */
-
-.card-meta {
-  min-width: 0;
 }
 
 
 .card-role {
-  margin: 0 0 3px;
+
+  margin-bottom: 3px;
 
   font-size:
-    clamp(0.87rem, 0.92vw, 1.02rem);
-
-  line-height: 1.22;
+    clamp(0.95rem, 1.05vw, 1.15rem);
 
   font-weight: 700;
 
-  overflow-wrap: break-word;
 }
 
 
 .card-working,
-.card-experience,
 .card-salary {
-  margin: 0;
 
   font-size:
-    clamp(0.73rem, 0.78vw, 0.87rem);
+    clamp(0.85rem, 0.95vw, 1.04rem);
 
-  line-height: 1.34;
+  line-height: 1.36;
 
-  font-weight: 400;
-
-  overflow-wrap: break-word;
 }
 
-
-.card-salary {
-  margin-top: 2px;
-}
-
-
-
-/* RIGHT CATEGORIES */
 
 .card-category-list {
-  min-width: 0;
 
   display: flex;
 
   flex-direction: column;
 
-  align-items: flex-start;
-
   gap: 5px;
+
 }
 
 
 .card-category {
-  max-width: 100%;
 
   font-size:
-    clamp(0.71rem, 0.76vw, 0.85rem);
-
-  line-height: 1.25;
+    clamp(0.86rem, 0.95vw, 1.04rem);
 
   font-weight: 700;
 
   text-transform: lowercase;
 
-  overflow-wrap: break-word;
 }
 
 
+/*
+  Deliberately NO [•] here.
+  Categories inside cards are labels,
+  not buttons.
+*/
+
 .card-category::before {
-  content: "[•] ";
+
+  content: none;
+
 }
 
 
@@ -741,77 +993,117 @@ button {
 ========================================= */
 
 .contribute-section {
-  min-height: 410px;
+
+  min-height: 560px;
 
   padding:
-    2.8vw
-    5.5vw
-    3.8vw;
+    clamp(70px, 7vw, 110px)
+    5vw;
+
+  background:
+    var(--green);
 
   display: grid;
 
   grid-template-columns:
-    1fr 0.4fr;
+    1fr
+    0.45fr;
 
-  border-bottom:
-    1px solid var(--line);
+  gap: 50px;
+
 }
 
 
 .contribute-copy h2 {
-  margin:
-    1.9rem 0 1.8rem;
 
-  max-width: 680px;
+  margin:
+    28px 0 30px;
+
+  max-width: 820px;
 
   font-size:
-    clamp(2.15rem, 3.55vw, 4.05rem);
+    clamp(2.6rem, 4.5vw, 5rem);
+
+  line-height: 1.03;
 
   font-weight: 400;
 
-  line-height: 1.05;
 }
 
 
 .contribute-copy p {
-  margin: 0 0 1rem;
 
-  max-width: 610px;
+  max-width: 650px;
 
   font-size:
-    clamp(0.9rem, 0.96vw, 1.06rem);
+    clamp(1rem, 1.2vw, 1.3rem);
 
-  line-height: 1.4;
+  line-height: 1.42;
+
 }
 
 
 .anonymous-note {
-  margin-top: 1.9rem !important;
 
-  font-weight: 700 !important;
+  margin-top: 30px;
+
+  font-weight: 700;
+
 }
 
 
 .contribute-action {
-  display: flex;
 
-  align-items: flex-end;
+  display: flex;
 
   justify-content: flex-end;
 
-  padding-bottom: 1rem;
+  align-items: flex-end;
+
 }
 
 
-.contribute-action a {
+.contribute-button {
+
+  min-width: 170px;
+
+  padding:
+    14px
+    30px;
+
+  display: inline-flex;
+
+  justify-content: center;
+
+  border:
+    1px solid var(--text);
+
+  border-radius:
+    999px;
+
+  background:
+    var(--text);
+
+  color:
+    var(--green);
+
+  text-decoration:
+    none;
+
   font-size:
-    clamp(0.86rem, 0.91vw, 1rem);
+    clamp(0.9rem, 1vw, 1.1rem);
 
-  font-weight: 700;
+}
 
-  text-decoration: underline;
 
-  text-underline-offset: 4px;
+.contribute-button:hover {
+
+  background:
+    transparent;
+
+  color:
+    var(--text);
+
 }
 
 
@@ -821,50 +1113,48 @@ button {
 ========================================= */
 
 .about-section {
-  min-height: 410px;
+
+  min-height: 560px;
 
   padding:
-    2.8vw
-    5.5vw
-    5vw;
+    clamp(70px, 7vw, 110px)
+    5vw
+    clamp(100px, 11vw, 170px);
+
+  background:
+    var(--yellow);
+
 }
 
 
 .about-copy {
-  width: 48%;
 
-  max-width: 650px;
+  width: min(650px, 55%);
 
-  margin-top: 2.7rem;
+  margin-top: 45px;
+
 }
 
 
 .about-copy p {
-  margin: 0 0 1.3rem;
+
+  margin:
+    0 0 24px;
 
   font-size:
-    clamp(0.9rem, 0.96vw, 1.06rem);
+    clamp(1rem, 1.2vw, 1.3rem);
 
-  line-height: 1.4;
+  line-height: 1.45;
+
 }
 
 
 .about-credit {
+
   font-size:
-    clamp(1rem, 1.12vw, 1.28rem)
+    clamp(1.15rem, 1.4vw, 1.5rem)
     !important;
 
-  line-height:
-    1.32 !important;
-}
-
-
-.about-credit a {
-  font-weight: 700;
-
-  text-decoration: underline;
-
-  text-underline-offset: 4px;
 }
 
 
@@ -874,18 +1164,22 @@ button {
 ========================================= */
 
 .empty-state {
+
   grid-column:
     1 / -1;
 
-  min-height: 230px;
+  min-height:
+    220px;
 
-  padding: 28px;
+  padding:
+    30px;
 
   border-right:
     1px solid var(--line);
 
   border-bottom:
     1px solid var(--line);
+
 }
 
 
@@ -895,47 +1189,62 @@ button {
 ========================================= */
 
 footer {
-  min-height: 64px;
 
   padding:
-    16px
-    5.5vw;
+    25px
+    5vw;
 
-  display: flex;
-
-  align-items: center;
-
-  justify-content: space-between;
+  background:
+    var(--yellow);
 
   border-top:
     1px solid var(--line);
 
-  font-size: 0.67rem;
+  display: flex;
 
-  font-weight: 700;
+  justify-content: space-between;
+
+  font-size: 0.9rem;
+
+}
+
+
+footer a {
+
+  color: inherit;
+
+  text-decoration: underline;
+
 }
 
 
 
 /* =========================================
-   MEDIUM SCREENS
-
-   Move to 2 columns EARLIER.
-   This is important: three narrow
-   columns were causing much of the
-   wrapping problem.
+   MEDIUM
 ========================================= */
 
 @media (max-width: 1100px) {
 
-  .archive-grid {
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
+  .hero-carousel {
+
+    left: 34%;
+    right: 3vw;
+
   }
 
 
-  .insight-card {
-    min-height: 420px;
+  .library-grid {
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+  }
+
+
+  .library-filters {
+
+    gap: 6vw;
+
   }
 
 }
@@ -948,29 +1257,78 @@ footer {
 
 @media (max-width: 800px) {
 
-  .hero {
-    min-height: 650px;
+  .top-nav {
 
-    height: auto;
+    left: 5vw;
+    right: 5vw;
+
+    justify-content: flex-end;
+
+  }
+
+
+  .hero {
+
+    min-height: 900px;
+
   }
 
 
   .hero-title {
-    font-size: 2.15rem;
+
+    left: 5vw;
+    top: 75px;
+
   }
 
 
-  .hero-intro {
-    left: 52%;
+  .hero-carousel {
 
-    top: 57%;
+    left: 5vw;
+    right: 5vw;
 
-    width: 42%;
+    top: 38%;
+
+  }
+
+
+  .hero-description {
+
+    left: 5vw;
+
+  }
+
+
+  .carousel-stage {
+
+    grid-template-columns:
+      35px
+      minmax(0, 1fr)
+      35px;
+
+  }
+
+
+  .library-filters {
+
+    grid-template-columns:
+      1fr;
+
+  }
+
+
+  .filter-columns {
+
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+
   }
 
 
   .about-copy {
-    width: 70%;
+
+    width: 75%;
+
   }
 
 }
@@ -983,189 +1341,227 @@ footer {
 
 @media (max-width: 600px) {
 
-  :root {
-    --side: 5vw;
+  body {
+
+    font-size: 17px;
+
   }
 
 
+  /* NAV */
+
+  .top-nav {
+
+    top: 18px;
+
+    gap: 22px;
+
+    font-size: 0.8rem;
+
+  }
+
+
+
+  /* HERO */
+
   .hero {
-    min-height: 650px;
+
+    min-height: 860px;
+
   }
 
 
   .hero-title {
-    left: 5vw;
 
-    top: 28px;
+    top: 70px;
 
-    font-size: 1.95rem;
+    font-size:
+      2.25rem;
+
   }
 
 
-  .top-nav {
-    top: 30px;
+  .hero-carousel {
 
-    right: 5vw;
+    top: 34%;
 
-    gap: 15px;
-
-    font-size: 0.58rem;
   }
 
 
-  .top-nav a:first-child {
-    display: none;
+  .carousel-label {
+
+    margin-left: 0;
+
+    margin-bottom: 20px;
+
   }
 
 
-  .hero-intro {
-    left: 5vw;
+  .carousel-stage {
 
-    right: 5vw;
+    grid-template-columns:
+      28px
+      minmax(0, 1fr)
+      28px;
 
-    bottom: 65px;
-
-    top: auto;
-
-    width: auto;
   }
 
 
-  .hero-links {
-    justify-content: flex-start;
-
-    gap: 30px;
-
-    margin-top: 40px;
-  }
-
-
-
-  /* FEATURED */
-
-  .featured-section {
-    min-height: 400px;
+  .carousel-slide {
 
     padding:
-      55px
-      5vw;
+      0
+      12px;
+
   }
 
 
-  .featured-inner {
-    width: 100%;
+  .carousel-window,
+  .carousel-track {
+
+    min-height: 330px;
+
   }
 
 
-  .featured-quote,
-  .featured-quote.long,
-  .featured-quote.very-long {
-    font-size: 1.2rem;
+  .carousel-advice,
+  .carousel-slide.long
+  .carousel-advice,
+  .carousel-slide.very-long
+  .carousel-advice {
 
-    line-height: 1.3;
+    font-size: 1.3rem;
+
+    line-height: 1.35;
+
   }
 
 
+  .carousel-meta {
 
-  /* ARCHIVE */
+    margin-top: 30px;
 
-  .archive-section {
+    font-size: 0.86rem;
+
+  }
+
+
+  .hero-actions {
+
+    margin-left: 28px;
+
+    gap: 10px;
+
+  }
+
+
+  .hero-button {
+
+    min-width: 120px;
+
     padding:
-      45px
+      11px
+      18px;
+
+    font-size: 0.82rem;
+
+  }
+
+
+  .hero-description {
+
+    bottom: 35px;
+
+    font-size: 1.05rem;
+
+  }
+
+
+
+  /* LIBRARY */
+
+  .library-section {
+
+    padding:
+      60px
       5vw
-      60px;
+      80px;
+
   }
 
 
-  .archive-filters {
-    width: 100%;
+  .library-heading {
+
+    margin-bottom: 45px;
+
+  }
+
+
+  .filter-columns {
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+  }
+
+
+  .library-grid {
 
     grid-template-columns:
       1fr;
 
-    gap: 36px;
-
-    margin-bottom: 38px;
   }
 
 
-  .archive-topline,
-  .archive-grid {
-    width: 100%;
-  }
+  .library-card {
 
+    min-height: 380px;
 
-  .archive-grid {
-    grid-template-columns:
-      1fr;
-
-    background:
-      linear-gradient(
-        180deg,
-
-        rgba(185, 233, 159, 0.20) 0%,
-
-        rgba(234, 239, 207, 0.70) 62%,
-
-        rgba(243, 240, 229, 0.97) 100%
-      );
-  }
-
-
-  .insight-card {
-    min-height: 370px;
   }
 
 
   .card-advice-area {
+
     padding:
-      28px
-      22px
-      32px;
+      30px
+      23px
+      36px;
+
   }
 
 
   .card-advice,
-  .insight-card.long
+  .library-card.long
   .card-advice,
-  .insight-card.very-long
+  .library-card.very-long
   .card-advice {
-    font-size: 1.04rem;
 
-    line-height: 1.35;
+    font-size: 1.12rem;
+
   }
 
 
   .card-info {
+
     padding:
-      18px
-      15px
-      17px;
+      20px
+      20px
+      22px;
 
     grid-template-columns:
       minmax(0, 1fr)
-      minmax(75px, auto);
+      minmax(80px, auto);
 
-    column-gap: 12px;
+    gap: 15px;
+
   }
 
 
   .card-info::before {
-    left: 14px;
-    right: 14px;
-  }
 
+    left: 20px;
+    right: 20px;
 
-  .card-role {
-    font-size: 0.86rem;
-  }
-
-
-  .card-working,
-  .card-experience,
-  .card-salary,
-  .card-category {
-    font-size: 0.72rem;
   }
 
 
@@ -1173,27 +1569,31 @@ footer {
   /* CONTRIBUTE */
 
   .contribute-section {
+
     display: block;
 
-    min-height: 440px;
+    min-height: 600px;
 
     padding:
-      45px
+      60px
       5vw;
+
   }
 
 
   .contribute-copy h2 {
-    font-size: 2.45rem;
+
+    font-size: 2.8rem;
+
   }
 
 
   .contribute-action {
-    margin-top: 45px;
 
-    padding: 0;
+    margin-top: 55px;
 
     justify-content: flex-start;
+
   }
 
 
@@ -1201,15 +1601,19 @@ footer {
   /* ABOUT */
 
   .about-section {
+
     padding:
-      45px
+      60px
       5vw
-      75px;
+      100px;
+
   }
 
 
   .about-copy {
+
     width: 100%;
+
   }
 
 }

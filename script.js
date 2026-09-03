@@ -12,10 +12,6 @@ let carouselLocked = false;
 
 
 
-/* =========================================
-   DOM
-========================================= */
-
 const libraryGrid =
   document.getElementById("library-grid");
 
@@ -43,11 +39,12 @@ const previousButton =
 const nextButton =
   document.getElementById("next-button");
 
+const hero =
+  document.getElementById("top");
 
 
-/* =========================================
-   LOAD DATA
-========================================= */
+
+/* LOAD */
 
 async function loadInsights() {
 
@@ -97,7 +94,7 @@ async function loadInsights() {
   catch (error) {
 
     console.warn(
-      "Normal fetch failed:",
+      "Fetch failed:",
       error
     );
 
@@ -136,9 +133,7 @@ async function loadInsights() {
 
 
 
-/* =========================================
-   PARSE RESPONSE
-========================================= */
+/* PARSE */
 
 function parseResponseText(text) {
 
@@ -198,10 +193,6 @@ function parseResponseText(text) {
 
 
 
-/* =========================================
-   EXTRACT ARRAY
-========================================= */
-
 function extractArray(value) {
 
   if (
@@ -256,9 +247,7 @@ function extractArray(value) {
 
 
 
-/* =========================================
-   JSONP FALLBACK
-========================================= */
+/* JSONP */
 
 function loadWithJSONP() {
 
@@ -267,7 +256,7 @@ function loadWithJSONP() {
 
 
       const callbackName =
-        "archiveCallback_" +
+        "libraryCallback_" +
         Date.now() +
         "_" +
         Math.floor(
@@ -350,7 +339,7 @@ function loadWithJSONP() {
 
             reject(
               new Error(
-                "No data array found."
+                "No data array."
               )
             );
 
@@ -412,9 +401,7 @@ function loadWithJSONP() {
 
 
 
-/* =========================================
-   NORMALISE
-========================================= */
+/* NORMALISE */
 
 function useLoadedData(data) {
 
@@ -535,11 +522,6 @@ function normalizeInsight(raw) {
 
 
 
-/*
-  No date / timestamp / ID / number
-  is imported.
-*/
-
 function firstValue(
   object,
   names
@@ -612,9 +594,7 @@ function firstValue(
 
 
 
-/* =========================================
-   CLEANING
-========================================= */
+/* HELPERS */
 
 function clean(value) {
 
@@ -650,10 +630,7 @@ function key(value) {
 
   return clean(value)
     .toLowerCase()
-    .replace(
-      /\s+/g,
-      " "
-    );
+    .replace(/\s+/g, " ");
 
 }
 
@@ -667,9 +644,7 @@ function same(a, b) {
 
 
 
-/* =========================================
-   CATEGORIES
-========================================= */
+/* CATEGORIES */
 
 const categoryDefinitions = [
 
@@ -686,7 +661,6 @@ const categoryDefinitions = [
     terms: [
       "money",
       "salary",
-      "salaries",
       "income",
       "pricing",
       "fee",
@@ -749,9 +723,7 @@ const categoryDefinitions = [
 function getCategories(insight) {
 
   const raw =
-    key(
-      insight.category
-    );
+    key(insight.category);
 
 
   if (!raw) {
@@ -790,28 +762,13 @@ function getCategories(insight) {
   );
 
 
-  if (!result.length) {
-
-    splitFallback(raw)
-      .forEach(
-        item =>
-          result.push(
-            titleCase(item)
-          )
-      );
-
-  }
-
-
   return unique(result);
 
 }
 
 
 
-/* =========================================
-   WORKING TYPES
-========================================= */
+/* WORK TYPE */
 
 const workingDefinitions = [
 
@@ -832,12 +789,13 @@ const workingDefinitions = [
   },
 
   {
-    label: "Independent / Founder",
+    label: "Studio founder",
     terms: [
       "independent",
       "founder",
       "own studio",
-      "studio owner"
+      "studio owner",
+      "studio founder"
     ]
   },
 
@@ -916,9 +874,7 @@ function getWorkingTypes(insight) {
 
 
 
-/* =========================================
-   AVAILABLE FILTERS
-========================================= */
+/* AVAILABLE FILTERS */
 
 function getAvailableCategories() {
 
@@ -930,8 +886,8 @@ function getAvailableCategories() {
 
       getCategories(insight)
         .forEach(
-          category =>
-            values.push(category)
+          item =>
+            values.push(item)
         );
 
     }
@@ -954,8 +910,8 @@ function getAvailableWorkingTypes() {
 
       getWorkingTypes(insight)
         .forEach(
-          type =>
-            values.push(type)
+          item =>
+            values.push(item)
         );
 
     }
@@ -968,9 +924,7 @@ function getAvailableWorkingTypes() {
 
 
 
-/* =========================================
-   COUNTS
-========================================= */
+/* FILTER COUNTS */
 
 function countCategory(category) {
 
@@ -1026,32 +980,25 @@ function countWorking(type) {
 
 
 
-/* =========================================
-   BUILD FILTERS
-========================================= */
+/* BUILD FILTERS */
 
 function createCategoryFilters() {
 
-  categoryFilters.innerHTML = "";
+  categoryFilters.innerHTML =
+    "";
 
 
   addFilter({
-
     container:
       categoryFilters,
-
     label:
       "all",
-
     value:
       "ALL",
-
     type:
       "category",
-
     count:
       insights.length
-
   });
 
 
@@ -1060,22 +1007,16 @@ function createCategoryFilters() {
       category => {
 
         addFilter({
-
           container:
             categoryFilters,
-
           label:
             category.toLowerCase(),
-
           value:
             category,
-
           type:
             "category",
-
           count:
             countCategory(category)
-
         });
 
       }
@@ -1109,26 +1050,21 @@ function createWorkingFilters() {
     );
 
 
-  workingFilters.innerHTML = "";
+  workingFilters.innerHTML =
+    "";
 
 
   addFilter({
-
     container:
       workingFilters,
-
     label:
       "all",
-
     value:
       "ALL",
-
     type:
       "working",
-
     count:
       insights.length
-
   });
 
 
@@ -1136,22 +1072,16 @@ function createWorkingFilters() {
     type => {
 
       addFilter({
-
         container:
           workingFilters,
-
         label:
           type.toLowerCase(),
-
         value:
           type,
-
         type:
           "working",
-
         count:
           countWorking(type)
-
       });
 
     }
@@ -1264,9 +1194,7 @@ function addFilter({
 
 
 
-/* =========================================
-   FILTER RESULTS
-========================================= */
+/* FILTER RESULTS */
 
 function getFilteredInsights() {
 
@@ -1283,24 +1211,26 @@ function getFilteredInsights() {
 
 
       const categoryMatch =
-        selectedCategory === "ALL"
+        selectedCategory ===
+          "ALL"
         ||
         categories.some(
-          category =>
+          item =>
             same(
-              category,
+              item,
               selectedCategory
             )
         );
 
 
       const workingMatch =
-        selectedWorkingAs === "ALL"
+        selectedWorkingAs ===
+          "ALL"
         ||
         workingTypes.some(
-          type =>
+          item =>
             same(
-              type,
+              item,
               selectedWorkingAs
             )
         );
@@ -1318,43 +1248,7 @@ function getFilteredInsights() {
 
 
 
-/* =========================================
-   TEXT LENGTH
-========================================= */
-
-function getLengthClass(advice) {
-
-  const length =
-    clean(advice).length;
-
-
-  if (
-    length > 390
-  ) {
-
-    return "very-long";
-
-  }
-
-
-  if (
-    length > 220
-  ) {
-
-    return "long";
-
-  }
-
-
-  return "";
-
-}
-
-
-
-/* =========================================
-   DISPLAY LIBRARY
-========================================= */
+/* DISPLAY LIBRARY */
 
 function displayLibrary() {
 
@@ -1362,7 +1256,8 @@ function displayLibrary() {
     getFilteredInsights();
 
 
-  libraryGrid.innerHTML = "";
+  libraryGrid.innerHTML =
+    "";
 
 
   insightCount.textContent =
@@ -1392,19 +1287,8 @@ function displayLibrary() {
         );
 
 
-      const lengthClass =
-        getLengthClass(
-          insight.advice
-        );
-
-
       card.className =
-        "library-card" +
-        (
-          lengthClass
-            ? ` ${lengthClass}`
-            : ""
-        );
+        "library-card";
 
 
       const categories =
@@ -1430,48 +1314,32 @@ function displayLibrary() {
 
 
       const role =
-        clean(
-          insight.role
-        );
-
-
-      const working =
-        workingTypes.join(" / ");
-
-
-      const experience =
-        clean(
-          insight.experience
-        );
-
-
-      const salary =
-        clean(
-          insight.salary
-        );
+        clean(insight.role);
 
 
       const secondary =
         [];
 
 
-      if (working) {
+      if (
+        workingTypes.length
+      ) {
 
         secondary.push(
-          working
+          workingTypes.join(
+            " / "
+          )
         );
 
       }
 
 
-      /*
-        No "in practice".
-      */
-
-      if (experience) {
+      if (
+        insight.experience
+      ) {
 
         secondary.push(
-          experience
+          insight.experience
         );
 
       }
@@ -1481,7 +1349,10 @@ function displayLibrary() {
 
         <div class="card-advice-area">
 
-          <p class="card-advice">
+          <p
+            class="card-advice"
+            tabindex="0"
+          >
             “${escapeHTML(
               insight.advice
             )}”
@@ -1492,8 +1363,7 @@ function displayLibrary() {
 
         <div class="card-info">
 
-
-          <div class="card-meta">
+          <div>
 
             ${
               role
@@ -1504,7 +1374,6 @@ function displayLibrary() {
                 `
                 : ""
             }
-
 
             ${
               secondary.length
@@ -1520,13 +1389,12 @@ function displayLibrary() {
                 : ""
             }
 
-
             ${
-              salary
+              insight.salary
                 ? `
                   <div class="card-salary">
                     ${escapeHTML(
-                      salary
+                      insight.salary
                     )}
                   </div>
                 `
@@ -1540,7 +1408,6 @@ function displayLibrary() {
             ${categoryHTML}
           </div>
 
-
         </div>
 
       `;
@@ -1553,34 +1420,95 @@ function displayLibrary() {
     }
   );
 
+
+  requestAnimationFrame(
+    initialiseCardOverflow
+  );
+
 }
 
 
 
-/* =========================================
-   CAROUSEL
-========================================= */
+/* OVERFLOW */
+
+function initialiseCardOverflow() {
+
+  const areas =
+    document.querySelectorAll(
+      ".card-advice-area"
+    );
+
+
+  areas.forEach(
+    area => {
+
+
+      const advice =
+        area.querySelector(
+          ".card-advice"
+        );
+
+
+      if (!advice) {
+
+        return;
+
+      }
+
+
+      function update() {
+
+        const overflowing =
+          advice.scrollHeight >
+          advice.clientHeight +
+          2;
+
+
+        area.classList.toggle(
+          "has-overflow",
+          overflowing
+        );
+
+
+        const atBottom =
+          advice.scrollTop +
+          advice.clientHeight >=
+          advice.scrollHeight -
+          3;
+
+
+        area.classList.toggle(
+          "at-bottom",
+          atBottom
+        );
+
+      }
+
+
+      advice.addEventListener(
+        "scroll",
+        update,
+        {
+          passive: true
+        }
+      );
+
+
+      update();
+
+    }
+  );
+
+}
+
+
+
+/* CAROUSEL */
 
 function buildCarousel() {
 
-  carouselTrack.innerHTML = "";
-
-
-  if (!insights.length) {
-
-    carouselTrack.innerHTML = `
-      <div class="carousel-slide active">
-
-        <p class="carousel-advice">
-          The library is currently empty.
-        </p>
-
-      </div>
-    `;
-
-    return;
-
-  }
+  carouselTrack.innerHTML =
+    "";
 
 
   insights.forEach(
@@ -1593,41 +1521,26 @@ function buildCarousel() {
         );
 
 
-      const lengthClass =
-        getLengthClass(
-          insight.advice
-        );
-
-
       slide.className =
         "carousel-slide" +
         (
           index === 0
             ? " active"
             : ""
-        ) +
-        (
-          lengthClass
-            ? ` ${lengthClass}`
-            : ""
         );
 
 
-      const categories =
-        getCategories(insight);
-
-
       const workingTypes =
-        getWorkingTypes(insight);
+        getWorkingTypes(
+          insight
+        );
 
 
       const meta =
         [];
 
 
-      if (
-        insight.role
-      ) {
+      if (insight.role) {
 
         meta.push(
           insight.role
@@ -1660,17 +1573,6 @@ function buildCarousel() {
       }
 
 
-      if (
-        insight.salary
-      ) {
-
-        meta.push(
-          insight.salary
-        );
-
-      }
-
-
       slide.innerHTML = `
 
         <p class="carousel-advice">
@@ -1678,7 +1580,6 @@ function buildCarousel() {
             insight.advice
           )}”
         </p>
-
 
         ${
           meta.length
@@ -1689,29 +1590,6 @@ function buildCarousel() {
                     " · "
                   )
                 )}
-              </div>
-            `
-            : ""
-        }
-
-
-        ${
-          categories.length
-            ? `
-              <div class="carousel-categories">
-
-                ${categories
-                  .map(
-                    category => `
-                      <span>
-                        ${escapeHTML(
-                          category.toLowerCase()
-                        )}
-                      </span>
-                    `
-                  )
-                  .join("")}
-
               </div>
             `
             : ""
@@ -1731,25 +1609,9 @@ function buildCarousel() {
 
 
 
-/* =========================================
-   CAROUSEL MOVEMENT
-========================================= */
+/* CAROUSEL MOVEMENT */
 
 function moveCarousel(direction) {
-
-  if (
-    carouselLocked ||
-    insights.length < 2
-  ) {
-
-    return;
-
-  }
-
-
-  carouselLocked =
-    true;
-
 
   const slides =
     Array.from(
@@ -1760,8 +1622,21 @@ function moveCarousel(direction) {
     );
 
 
-  const oldIndex =
-    carouselIndex;
+  if (
+    carouselLocked ||
+    slides.length < 2
+  ) {
+
+    return;
+
+  }
+
+
+  carouselLocked = true;
+
+
+  const current =
+    slides[carouselIndex];
 
 
   if (
@@ -1779,15 +1654,12 @@ function moveCarousel(direction) {
 
     carouselIndex =
       (
-        carouselIndex - 1 +
+        carouselIndex -
+        1 +
         slides.length
       ) % slides.length;
 
   }
-
-
-  const current =
-    slides[oldIndex];
 
 
   const next =
@@ -1806,8 +1678,8 @@ function moveCarousel(direction) {
 
   next.style.transform =
     direction === 1
-      ? "translateX(110%)"
-      : "translateX(-110%)";
+      ? "translateX(110vw)"
+      : "translateX(-110vw)";
 
 
   next.style.opacity =
@@ -1844,7 +1716,7 @@ function moveCarousel(direction) {
           else {
 
             current.style.transform =
-              "translateX(110%)";
+              "translateX(110vw)";
 
             current.style.opacity =
               "0";
@@ -1865,11 +1737,9 @@ function moveCarousel(direction) {
           setTimeout(
             () => {
 
-
               current.classList.remove(
                 "exit-left"
               );
-
 
               current.style.transform =
                 "";
@@ -1877,13 +1747,12 @@ function moveCarousel(direction) {
               current.style.opacity =
                 "";
 
-
               carouselLocked =
                 false;
 
             },
 
-            650
+            900
           );
 
         }
@@ -1895,10 +1764,6 @@ function moveCarousel(direction) {
 }
 
 
-
-/* =========================================
-   CAROUSEL BUTTONS
-========================================= */
 
 nextButton.addEventListener(
   "click",
@@ -1913,82 +1778,96 @@ previousButton.addEventListener(
 
 
 
-/* KEYBOARD */
+/* HERO MENU TRANSITION */
 
-document.addEventListener(
-  "keydown",
-  event => {
+function initialiseHeroMenuTransition() {
 
+  function update() {
 
-    if (
-      event.key ===
-      "ArrowRight"
-    ) {
-
-      moveCarousel(1);
-
-    }
+    const trigger =
+      hero.offsetHeight -
+      170;
 
 
-    if (
-      event.key ===
-      "ArrowLeft"
-    ) {
+    const settled =
+      window.scrollY >
+      trigger;
 
-      moveCarousel(-1);
 
-    }
+    document.body.classList.toggle(
+      "menu-settled",
+      settled
+    );
 
   }
-);
+
+
+  window.addEventListener(
+    "scroll",
+    update,
+    {
+      passive: true
+    }
+  );
+
+
+  window.addEventListener(
+    "resize",
+    update
+  );
+
+
+  update();
+
+}
 
 
 
-/* =========================================
-   CLEAR FILTERS
-========================================= */
+/* MENU GRADIENT */
 
-clearFilters.addEventListener(
-  "click",
-  () => {
+function initialiseMenuGradient() {
 
-
-    selectedCategory =
-      "ALL";
+  const buttons =
+    document.querySelectorAll(
+      ".menu-pill"
+    );
 
 
-    selectedWorkingAs =
-      "ALL";
+  buttons.forEach(
+    button => {
+
+      button.addEventListener(
+        "pointermove",
+        event => {
+
+          const rect =
+            button.getBoundingClientRect();
 
 
-    createCategoryFilters();
-
-    createWorkingFilters();
-
-    displayLibrary();
-
-  }
-);
+          button.style.setProperty(
+            "--pill-x",
+            `${event.clientX - rect.left}px`
+          );
 
 
+          button.style.setProperty(
+            "--pill-y",
+            `${event.clientY - rect.top}px`
+          );
 
-/* =========================================
-   MOVING LIBRARY SPOTLIGHT
-========================================= */
+        }
+      );
+
+    }
+  );
+
+}
+
+
+
+/* LIBRARY SPOTLIGHT */
 
 function initialiseLibrarySpotlight() {
-
-  if (!libraryGrid) {
-
-    return;
-
-  }
-
-
-  /*
-    Only use the effect on a device
-    with a real hover pointer / mouse.
-  */
 
   const canHover =
     window.matchMedia(
@@ -1996,25 +1875,23 @@ function initialiseLibrarySpotlight() {
     ).matches;
 
 
-  if (!canHover) {
+  if (
+    !canHover ||
+    !libraryGrid
+  ) {
 
     return;
 
   }
 
 
-
-  /* SHOW */
-
   libraryGrid.addEventListener(
     "pointerenter",
     event => {
 
-
       updateLibrarySpotlight(
         event
       );
-
 
       libraryGrid.style.setProperty(
         "--spotlight-opacity",
@@ -2025,29 +1902,15 @@ function initialiseLibrarySpotlight() {
   );
 
 
-
-  /* MOVE */
-
   libraryGrid.addEventListener(
     "pointermove",
-    event => {
-
-
-      updateLibrarySpotlight(
-        event
-      );
-
-    }
+    updateLibrarySpotlight
   );
 
-
-
-  /* HIDE */
 
   libraryGrid.addEventListener(
     "pointerleave",
     () => {
-
 
       libraryGrid.style.setProperty(
         "--spotlight-opacity",
@@ -2061,45 +1924,51 @@ function initialiseLibrarySpotlight() {
 
 
 
-/* =========================================
-   SPOTLIGHT POSITION
-========================================= */
-
 function updateLibrarySpotlight(event) {
 
   const rect =
-    libraryGrid
-      .getBoundingClientRect();
-
-
-  const x =
-    event.clientX -
-    rect.left;
-
-
-  const y =
-    event.clientY -
-    rect.top;
+    libraryGrid.getBoundingClientRect();
 
 
   libraryGrid.style.setProperty(
     "--mouse-x",
-    `${x}px`
+    `${event.clientX - rect.left}px`
   );
 
 
   libraryGrid.style.setProperty(
     "--mouse-y",
-    `${y}px`
+    `${event.clientY - rect.top}px`
   );
 
 }
 
 
 
-/* =========================================
-   ERROR
-========================================= */
+/* CLEAR FILTERS */
+
+clearFilters.addEventListener(
+  "click",
+  () => {
+
+    selectedCategory =
+      "ALL";
+
+    selectedWorkingAs =
+      "ALL";
+
+    createCategoryFilters();
+
+    createWorkingFilters();
+
+    displayLibrary();
+
+  }
+);
+
+
+
+/* ERROR */
 
 function showError() {
 
@@ -2111,13 +1980,11 @@ function showError() {
 
 
   carouselTrack.innerHTML = `
-    <div class="carousel-slide active">
-
+    <article class="carousel-slide active">
       <p class="carousel-advice">
         The library is temporarily unavailable.
       </p>
-
-    </div>
+    </article>
   `;
 
 
@@ -2128,9 +1995,7 @@ function showError() {
 
 
 
-/* =========================================
-   HELPERS
-========================================= */
+/* UTILITIES */
 
 function containsTerm(
   text,
@@ -2152,79 +2017,33 @@ function containsTerm(
 
 function unique(values) {
 
-  const used =
+  const seen =
     new Set();
 
 
-  const result =
-    [];
-
-
-  values.forEach(
+  return values.filter(
     value => {
 
-
-      const cleaned =
-        clean(value);
-
-
       const normalized =
-        key(cleaned);
+        key(value);
 
 
       if (
-        cleaned &&
-        !used.has(
-          normalized
-        )
+        !normalized ||
+        seen.has(normalized)
       ) {
 
-        used.add(
-          normalized
-        );
-
-
-        result.push(
-          cleaned
-        );
+        return false;
 
       }
 
+
+      seen.add(normalized);
+
+      return true;
+
     }
   );
-
-
-  return result;
-
-}
-
-
-
-function splitFallback(value) {
-
-  return clean(value)
-    .split(
-      /\s*(?:,|;|\||&|\+|\band\b)\s*/i
-    )
-    .map(
-      item =>
-        clean(item)
-    )
-    .filter(Boolean);
-
-}
-
-
-
-function titleCase(value) {
-
-  return clean(value)
-    .toLowerCase()
-    .replace(
-      /\b\w/g,
-      letter =>
-        letter.toUpperCase()
-    );
 
 }
 
@@ -2247,34 +2066,17 @@ function escapeHTML(value) {
   return String(
     value ?? ""
   )
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-    .replace(
-      /</g,
-      "&lt;"
-    )
-    .replace(
-      />/g,
-      "&gt;"
-    )
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-    .replace(
-      /'/g,
-      "&#039;"
-    );
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 
 }
 
 
 
-/* =========================================
-   INITIALISE
-========================================= */
+/* INITIALISE */
 
 function initialiseLibrary() {
 
@@ -2289,10 +2091,9 @@ function initialiseLibrary() {
 }
 
 
+initialiseHeroMenuTransition();
 
-/* =========================================
-   START
-========================================= */
+initialiseMenuGradient();
 
 initialiseLibrarySpotlight();
 

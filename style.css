@@ -140,15 +140,11 @@ button {
 }
 
 
-/* NO HOVER ANIMATION */
-
 .moving-nav a:hover,
 .about-nav a:hover {
   text-decoration: none;
 }
 
-
-/* CHANGE TO YELLOW OVER YELLOW SECTIONS */
 
 .moving-nav.on-yellow a,
 .about-nav.on-yellow a {
@@ -296,7 +292,7 @@ button {
 
   position: absolute;
 
-  inset: -90px -45px;
+  inset: -70px -35px;
 
   z-index: 0;
 
@@ -304,14 +300,14 @@ button {
 
   background:
     radial-gradient(
-      circle 145px
+      circle 120px
       at var(--arrow-x) var(--arrow-y),
 
-      rgba(247, 241, 220, 1) 0%,
-      rgba(247, 241, 220, 0.90) 22%,
-      rgba(247, 241, 220, 0.58) 43%,
-      rgba(247, 241, 220, 0.22) 62%,
-      rgba(247, 241, 220, 0) 78%
+      rgba(247, 241, 220, 0.92) 0%,
+      rgba(247, 241, 220, 0.72) 25%,
+      rgba(247, 241, 220, 0.42) 48%,
+      rgba(247, 241, 220, 0.15) 68%,
+      rgba(247, 241, 220, 0) 88%
     );
 
   opacity: var(--arrow-opacity);
@@ -344,7 +340,7 @@ button {
 
 
 
-/* MOVING GRADIENT UNDER HERO ADVICE */
+/* SMALLER + SOFTER HERO GRADIENT */
 
 .carousel-window::before {
 
@@ -352,7 +348,7 @@ button {
 
   position: absolute;
 
-  inset: -100px -120px;
+  inset: -55px -65px;
 
   z-index: 0;
 
@@ -360,14 +356,14 @@ button {
 
   background:
     radial-gradient(
-      circle 280px
+      circle 185px
       at var(--advice-x) var(--advice-y),
 
-      rgba(247, 241, 220, 1) 0%,
-      rgba(247, 241, 220, 0.92) 20%,
-      rgba(247, 241, 220, 0.67) 40%,
-      rgba(247, 241, 220, 0.30) 60%,
-      rgba(247, 241, 220, 0) 80%
+      rgba(247, 241, 220, 0.95) 0%,
+      rgba(247, 241, 220, 0.72) 24%,
+      rgba(247, 241, 220, 0.42) 46%,
+      rgba(247, 241, 220, 0.16) 66%,
+      rgba(247, 241, 220, 0) 88%
     );
 
   opacity: var(--advice-opacity);
@@ -461,7 +457,9 @@ button {
 
 
 
-/* HERO ADVICE */
+/* =========================================
+   HERO ADVICE TYPOGRAPHY
+========================================= */
 
 .carousel-advice {
 
@@ -478,9 +476,6 @@ button {
 
 }
 
-
-
-/* KEEP HERO FONT SIZE CONSISTENT TOO */
 
 .carousel-slide.long .carousel-advice,
 .carousel-slide.very-long .carousel-advice {
@@ -590,8 +585,6 @@ button {
 }
 
 
-
-/* SAME SIZE AS HERO ADVICE */
 
 .library-heading p {
 
@@ -891,7 +884,7 @@ button {
 
 
 
-/* SMALL ELLIPSIS INDICATOR */
+/* ELLIPSIS */
 
 .card-overflow-indicator {
 
@@ -934,7 +927,7 @@ button {
 
 
 
-/* WEBKIT SCROLLBAR */
+/* SCROLLBAR */
 
 .card-advice-area::-webkit-scrollbar {
   width: 5px;

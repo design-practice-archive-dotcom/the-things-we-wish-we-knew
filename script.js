@@ -137,7 +137,7 @@ async function loadInsights() {
 
 
 /* =========================================
-   PARSE
+   PARSE RESPONSE
 ========================================= */
 
 function parseResponseText(text) {
@@ -198,6 +198,10 @@ function parseResponseText(text) {
 
 
 
+/* =========================================
+   EXTRACT ARRAY
+========================================= */
+
 function extractArray(value) {
 
   if (
@@ -253,7 +257,7 @@ function extractArray(value) {
 
 
 /* =========================================
-   JSONP
+   JSONP FALLBACK
 ========================================= */
 
 function loadWithJSONP() {
@@ -532,9 +536,8 @@ function normalizeInsight(raw) {
 
 
 /*
-  Important:
-  no date, timestamp, number or ID
-  is imported or displayed.
+  No date / timestamp / ID / number
+  is imported.
 */
 
 function firstValue(
@@ -647,7 +650,10 @@ function key(value) {
 
   return clean(value)
     .toLowerCase()
-    .replace(/\s+/g, " ");
+    .replace(
+      /\s+/g,
+      " "
+    );
 
 }
 
@@ -669,7 +675,10 @@ const categoryDefinitions = [
 
   {
     label: "Career",
-    terms: ["career", "careers"]
+    terms: [
+      "career",
+      "careers"
+    ]
   },
 
   {
@@ -677,6 +686,7 @@ const categoryDefinitions = [
     terms: [
       "money",
       "salary",
+      "salaries",
       "income",
       "pricing",
       "fee",
@@ -688,7 +698,10 @@ const categoryDefinitions = [
 
   {
     label: "Clients",
-    terms: ["client", "clients"]
+    terms: [
+      "client",
+      "clients"
+    ]
   },
 
   {
@@ -701,7 +714,9 @@ const categoryDefinitions = [
 
   {
     label: "Making",
-    terms: ["making"]
+    terms: [
+      "making"
+    ]
   },
 
   {
@@ -715,12 +730,16 @@ const categoryDefinitions = [
 
   {
     label: "Education",
-    terms: ["education"]
+    terms: [
+      "education"
+    ]
   },
 
   {
     label: "Other",
-    terms: ["other"]
+    terms: [
+      "other"
+    ]
   }
 
 ];
@@ -730,7 +749,9 @@ const categoryDefinitions = [
 function getCategories(insight) {
 
   const raw =
-    key(insight.category);
+    key(
+      insight.category
+    );
 
 
   if (!raw) {
@@ -789,7 +810,7 @@ function getCategories(insight) {
 
 
 /* =========================================
-   WORKING TYPE
+   WORKING TYPES
 ========================================= */
 
 const workingDefinitions = [
@@ -832,12 +853,16 @@ const workingDefinitions = [
 
   {
     label: "Student",
-    terms: ["student"]
+    terms: [
+      "student"
+    ]
   },
 
   {
     label: "Other",
-    terms: ["other"]
+    terms: [
+      "other"
+    ]
   }
 
 ];
@@ -847,7 +872,9 @@ const workingDefinitions = [
 function getWorkingTypes(insight) {
 
   const raw =
-    key(insight.workingAs);
+    key(
+      insight.workingAs
+    );
 
 
   if (!raw) {
@@ -890,7 +917,7 @@ function getWorkingTypes(insight) {
 
 
 /* =========================================
-   FILTER VALUES
+   AVAILABLE FILTERS
 ========================================= */
 
 function getAvailableCategories() {
@@ -1000,7 +1027,7 @@ function countWorking(type) {
 
 
 /* =========================================
-   FILTERS
+   BUILD FILTERS
 ========================================= */
 
 function createCategoryFilters() {
@@ -1164,9 +1191,7 @@ function addFilter({
         selectedCategory
       )
     )
-
     ||
-
     (
       type === "working" &&
       same(
@@ -1231,14 +1256,16 @@ function addFilter({
   );
 
 
-  container.appendChild(button);
+  container.appendChild(
+    button
+  );
 
 }
 
 
 
 /* =========================================
-   FILTERED LIBRARY
+   FILTER RESULTS
 ========================================= */
 
 function getFilteredInsights() {
@@ -1257,9 +1284,7 @@ function getFilteredInsights() {
 
       const categoryMatch =
         selectedCategory === "ALL"
-
         ||
-
         categories.some(
           category =>
             same(
@@ -1271,9 +1296,7 @@ function getFilteredInsights() {
 
       const workingMatch =
         selectedWorkingAs === "ALL"
-
         ||
-
         workingTypes.some(
           type =>
             same(
@@ -1296,7 +1319,7 @@ function getFilteredInsights() {
 
 
 /* =========================================
-   LENGTH
+   TEXT LENGTH
 ========================================= */
 
 function getLengthClass(advice) {
@@ -1305,14 +1328,18 @@ function getLengthClass(advice) {
     clean(advice).length;
 
 
-  if (length > 390) {
+  if (
+    length > 390
+  ) {
 
     return "very-long";
 
   }
 
 
-  if (length > 220) {
+  if (
+    length > 220
+  ) {
 
     return "long";
 
@@ -1326,7 +1353,7 @@ function getLengthClass(advice) {
 
 
 /* =========================================
-   LIBRARY CARDS
+   DISPLAY LIBRARY
 ========================================= */
 
 function displayLibrary() {
@@ -1403,7 +1430,9 @@ function displayLibrary() {
 
 
       const role =
-        clean(insight.role);
+        clean(
+          insight.role
+        );
 
 
       const working =
@@ -1411,30 +1440,39 @@ function displayLibrary() {
 
 
       const experience =
-        clean(insight.experience);
+        clean(
+          insight.experience
+        );
 
 
       const salary =
-        clean(insight.salary);
+        clean(
+          insight.salary
+        );
 
 
-      const secondary = [];
+      const secondary =
+        [];
 
 
       if (working) {
 
-        secondary.push(working);
+        secondary.push(
+          working
+        );
 
       }
 
 
       /*
-        "in practice" deliberately removed.
+        No "in practice".
       */
 
       if (experience) {
 
-        secondary.push(experience);
+        secondary.push(
+          experience
+        );
 
       }
 
@@ -1487,7 +1525,9 @@ function displayLibrary() {
               salary
                 ? `
                   <div class="card-salary">
-                    ${escapeHTML(salary)}
+                    ${escapeHTML(
+                      salary
+                    )}
                   </div>
                 `
                 : ""
@@ -1506,7 +1546,9 @@ function displayLibrary() {
       `;
 
 
-      libraryGrid.appendChild(card);
+      libraryGrid.appendChild(
+        card
+      );
 
     }
   );
@@ -1528,9 +1570,11 @@ function buildCarousel() {
 
     carouselTrack.innerHTML = `
       <div class="carousel-slide active">
+
         <p class="carousel-advice">
           The library is currently empty.
         </p>
+
       </div>
     `;
 
@@ -1577,10 +1621,13 @@ function buildCarousel() {
         getWorkingTypes(insight);
 
 
-      const meta = [];
+      const meta =
+        [];
 
 
-      if (insight.role) {
+      if (
+        insight.role
+      ) {
 
         meta.push(
           insight.role
@@ -1589,16 +1636,22 @@ function buildCarousel() {
       }
 
 
-      if (workingTypes.length) {
+      if (
+        workingTypes.length
+      ) {
 
         meta.push(
-          workingTypes.join(" / ")
+          workingTypes.join(
+            " / "
+          )
         );
 
       }
 
 
-      if (insight.experience) {
+      if (
+        insight.experience
+      ) {
 
         meta.push(
           insight.experience
@@ -1607,7 +1660,9 @@ function buildCarousel() {
       }
 
 
-      if (insight.salary) {
+      if (
+        insight.salary
+      ) {
 
         meta.push(
           insight.salary
@@ -1630,7 +1685,9 @@ function buildCarousel() {
             ? `
               <div class="carousel-meta">
                 ${escapeHTML(
-                  meta.join(" · ")
+                  meta.join(
+                    " · "
+                  )
                 )}
               </div>
             `
@@ -1675,7 +1732,7 @@ function buildCarousel() {
 
 
 /* =========================================
-   SLIDE ANIMATION
+   CAROUSEL MOVEMENT
 ========================================= */
 
 function moveCarousel(direction) {
@@ -1690,7 +1747,8 @@ function moveCarousel(direction) {
   }
 
 
-  carouselLocked = true;
+  carouselLocked =
+    true;
 
 
   const slides =
@@ -1706,7 +1764,9 @@ function moveCarousel(direction) {
     carouselIndex;
 
 
-  if (direction === 1) {
+  if (
+    direction === 1
+  ) {
 
     carouselIndex =
       (
@@ -1736,42 +1796,22 @@ function moveCarousel(direction) {
 
   next.classList.remove(
     "active",
-    "exit-left",
-    "enter-left"
+    "exit-left"
   );
 
 
-  /*
-    Next advice comes from the right.
-  */
+  next.style.transition =
+    "none";
 
-  if (direction === 1) {
 
-    next.style.transition = "none";
+  next.style.transform =
+    direction === 1
+      ? "translateX(110%)"
+      : "translateX(-110%)";
 
-    next.style.transform =
-      "translateX(110%)";
 
-    next.style.opacity =
-      "0";
-
-  }
-
-  /*
-    Previous advice comes from the left.
-  */
-
-  else {
-
-    next.style.transition = "none";
-
-    next.style.transform =
-      "translateX(-110%)";
-
-    next.style.opacity =
-      "0";
-
-  }
+  next.style.opacity =
+    "0";
 
 
   requestAnimationFrame(
@@ -1781,14 +1821,19 @@ function moveCarousel(direction) {
         () => {
 
 
-          next.style.transition = "";
+          next.style.transition =
+            "";
 
-          next.style.transform = "";
+          next.style.transform =
+            "";
 
-          next.style.opacity = "";
+          next.style.opacity =
+            "";
 
 
-          if (direction === 1) {
+          if (
+            direction === 1
+          ) {
 
             current.classList.add(
               "exit-left"
@@ -1851,7 +1896,9 @@ function moveCarousel(direction) {
 
 
 
-/* BUTTONS */
+/* =========================================
+   CAROUSEL BUTTONS
+========================================= */
 
 nextButton.addEventListener(
   "click",
@@ -1866,7 +1913,7 @@ previousButton.addEventListener(
 
 
 
-/* KEYBOARD SUPPORT */
+/* KEYBOARD */
 
 document.addEventListener(
   "keydown",
@@ -1922,6 +1969,131 @@ clearFilters.addEventListener(
 
   }
 );
+
+
+
+/* =========================================
+   MOVING LIBRARY SPOTLIGHT
+========================================= */
+
+function initialiseLibrarySpotlight() {
+
+  if (!libraryGrid) {
+
+    return;
+
+  }
+
+
+  /*
+    Only use the effect on a device
+    with a real hover pointer / mouse.
+  */
+
+  const canHover =
+    window.matchMedia(
+      "(hover: hover) and (pointer: fine)"
+    ).matches;
+
+
+  if (!canHover) {
+
+    return;
+
+  }
+
+
+
+  /* SHOW */
+
+  libraryGrid.addEventListener(
+    "pointerenter",
+    event => {
+
+
+      updateLibrarySpotlight(
+        event
+      );
+
+
+      libraryGrid.style.setProperty(
+        "--spotlight-opacity",
+        "1"
+      );
+
+    }
+  );
+
+
+
+  /* MOVE */
+
+  libraryGrid.addEventListener(
+    "pointermove",
+    event => {
+
+
+      updateLibrarySpotlight(
+        event
+      );
+
+    }
+  );
+
+
+
+  /* HIDE */
+
+  libraryGrid.addEventListener(
+    "pointerleave",
+    () => {
+
+
+      libraryGrid.style.setProperty(
+        "--spotlight-opacity",
+        "0"
+      );
+
+    }
+  );
+
+}
+
+
+
+/* =========================================
+   SPOTLIGHT POSITION
+========================================= */
+
+function updateLibrarySpotlight(event) {
+
+  const rect =
+    libraryGrid
+      .getBoundingClientRect();
+
+
+  const x =
+    event.clientX -
+    rect.left;
+
+
+  const y =
+    event.clientY -
+    rect.top;
+
+
+  libraryGrid.style.setProperty(
+    "--mouse-x",
+    `${x}px`
+  );
+
+
+  libraryGrid.style.setProperty(
+    "--mouse-y",
+    `${y}px`
+  );
+
+}
 
 
 
@@ -2002,12 +2174,19 @@ function unique(values) {
 
       if (
         cleaned &&
-        !used.has(normalized)
+        !used.has(
+          normalized
+        )
       ) {
 
-        used.add(normalized);
+        used.add(
+          normalized
+        );
 
-        result.push(cleaned);
+
+        result.push(
+          cleaned
+        );
 
       }
 
@@ -2068,11 +2247,26 @@ function escapeHTML(value) {
   return String(
     value ?? ""
   )
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
 
 }
 
@@ -2099,5 +2293,7 @@ function initialiseLibrary() {
 /* =========================================
    START
 ========================================= */
+
+initialiseLibrarySpotlight();
 
 loadInsights();

@@ -42,12 +42,37 @@
 <body>
 
 
-  <!-- HERO -->
+  <!-- FIXED NAVIGATION -->
+
+  <nav class="top-nav">
+
+    <a href="#library">
+      library
+    </a>
+
+    <a href="#about">
+      about
+    </a>
+
+    <a href="#contribute">
+      contribute
+    </a>
+
+  </nav>
+
+
+
+  <!-- =====================================
+       HERO / LANDING PAGE
+  ====================================== -->
 
   <header
     id="top"
     class="hero"
   >
+
+
+    <!-- TITLE -->
 
     <a
       href="#top"
@@ -60,56 +85,81 @@
     </a>
 
 
-    <nav class="top-nav">
 
-      <a href="#archive">
-        archive
-      </a>
+    <!-- RANDOM ADVICE / CAROUSEL -->
 
-      <a href="#about">
-        about
-      </a>
+    <div class="hero-carousel">
 
-      <a
-        href="https://docs.google.com/forms/d/e/1FAIpQLScjiItmC0lLiyAeuG68L-sKDdghVBmpc2iqTyt22s_fOLPhBw/viewform?usp=header"
-        target="_blank"
-        rel="noopener"
-      >
-        leave an advice
-      </a>
-
-    </nav>
+      <div class="carousel-label">
+        from the library
+      </div>
 
 
-    <div class="hero-intro">
+      <div class="carousel-stage">
 
-      <p>
-        A growing collection of advice<br>
-        from people working in design.
-      </p>
+        <button
+          id="previous-button"
+          class="carousel-arrow carousel-arrow-left"
+          type="button"
+          aria-label="Previous advice"
+        >
+          ←
+        </button>
 
-      <p class="hero-question">
-        What knowledge would you pass on?
-      </p>
+
+        <div class="carousel-window">
+
+          <div
+            id="carousel-track"
+            class="carousel-track"
+          ></div>
+
+        </div>
 
 
-      <div class="hero-links">
+        <button
+          id="next-button"
+          class="carousel-arrow carousel-arrow-right"
+          type="button"
+          aria-label="Next advice"
+        >
+          →
+        </button>
 
-        <a href="#archive">
-          archive
+      </div>
+
+
+      <div class="hero-actions">
+
+        <a
+          href="#library"
+          class="hero-button hero-button-filled"
+        >
+          library
         </a>
 
         <a
           href="https://docs.google.com/forms/d/e/1FAIpQLScjiItmC0lLiyAeuG68L-sKDdghVBmpc2iqTyt22s_fOLPhBw/viewform?usp=header"
+          class="hero-button hero-button-outline"
           target="_blank"
           rel="noopener"
         >
-          leave your own advice
+          contribute
         </a>
 
       </div>
 
     </div>
+
+
+
+    <!-- DESCRIPTION -->
+
+    <p class="hero-description">
+      A growing collection of advice<br>
+      from people working in design.
+    </p>
+
 
   </header>
 
@@ -118,63 +168,56 @@
   <main>
 
 
-    <!-- FEATURED -->
+    <!-- =====================================
+         LIBRARY
+    ====================================== -->
 
-    <section class="featured-section">
-
-      <div class="featured-inner">
-
-        <div class="eyebrow">
-          from the archive
-        </div>
+    <section
+      id="library"
+      class="library-section"
+    >
 
 
-        <div
-          id="featured-insight"
-          class="featured-insight"
-        >
-          <p class="featured-quote">
-            Loading archive...
+      <div class="library-heading">
+
+        <div>
+          <div class="eyebrow">
+            library
+          </div>
+
+          <p>
+            Advice from people working in design.
           </p>
         </div>
 
 
-        <button
-          id="another-button"
-          class="plain-button"
-          type="button"
-        >
-          another →
-        </button>
+        <div class="library-count">
+          <span id="insight-count">0</span>
+          entries
+        </div>
 
       </div>
 
-    </section>
 
 
+      <!-- FILTERS -->
 
-    <!-- ARCHIVE -->
-
-    <section
-      id="archive"
-      class="archive-section"
-    >
-
-      <div class="archive-filters">
+      <div class="library-filters">
 
 
         <div class="filter-block">
 
-          <div class="eyebrow">
+          <div class="filter-heading">
             what are they talking about?
           </div>
 
           <div
             id="category-filters"
-            class="filter-list"
+            class="filter-columns"
           ></div>
 
         </div>
+
 
 
         <div
@@ -182,13 +225,13 @@
           class="filter-block"
         >
 
-          <div class="eyebrow">
-            who is speaking
+          <div class="filter-heading">
+            who is speaking?
           </div>
 
           <div
             id="working-filters"
-            class="filter-list"
+            class="filter-columns"
           ></div>
 
         </div>
@@ -198,12 +241,7 @@
 
 
 
-      <div class="archive-topline">
-
-        <div class="archive-count">
-          <span id="insight-count">0</span>
-          insights
-        </div>
+      <div class="library-controls">
 
         <button
           id="clear-filters"
@@ -217,16 +255,21 @@
 
 
 
+      <!-- CARDS -->
+
       <div
-        id="archive-grid"
-        class="archive-grid"
+        id="library-grid"
+        class="library-grid"
       ></div>
+
 
     </section>
 
 
 
-    <!-- CONTRIBUTE -->
+    <!-- =====================================
+         CONTRIBUTE
+    ====================================== -->
 
     <section
       id="contribute"
@@ -239,17 +282,20 @@
           contribute
         </div>
 
+
         <h2>
           What is one thing<br>
           you wish someone<br>
           had told you?
         </h2>
 
+
         <p>
           It can be about work, money, clients, careers,
-          collaboration, education — or anything else you
-          learned along the way.
+          collaboration, education — or anything else
+          you learned along the way.
         </p>
+
 
         <p class="anonymous-note">
           Every contribution is anonymous.
@@ -258,14 +304,16 @@
       </div>
 
 
+
       <div class="contribute-action">
 
         <a
           href="https://docs.google.com/forms/d/e/1FAIpQLScjiItmC0lLiyAeuG68L-sKDdghVBmpc2iqTyt22s_fOLPhBw/viewform?usp=header"
+          class="contribute-button"
           target="_blank"
           rel="noopener"
         >
-          leave yours →
+          leave yours
         </a>
 
       </div>
@@ -274,7 +322,9 @@
 
 
 
-    <!-- ABOUT -->
+    <!-- =====================================
+         ABOUT
+    ====================================== -->
 
     <section
       id="about"
@@ -282,7 +332,7 @@
     >
 
       <div class="eyebrow">
-        about the archive
+        about the library
       </div>
 
 
@@ -290,11 +340,9 @@
 
         <p class="about-credit">
           Collected from many,<br>
-          curated by
-          <a href="mailto:anja@zachau.org">
-            Anja Zachau
-          </a>.
+          curated by Anja Zachau.
         </p>
+
 
         <p>
           Design education teaches us how to design.
@@ -303,9 +351,10 @@
           and everything in between.
         </p>
 
+
         <p>
           A lot of that knowledge is never written down.
-          This archive collects some of it.
+          This library collects some of it.
         </p>
 
       </div>

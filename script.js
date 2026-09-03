@@ -34,7 +34,6 @@ const workingFilterArea =
 const clearFilters =
   document.getElementById("clear-filters");
 
-
 const carouselTrack =
   document.getElementById("carousel-track");
 
@@ -49,7 +48,6 @@ const previousButton =
 
 const nextButton =
   document.getElementById("next-button");
-
 
 const movingNav =
   document.getElementById("moving-nav");
@@ -78,11 +76,7 @@ async function loadInsights() {
 
 
     if (!response.ok) {
-
-      throw new Error(
-        "HTTP " + response.status
-      );
-
+      throw new Error("HTTP " + response.status);
     }
 
 
@@ -161,9 +155,7 @@ function parseResponseText(text) {
 
 
   if (!trimmed) {
-
     return null;
-
   }
 
 
@@ -174,9 +166,7 @@ function parseResponseText(text) {
   }
 
   catch (error) {
-
     /* continue */
-
   }
 
 
@@ -186,10 +176,7 @@ function parseResponseText(text) {
     );
 
 
-  if (
-    match &&
-    match[1]
-  ) {
+  if (match && match[1]) {
 
     try {
 
@@ -216,12 +203,8 @@ function parseResponseText(text) {
 
 function extractArray(value) {
 
-  if (
-    Array.isArray(value)
-  ) {
-
+  if (Array.isArray(value)) {
     return value;
-
   }
 
 
@@ -244,10 +227,7 @@ function extractArray(value) {
   ];
 
 
-  for (
-    const property
-    of keys
-  ) {
+  for (const property of keys) {
 
     if (
       Array.isArray(
@@ -298,9 +278,7 @@ function loadWithJSONP() {
 
       function cleanup() {
 
-        if (
-          window[callbackName]
-        ) {
+        if (window[callbackName]) {
 
           delete window[
             callbackName
@@ -309,9 +287,7 @@ function loadWithJSONP() {
         }
 
 
-        if (
-          script.parentNode
-        ) {
+        if (script.parentNode) {
 
           script.remove();
 
@@ -425,7 +401,7 @@ function loadWithJSONP() {
 
 
 /* =========================================
-   NORMALISE DATA
+   NORMALISE
 ========================================= */
 
 function useLoadedData(data) {
@@ -552,10 +528,7 @@ function firstValue(
   names
 ) {
 
-  for (
-    const name
-    of names
-  ) {
+  for (const name of names) {
 
     if (
       Object.prototype
@@ -589,10 +562,7 @@ function firstValue(
     Object.keys(object);
 
 
-  for (
-    const wanted
-    of names
-  ) {
+  for (const wanted of names) {
 
     const match =
       keys.find(
@@ -603,11 +573,7 @@ function firstValue(
 
 
     if (match) {
-
-      return clean(
-        object[match]
-      );
-
+      return clean(object[match]);
     }
 
   }
@@ -635,9 +601,7 @@ function clean(value) {
   }
 
 
-  if (
-    Array.isArray(value)
-  ) {
+  if (Array.isArray(value)) {
 
     return value
       .map(clean)
@@ -657,19 +621,14 @@ function key(value) {
 
   return clean(value)
     .toLowerCase()
-    .replace(
-      /\s+/g,
-      " "
-    );
+    .replace(/\s+/g, " ");
 
 }
 
 
 
 function same(a, b) {
-
   return key(a) === key(b);
-
 }
 
 
@@ -756,15 +715,11 @@ const categoryDefinitions = [
 function getCategories(insight) {
 
   const raw =
-    key(
-      insight.category
-    );
+    key(insight.category);
 
 
   if (!raw) {
-
     return [];
-
   }
 
 
@@ -773,7 +728,6 @@ function getCategories(insight) {
 
   categoryDefinitions.forEach(
     definition => {
-
 
       const found =
         definition.terms.some(
@@ -839,12 +793,13 @@ const workingDefinitions = [
   },
 
   {
-    label: "Independent / Founder",
+    label: "Studio Founder",
     terms: [
       "independent",
       "founder",
       "own studio",
-      "studio owner"
+      "studio owner",
+      "studio founder"
     ]
   },
 
@@ -879,15 +834,11 @@ const workingDefinitions = [
 function getWorkingTypes(insight) {
 
   const raw =
-    key(
-      insight.workingAs
-    );
+    key(insight.workingAs);
 
 
   if (!raw) {
-
     return [];
-
   }
 
 
@@ -896,7 +847,6 @@ function getWorkingTypes(insight) {
 
   workingDefinitions.forEach(
     definition => {
-
 
       const found =
         definition.terms.some(
@@ -924,7 +874,7 @@ function getWorkingTypes(insight) {
 
 
 /* =========================================
-   FILTERS
+   AVAILABLE FILTERS
 ========================================= */
 
 function getAvailableCategories() {
@@ -975,14 +925,14 @@ function getAvailableWorkingTypes() {
 
 
 
+/* =========================================
+   COUNTS
+========================================= */
+
 function countCategory(category) {
 
-  if (
-    category === "ALL"
-  ) {
-
+  if (category === "ALL") {
     return insights.length;
-
   }
 
 
@@ -1004,12 +954,8 @@ function countCategory(category) {
 
 function countWorking(type) {
 
-  if (
-    type === "ALL"
-  ) {
-
+  if (type === "ALL") {
     return insights.length;
-
   }
 
 
@@ -1028,6 +974,10 @@ function countWorking(type) {
 }
 
 
+
+/* =========================================
+   BUILD FILTERS
+========================================= */
 
 function createCategoryFilters() {
 
@@ -1174,12 +1124,9 @@ function addFilter({
     );
 
 
-  button.type =
-    "button";
+  button.type = "button";
 
-
-  button.className =
-    "filter";
+  button.className = "filter";
 
 
   const active =
@@ -1201,11 +1148,7 @@ function addFilter({
 
 
   if (active) {
-
-    button.classList.add(
-      "active"
-    );
-
+    button.classList.add("active");
   }
 
 
@@ -1224,24 +1167,13 @@ function addFilter({
     "click",
     () => {
 
-
-      if (
-        type === "category"
-      ) {
-
-        selectedCategory =
-          value;
-
+      if (type === "category") {
+        selectedCategory = value;
       }
 
 
-      if (
-        type === "working"
-      ) {
-
-        selectedWorkingAs =
-          value;
-
+      if (type === "working") {
+        selectedWorkingAs = value;
       }
 
 
@@ -1255,9 +1187,7 @@ function addFilter({
   );
 
 
-  container.appendChild(
-    button
-  );
+  container.appendChild(button);
 
 }
 
@@ -1271,7 +1201,6 @@ function getFilteredInsights() {
 
   return insights.filter(
     insight => {
-
 
       const categories =
         getCategories(insight);
@@ -1327,21 +1256,13 @@ function getLengthClass(advice) {
     clean(advice).length;
 
 
-  if (
-    length > 390
-  ) {
-
+  if (length > 390) {
     return "very-long";
-
   }
 
 
-  if (
-    length > 220
-  ) {
-
+  if (length > 220) {
     return "long";
-
   }
 
 
@@ -1429,9 +1350,7 @@ function displayLibrary() {
 
 
       const role =
-        clean(
-          insight.role
-        );
+        clean(insight.role);
 
 
       const working =
@@ -1439,35 +1358,23 @@ function displayLibrary() {
 
 
       const experience =
-        clean(
-          insight.experience
-        );
+        clean(insight.experience);
 
 
       const salary =
-        clean(
-          insight.salary
-        );
+        clean(insight.salary);
 
 
       const secondary = [];
 
 
       if (working) {
-
-        secondary.push(
-          working
-        );
-
+        secondary.push(working);
       }
 
 
       if (experience) {
-
-        secondary.push(
-          experience
-        );
-
+        secondary.push(experience);
       }
 
 
@@ -1480,6 +1387,13 @@ function displayLibrary() {
               insight.advice
             )}”
           </p>
+
+          <span
+            class="card-overflow-indicator"
+            aria-hidden="true"
+          >
+            …
+          </span>
 
         </div>
 
@@ -1519,9 +1433,7 @@ function displayLibrary() {
               salary
                 ? `
                   <div class="card-salary">
-                    ${escapeHTML(
-                      salary
-                    )}
+                    ${escapeHTML(salary)}
                   </div>
                 `
                 : ""
@@ -1540,9 +1452,81 @@ function displayLibrary() {
       `;
 
 
-      libraryGrid.appendChild(
-        card
+      libraryGrid.appendChild(card);
+
+    }
+  );
+
+
+  requestAnimationFrame(
+    initialiseCardOverflow
+  );
+
+}
+
+
+
+/* =========================================
+   CARD OVERFLOW
+========================================= */
+
+function initialiseCardOverflow() {
+
+  const cards =
+    libraryGrid.querySelectorAll(
+      ".library-card"
+    );
+
+
+  cards.forEach(
+    card => {
+
+      const area =
+        card.querySelector(
+          ".card-advice-area"
+        );
+
+
+      if (!area) return;
+
+
+      const hasOverflow =
+        area.scrollHeight >
+        area.clientHeight + 2;
+
+
+      card.classList.toggle(
+        "has-overflow",
+        hasOverflow
       );
+
+
+      function updateIndicator() {
+
+        const atBottom =
+          area.scrollTop +
+          area.clientHeight >=
+          area.scrollHeight - 3;
+
+
+        card.classList.toggle(
+          "scrolled-to-bottom",
+          atBottom
+        );
+
+      }
+
+
+      area.addEventListener(
+        "scroll",
+        updateIndicator,
+        {
+          passive: true
+        }
+      );
+
+
+      updateIndicator();
 
     }
   );
@@ -1611,59 +1595,32 @@ function buildCarousel() {
         getWorkingTypes(insight);
 
 
-      const meta =
-        [];
+      const meta = [];
 
 
-      if (
-        insight.role
-      ) {
+      if (insight.role) {
+        meta.push(insight.role);
+      }
+
+
+      if (workingTypes.length) {
 
         meta.push(
-          insight.role
+          workingTypes.join(" / ")
         );
 
       }
 
 
-      if (
-        workingTypes.length
-      ) {
-
-        meta.push(
-          workingTypes.join(
-            " / "
-          )
-        );
-
+      if (insight.experience) {
+        meta.push(insight.experience);
       }
 
 
-      if (
-        insight.experience
-      ) {
-
-        meta.push(
-          insight.experience
-        );
-
+      if (insight.salary) {
+        meta.push(insight.salary);
       }
 
-
-      if (
-        insight.salary
-      ) {
-
-        meta.push(
-          insight.salary
-        );
-
-      }
-
-
-      /*
-        No categories in hero.
-      */
 
       slide.innerHTML = `
 
@@ -1718,8 +1675,7 @@ function moveCarousel(direction) {
   }
 
 
-  carouselLocked =
-    true;
+  carouselLocked = true;
 
 
   const slides =
@@ -1735,9 +1691,7 @@ function moveCarousel(direction) {
     carouselIndex;
 
 
-  if (
-    direction === 1
-  ) {
+  if (direction === 1) {
 
     carouselIndex =
       (
@@ -1765,10 +1719,6 @@ function moveCarousel(direction) {
     slides[carouselIndex];
 
 
-  /*
-    Reset both slides first.
-  */
-
   current.classList.remove(
     "enter-right",
     "enter-active"
@@ -1782,15 +1732,7 @@ function moveCarousel(direction) {
   );
 
 
-  /*
-    NEXT:
-    current flies left,
-    new slide enters from right.
-  */
-
-  if (
-    direction === 1
-  ) {
+  if (direction === 1) {
 
     next.classList.add(
       "enter-right"
@@ -1843,8 +1785,7 @@ function moveCarousel(direction) {
                 );
 
 
-                carouselLocked =
-                  false;
+                carouselLocked = false;
 
               },
 
@@ -1858,12 +1799,6 @@ function moveCarousel(direction) {
     );
 
   }
-
-
-  /*
-    PREVIOUS:
-    reverse direction.
-  */
 
   else {
 
@@ -1938,6 +1873,7 @@ function moveCarousel(direction) {
                 next.style.opacity =
                   "";
 
+
                 next.classList.add(
                   "active"
                 );
@@ -1980,24 +1916,13 @@ document.addEventListener(
   "keydown",
   event => {
 
-
-    if (
-      event.key ===
-      "ArrowRight"
-    ) {
-
+    if (event.key === "ArrowRight") {
       moveCarousel(1);
-
     }
 
 
-    if (
-      event.key ===
-      "ArrowLeft"
-    ) {
-
+    if (event.key === "ArrowLeft") {
       moveCarousel(-1);
-
     }
 
   }
@@ -2006,15 +1931,13 @@ document.addEventListener(
 
 
 /* =========================================
-   HERO ADVICE GRADIENT
+   HERO GRADIENT
 ========================================= */
 
 function initialiseAdviceGradient() {
 
   if (!carouselWindow) {
-
     return;
-
   }
 
 
@@ -2025,9 +1948,7 @@ function initialiseAdviceGradient() {
 
 
   if (!canHover) {
-
     return;
-
   }
 
 
@@ -2035,9 +1956,7 @@ function initialiseAdviceGradient() {
     "pointerenter",
     event => {
 
-      updateAdviceGradient(
-        event
-      );
+      updateAdviceGradient(event);
 
 
       carouselWindow.style.setProperty(
@@ -2100,9 +2019,7 @@ function updateAdviceGradient(event) {
 function initialiseArrowGradient() {
 
   if (!carouselStage) {
-
     return;
-
   }
 
 
@@ -2113,9 +2030,7 @@ function initialiseArrowGradient() {
 
 
   if (!canHover) {
-
     return;
-
   }
 
 
@@ -2169,7 +2084,6 @@ function initialiseArrowGradient() {
   ].forEach(
     button => {
 
-
       button.addEventListener(
         "pointerenter",
         showGradient
@@ -2195,15 +2109,13 @@ function initialiseArrowGradient() {
 
 
 /* =========================================
-   LIBRARY SPOTLIGHT
+   LIBRARY GRADIENT
 ========================================= */
 
 function initialiseLibrarySpotlight() {
 
   if (!libraryGrid) {
-
     return;
-
   }
 
 
@@ -2214,9 +2126,7 @@ function initialiseLibrarySpotlight() {
 
 
   if (!canHover) {
-
     return;
-
   }
 
 
@@ -2224,10 +2134,7 @@ function initialiseLibrarySpotlight() {
     "pointerenter",
     event => {
 
-
-      updateLibrarySpotlight(
-        event
-      );
+      updateLibrarySpotlight(event);
 
 
       libraryGrid.style.setProperty(
@@ -2249,7 +2156,6 @@ function initialiseLibrarySpotlight() {
     "pointerleave",
     () => {
 
-
       libraryGrid.style.setProperty(
         "--spotlight-opacity",
         "0"
@@ -2269,25 +2175,15 @@ function updateLibrarySpotlight(event) {
       .getBoundingClientRect();
 
 
-  const x =
-    event.clientX -
-    rect.left;
-
-
-  const y =
-    event.clientY -
-    rect.top;
-
-
   libraryGrid.style.setProperty(
     "--mouse-x",
-    `${x}px`
+    `${event.clientX - rect.left}px`
   );
 
 
   libraryGrid.style.setProperty(
     "--mouse-y",
-    `${y}px`
+    `${event.clientY - rect.top}px`
   );
 
 }
@@ -2298,27 +2194,10 @@ function updateLibrarySpotlight(event) {
    MOVING NAVIGATION
 ========================================= */
 
-/*
-  The buttons only move vertically.
-
-  At top of page:
-  under the advice.
-
-  As page scrolls:
-  they travel upward.
-
-  Then they stop at 22px
-  and remain fixed.
-*/
-
 function updateMovingNavigation() {
 
-  if (
-    !movingNav
-  ) {
-
+  if (!movingNav) {
     return;
-
   }
 
 
@@ -2333,11 +2212,6 @@ function updateMovingNavigation() {
   const finalY =
     22;
 
-
-  /*
-    Complete the movement over roughly
-    the first 62% of one viewport.
-  */
 
   const travelDistance =
     viewportHeight * 0.62;
@@ -2373,7 +2247,7 @@ function updateMovingNavigation() {
 
 
 /* =========================================
-   NAV SECTION COLOUR
+   NAV BACKGROUND
 ========================================= */
 
 function updateNavigationBackgrounds() {
@@ -2447,7 +2321,6 @@ clearFilters.addEventListener(
   "click",
   () => {
 
-
     selectedCategory =
       "ALL";
 
@@ -2491,8 +2364,7 @@ function showError() {
   `;
 
 
-  insightCount.textContent =
-    "0";
+  insightCount.textContent = "0";
 
 }
 
@@ -2514,9 +2386,7 @@ function containsTerm(
     );
 
 
-  return expression.test(
-    text
-  );
+  return expression.test(text);
 
 }
 
@@ -2524,17 +2394,13 @@ function containsTerm(
 
 function unique(values) {
 
-  const used =
-    new Set();
+  const used = new Set();
 
-
-  const result =
-    [];
+  const result = [];
 
 
   values.forEach(
     value => {
-
 
       const cleaned =
         clean(value);
@@ -2546,19 +2412,12 @@ function unique(values) {
 
       if (
         cleaned &&
-        !used.has(
-          normalized
-        )
+        !used.has(normalized)
       ) {
 
-        used.add(
-          normalized
-        );
+        used.add(normalized);
 
-
-        result.push(
-          cleaned
-        );
+        result.push(cleaned);
 
       }
 
@@ -2619,26 +2478,11 @@ function escapeHTML(value) {
   return String(
     value ?? ""
   )
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-    .replace(
-      /</g,
-      "&lt;"
-    )
-    .replace(
-      />/g,
-      "&gt;"
-    )
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-    .replace(
-      /'/g,
-      "&#039;"
-    );
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 
 }
 
@@ -2663,7 +2507,7 @@ function initialiseLibrary() {
 
 
 /* =========================================
-   SCROLL / RESIZE
+   PAGE INTERACTIONS
 ========================================= */
 
 function updatePageInteractions() {
@@ -2687,7 +2531,13 @@ window.addEventListener(
 
 window.addEventListener(
   "resize",
-  updatePageInteractions
+  () => {
+
+    updatePageInteractions();
+
+    initialiseCardOverflow();
+
+  }
 );
 
 

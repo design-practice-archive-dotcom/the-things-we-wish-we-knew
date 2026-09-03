@@ -1,8 +1,12 @@
 :root {
   --green: #b9e99f;
   --text: #53251e;
-  --line: rgba(83, 37, 30, 0.72);
-  --cream: #f3f0e5;
+
+  --line:
+    rgba(83, 37, 30, 0.72);
+
+  --soft-line:
+    rgba(83, 37, 30, 0.48);
 
   --mono:
     "Courier Prime",
@@ -39,6 +43,7 @@ body {
 
   font-size: 16px;
   line-height: 1.34;
+
   font-weight: 400;
 
   -webkit-font-smoothing: antialiased;
@@ -70,7 +75,8 @@ button {
   min-height: 540px;
   max-height: 830px;
 
-  border-bottom: 1px solid var(--line);
+  border-bottom:
+    1px solid var(--line);
 }
 
 
@@ -84,7 +90,6 @@ button {
     clamp(1.95rem, 2.35vw, 2.9rem);
 
   line-height: 1.02;
-  letter-spacing: 0.015em;
 
   font-weight: 400;
 }
@@ -125,7 +130,6 @@ button {
   top: 59%;
 
   width: 33%;
-
   max-width: 480px;
 }
 
@@ -137,11 +141,6 @@ button {
     clamp(0.94rem, 1.03vw, 1.12rem);
 
   line-height: 1.34;
-}
-
-
-.hero-description {
-  font-weight: 400;
 }
 
 
@@ -299,12 +298,6 @@ button {
 }
 
 
-.plain-button:hover {
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-
-
 
 /* =========================================
    ARCHIVE
@@ -322,9 +315,7 @@ button {
 
 
 
-/* =========================================
-   FILTERS
-========================================= */
+/* FILTERS */
 
 .archive-filters {
   width: 92%;
@@ -389,18 +380,10 @@ button {
 }
 
 
-.filter:hover {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-
 .filter-count {
   margin-left: 6px;
 
   opacity: 0.5;
-
-  font-weight: 400;
 }
 
 
@@ -410,9 +393,7 @@ button {
 
 
 
-/* =========================================
-   ARCHIVE TOP LINE
-========================================= */
+/* ARCHIVE TOPLINE */
 
 .archive-topline {
   width: 94%;
@@ -446,14 +427,6 @@ button {
   cursor: pointer;
 
   font-size: 0.65rem;
-
-  font-weight: 400;
-}
-
-
-.clear-button:hover {
-  text-decoration: underline;
-  text-underline-offset: 3px;
 }
 
 
@@ -473,17 +446,15 @@ button {
     repeat(3, minmax(0, 1fr));
 
   /*
-    Equal-height rows.
-    Cards within one row will always
-    have exactly the same height.
+    All cards in one row naturally share
+    the same height.
   */
 
-  grid-auto-rows: minmax(440px, auto);
+  align-items: stretch;
 
 
   /*
-    Continuous gradient across
-    the entire archive.
+    Continuous background across grid.
   */
 
   background:
@@ -510,21 +481,21 @@ button {
 
 /* =========================================
    CARD
+
+   IMPORTANT:
+   NO fixed footer height.
+   NO absolute positioning.
+   NO timestamp.
 ========================================= */
 
 .insight-card {
   min-width: 0;
 
-  display: grid;
+  min-height: 430px;
 
-  /*
-    Large flexible advice section
-    + fixed credentials section
-  */
+  display: flex;
 
-  grid-template-rows:
-    minmax(300px, 1fr)
-    118px;
+  flex-direction: column;
 
   background: transparent;
 
@@ -537,108 +508,155 @@ button {
 
 
 
+/*
+  Force-hide anything left over
+  from older versions.
+*/
+
+.card-number,
+.card-date,
+.card-timestamp,
+.timestamp,
+.date,
+.insight-date {
+  display: none !important;
+}
+
+
+
 /* =========================================
-   ADVICE
+   ADVICE AREA
 ========================================= */
 
 .card-advice-area {
   min-width: 0;
 
+  flex:
+    1 1 auto;
+
   padding:
     34px
-    34px
-    30px;
+    32px
+    36px;
 
-  display: flex;
-
-  align-items: flex-start;
+  display: block;
 }
 
 
 .card-advice {
-  width: 92%;
+  width: 100%;
+
+  max-width: 100%;
 
   margin: 0;
 
   font-size:
-    clamp(1.18rem, 1.32vw, 1.48rem);
+    clamp(1.14rem, 1.27vw, 1.44rem);
 
   line-height: 1.34;
 
-  letter-spacing: 0.01em;
-
   font-weight: 400;
 
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
+
+  word-break: normal;
+
+  hyphens: auto;
 }
 
 
 
 /*
-   Longer advice gets smaller,
-   rather than dramatically
-   increasing the card height.
+  Long advice becomes progressively
+  smaller rather than overflowing.
 */
 
 .insight-card.long
 .card-advice {
-  width: 95%;
-
   font-size:
-    clamp(1rem, 1.1vw, 1.22rem);
+    clamp(0.98rem, 1.07vw, 1.18rem);
 
-  line-height: 1.38;
+  line-height: 1.4;
 }
 
 
 .insight-card.very-long
 .card-advice {
-  width: 97%;
-
   font-size:
-    clamp(0.82rem, 0.91vw, 1rem);
+    clamp(0.83rem, 0.91vw, 1rem);
 
-  line-height: 1.42;
+  line-height: 1.44;
 }
 
 
 
 /* =========================================
-   CREDENTIALS
+   CREDENTIALS AREA
 ========================================= */
 
 .card-info {
+  position: relative;
+
+  flex:
+    0 0 auto;
+
   min-width: 0;
 
-  height: 118px;
-
-  padding:
-    15px
-    18px
-    14px;
-
   /*
-    This is THE divider between
-    advice and credentials.
+    Padding above leaves room
+    for the inset separator.
   */
 
-  border-top:
-    1px solid var(--line);
+  padding:
+    19px
+    20px
+    18px;
 
   display: grid;
 
   grid-template-columns:
     minmax(0, 1fr)
-    auto;
+    minmax(82px, auto);
 
-  gap: 20px;
+  column-gap: 20px;
 
   align-items: start;
 }
 
 
 
-/* LEFT SIDE */
+/*
+  Short, light separator.
+
+  It deliberately does NOT touch
+  either side of the card.
+*/
+
+.card-info::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+
+  left: 18px;
+  right: 18px;
+
+  height: 1px;
+
+  background:
+    var(--soft-line);
+
+  transform:
+    scaleY(0.7);
+
+  transform-origin:
+    center;
+}
+
+
+
+/* LEFT CREDENTIALS */
 
 .card-meta {
   min-width: 0;
@@ -646,58 +664,45 @@ button {
 
 
 .card-role {
-  margin: 0 0 2px;
+  margin: 0 0 3px;
 
   font-size:
-    clamp(0.88rem, 0.94vw, 1.04rem);
+    clamp(0.87rem, 0.92vw, 1.02rem);
 
-  line-height: 1.18;
+  line-height: 1.22;
 
   font-weight: 700;
+
+  overflow-wrap: break-word;
 }
 
 
-.card-working {
+.card-working,
+.card-experience,
+.card-salary {
   margin: 0;
 
   font-size:
-    clamp(0.74rem, 0.8vw, 0.9rem);
+    clamp(0.73rem, 0.78vw, 0.87rem);
 
-  line-height: 1.3;
-
-  font-weight: 400;
-}
-
-
-.card-experience {
-  margin: 0;
-
-  font-size:
-    clamp(0.74rem, 0.8vw, 0.9rem);
-
-  line-height: 1.3;
+  line-height: 1.34;
 
   font-weight: 400;
+
+  overflow-wrap: break-word;
 }
 
 
 .card-salary {
-  margin: 1px 0 0;
-
-  font-size:
-    clamp(0.74rem, 0.8vw, 0.9rem);
-
-  line-height: 1.3;
-
-  font-weight: 400;
+  margin-top: 2px;
 }
 
 
 
-/* RIGHT SIDE */
+/* RIGHT CATEGORIES */
 
 .card-category-list {
-  min-width: 90px;
+  min-width: 0;
 
   display: flex;
 
@@ -710,16 +715,18 @@ button {
 
 
 .card-category {
-  white-space: nowrap;
+  max-width: 100%;
 
   font-size:
-    clamp(0.72rem, 0.77vw, 0.86rem);
+    clamp(0.71rem, 0.76vw, 0.85rem);
 
   line-height: 1.25;
 
   font-weight: 700;
 
   text-transform: lowercase;
+
+  overflow-wrap: break-word;
 }
 
 
@@ -847,7 +854,8 @@ button {
     clamp(1rem, 1.12vw, 1.28rem)
     !important;
 
-  line-height: 1.32 !important;
+  line-height:
+    1.32 !important;
 }
 
 
@@ -862,7 +870,7 @@ button {
 
 
 /* =========================================
-   EMPTY / ERROR
+   EMPTY
 ========================================= */
 
 .empty-state {
@@ -878,8 +886,6 @@ button {
 
   border-bottom:
     1px solid var(--line);
-
-  font-size: 0.95rem;
 }
 
 
@@ -910,10 +916,28 @@ footer {
 }
 
 
-footer a:hover {
-  text-decoration: underline;
 
-  text-underline-offset: 3px;
+/* =========================================
+   MEDIUM SCREENS
+
+   Move to 2 columns EARLIER.
+   This is important: three narrow
+   columns were causing much of the
+   wrapping problem.
+========================================= */
+
+@media (max-width: 1100px) {
+
+  .archive-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+
+  .insight-card {
+    min-height: 420px;
+  }
+
 }
 
 
@@ -922,7 +946,7 @@ footer a:hover {
    TABLET
 ========================================= */
 
-@media (max-width: 900px) {
+@media (max-width: 800px) {
 
   .hero {
     min-height: 650px;
@@ -945,32 +969,8 @@ footer a:hover {
   }
 
 
-  .archive-grid {
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
-
-    grid-auto-rows:
-      minmax(430px, auto);
-  }
-
-
-  .insight-card {
-    grid-template-rows:
-      minmax(295px, 1fr)
-      118px;
-  }
-
-
-  .card-advice-area {
-    padding:
-      30px
-      28px
-      28px;
-  }
-
-
   .about-copy {
-    width: 65%;
+    width: 70%;
   }
 
 }
@@ -987,14 +987,6 @@ footer a:hover {
     --side: 5vw;
   }
 
-
-  body {
-    font-size: 15px;
-  }
-
-
-
-  /* HERO */
 
   .hero {
     min-height: 650px;
@@ -1039,19 +1031,12 @@ footer a:hover {
   }
 
 
-  .hero-intro p {
-    font-size: 0.92rem;
-  }
-
-
   .hero-links {
     justify-content: flex-start;
 
     gap: 30px;
 
     margin-top: 40px;
-
-    font-size: 0.67rem;
   }
 
 
@@ -1075,7 +1060,7 @@ footer a:hover {
   .featured-quote,
   .featured-quote.long,
   .featured-quote.very-long {
-    font-size: 1.24rem;
+    font-size: 1.2rem;
 
     line-height: 1.3;
   }
@@ -1110,18 +1095,9 @@ footer a:hover {
   }
 
 
-  .filter {
-    font-size: 0.78rem;
-  }
-
-
-
   .archive-grid {
     grid-template-columns:
       1fr;
-
-    grid-auto-rows:
-      auto;
 
     background:
       linear-gradient(
@@ -1137,11 +1113,7 @@ footer a:hover {
 
 
   .insight-card {
-    min-height: 390px;
-
-    grid-template-rows:
-      minmax(270px, 1fr)
-      120px;
+    min-height: 370px;
   }
 
 
@@ -1149,7 +1121,7 @@ footer a:hover {
     padding:
       28px
       22px
-      26px;
+      32px;
   }
 
 
@@ -1158,27 +1130,34 @@ footer a:hover {
   .card-advice,
   .insight-card.very-long
   .card-advice {
-    width: 96%;
+    font-size: 1.04rem;
 
-    font-size: 1.05rem;
-
-    line-height: 1.34;
+    line-height: 1.35;
   }
 
 
   .card-info {
-    height: 120px;
-
     padding:
-      14px
-      14px;
+      18px
+      15px
+      17px;
 
-    gap: 12px;
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(75px, auto);
+
+    column-gap: 12px;
+  }
+
+
+  .card-info::before {
+    left: 14px;
+    right: 14px;
   }
 
 
   .card-role {
-    font-size: 0.87rem;
+    font-size: 0.86rem;
   }
 
 
@@ -1186,7 +1165,7 @@ footer a:hover {
   .card-experience,
   .card-salary,
   .card-category {
-    font-size: 0.73rem;
+    font-size: 0.72rem;
   }
 
 
@@ -1206,11 +1185,6 @@ footer a:hover {
 
   .contribute-copy h2 {
     font-size: 2.45rem;
-  }
-
-
-  .contribute-copy p {
-    font-size: 0.95rem;
   }
 
 
@@ -1236,11 +1210,6 @@ footer a:hover {
 
   .about-copy {
     width: 100%;
-  }
-
-
-  .about-copy p {
-    font-size: 0.95rem;
   }
 
 }

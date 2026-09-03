@@ -2,14 +2,15 @@
 
   --green: #b9e99f;
   --yellow: #f6fe6a;
+  --beige: #f7f1dc;
 
   --text: #53251e;
 
   --line:
-    rgba(83, 37, 30, 0.6);
+    rgba(83, 37, 30, 0.58);
 
   --soft-line:
-    rgba(83, 37, 30, 0.42);
+    rgba(83, 37, 30, 0.38);
 
   --button-light:
     #f7f5ea;
@@ -21,6 +22,7 @@
     monospace;
 
 }
+
 
 
 /* =========================================
@@ -130,7 +132,7 @@ button {
 
 
 
-/* TITLE */
+/* HERO TITLE */
 
 .hero-title {
 
@@ -163,7 +165,7 @@ button {
 
 
 
-/* DESCRIPTION BOTTOM LEFT */
+/* DESCRIPTION */
 
 .hero-description {
 
@@ -219,9 +221,6 @@ button {
 }
 
 
-
-/* CAROUSEL STAGE */
-
 .carousel-stage {
 
   position: relative;
@@ -238,9 +237,6 @@ button {
 }
 
 
-
-/* WINDOW */
-
 .carousel-window {
 
   position: relative;
@@ -252,9 +248,6 @@ button {
 }
 
 
-
-/* TRACK */
-
 .carousel-track {
 
   width: 100%;
@@ -265,9 +258,6 @@ button {
 
 }
 
-
-
-/* INDIVIDUAL SLIDE */
 
 .carousel-slide {
 
@@ -323,18 +313,8 @@ button {
 }
 
 
-.carousel-slide.enter-left {
 
-  opacity: 0;
-
-  transform:
-    translateX(-110%);
-
-}
-
-
-
-/* ADVICE */
+/* CAROUSEL ADVICE */
 
 .carousel-advice {
 
@@ -371,7 +351,7 @@ button {
 
 
 
-/* CREDENTIALS */
+/* CAROUSEL CREDENTIALS */
 
 .carousel-meta {
 
@@ -383,13 +363,6 @@ button {
     clamp(0.84rem, 0.94vw, 1.05rem);
 
   line-height: 1.35;
-
-}
-
-
-.carousel-role {
-
-  font-weight: 700;
 
 }
 
@@ -415,7 +388,7 @@ button {
 
 
 
-/* ARROWS */
+/* CAROUSEL ARROWS */
 
 .carousel-arrow {
 
@@ -427,10 +400,12 @@ button {
 
   cursor: pointer;
 
-  font-size:
-    1.5rem;
+  font-size: 1.5rem;
 
   line-height: 1;
+
+  transition:
+    transform 150ms ease;
 
 }
 
@@ -443,7 +418,7 @@ button {
 
 
 
-/* HERO CTA BUTTONS */
+/* HERO BUTTONS */
 
 .hero-actions {
 
@@ -483,7 +458,8 @@ button {
 
   transition:
     background 180ms ease,
-    color 180ms ease;
+    color 180ms ease,
+    border-color 180ms ease;
 
 }
 
@@ -559,7 +535,7 @@ button {
 
 
 /* =========================================
-   LIBRARY
+   LIBRARY SECTION
 ========================================= */
 
 .library-section {
@@ -576,7 +552,7 @@ button {
 
 
 
-/* HEADING */
+/* LIBRARY HEADING */
 
 .library-heading {
 
@@ -644,12 +620,6 @@ button {
 
 }
 
-
-
-/*
-  Filters are arranged into columns,
-  rather than becoming one long list.
-*/
 
 .filter-columns {
 
@@ -736,7 +706,7 @@ button {
 
 
 
-/* CLEAR */
+/* CLEAR FILTER */
 
 .library-controls {
 
@@ -770,10 +740,23 @@ button {
 
 
 /* =========================================
-   LIBRARY GRID
+   INTERACTIVE LIBRARY GRID
 ========================================= */
 
 .library-grid {
+
+  /*
+    JavaScript updates these variables.
+  */
+
+  --mouse-x: 50%;
+  --mouse-y: 50%;
+  --spotlight-opacity: 0;
+
+
+  position: relative;
+
+  isolation: isolate;
 
   width: 100%;
 
@@ -783,6 +766,16 @@ button {
     repeat(3, minmax(0, 1fr));
 
   align-items: stretch;
+
+
+  /*
+    The base underneath all boxes
+    stays green.
+  */
+
+  background:
+    var(--green);
+
 
   border-top:
     1px solid var(--line);
@@ -794,11 +787,67 @@ button {
 
 
 
+/*
+  ONE CONTINUOUS BEIGE GRADIENT
+  ACROSS THE ENTIRE GRID.
+*/
+
+.library-grid::before {
+
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 0;
+
+  pointer-events: none;
+
+
+  background:
+
+    radial-gradient(
+      circle
+      300px
+      at
+      var(--mouse-x)
+      var(--mouse-y),
+
+      rgba(247, 241, 220, 1) 0%,
+
+      rgba(247, 241, 220, 0.95) 18%,
+
+      rgba(247, 241, 220, 0.75) 34%,
+
+      rgba(247, 241, 220, 0.43) 49%,
+
+      rgba(247, 241, 220, 0.18) 63%,
+
+      rgba(247, 241, 220, 0) 78%
+    );
+
+
+  opacity:
+    var(--spotlight-opacity);
+
+
+  transition:
+    opacity 300ms ease;
+
+}
+
+
+
 /* =========================================
    LIBRARY CARD
 ========================================= */
 
 .library-card {
+
+  position: relative;
+
+  z-index: 1;
 
   min-width: 0;
 
@@ -807,6 +856,16 @@ button {
   display: flex;
 
   flex-direction: column;
+
+
+  /*
+    Transparent so the gradient below
+    can shine through all boxes.
+  */
+
+  background:
+    transparent;
+
 
   border-right:
     1px solid var(--line);
@@ -818,7 +877,7 @@ button {
 
 
 
-/* HIDE ANY LEGACY TIMESTAMP ETC */
+/* LEGACY DATE / NUMBER HIDE */
 
 .card-number,
 .card-date,
@@ -833,9 +892,15 @@ button {
 
 
 
-/* ADVICE */
+/* =========================================
+   CARD ADVICE
+========================================= */
 
 .card-advice-area {
+
+  position: relative;
+
+  z-index: 2;
 
   flex:
     1 1 auto;
@@ -883,11 +948,15 @@ button {
 
 
 
-/* CARD CREDENTIALS */
+/* =========================================
+   CARD CREDENTIALS
+========================================= */
 
 .card-info {
 
   position: relative;
+
+  z-index: 2;
 
   flex:
     0 0 auto;
@@ -908,6 +977,11 @@ button {
 }
 
 
+
+/*
+  INSET SEPARATOR
+*/
+
 .card-info::before {
 
   content: "";
@@ -917,13 +991,19 @@ button {
   top: 0;
 
   left: 24px;
-
   right: 24px;
 
   height: 1px;
 
   background:
     var(--soft-line);
+
+}
+
+
+.card-meta {
+
+  min-width: 0;
 
 }
 
@@ -947,6 +1027,13 @@ button {
     clamp(0.85rem, 0.95vw, 1.04rem);
 
   line-height: 1.36;
+
+}
+
+
+.card-salary {
+
+  margin-top: 2px;
 
 }
 
@@ -975,9 +1062,8 @@ button {
 
 
 /*
-  Deliberately NO [•] here.
-  Categories inside cards are labels,
-  not buttons.
+  Categories are labels here,
+  not interactive controls.
 */
 
 .card-category::before {
@@ -1093,6 +1179,10 @@ button {
   font-size:
     clamp(0.9rem, 1vw, 1.1rem);
 
+  transition:
+    background 180ms ease,
+    color 180ms ease;
+
 }
 
 
@@ -1129,7 +1219,8 @@ button {
 
 .about-copy {
 
-  width: min(650px, 55%);
+  width:
+    min(650px, 55%);
 
   margin-top: 45px;
 
@@ -1165,14 +1256,16 @@ button {
 
 .empty-state {
 
+  position: relative;
+
+  z-index: 1;
+
   grid-column:
     1 / -1;
 
-  min-height:
-    220px;
+  min-height: 220px;
 
-  padding:
-    30px;
+  padding: 30px;
 
   border-right:
     1px solid var(--line);
@@ -1348,8 +1441,6 @@ footer a {
   }
 
 
-  /* NAV */
-
   .top-nav {
 
     top: 18px;
@@ -1375,8 +1466,7 @@ footer a {
 
     top: 70px;
 
-    font-size:
-      2.25rem;
+    font-size: 2.25rem;
 
   }
 
@@ -1509,6 +1599,17 @@ footer a {
 
     grid-template-columns:
       1fr;
+
+  }
+
+
+  /*
+    Disable moving spotlight on touch/mobile.
+  */
+
+  .library-grid::before {
+
+    display: none;
 
   }
 

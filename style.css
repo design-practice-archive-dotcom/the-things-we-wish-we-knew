@@ -43,23 +43,17 @@ body {
 
   width: 100%;
 
-  background:
-    var(--green);
+  background: var(--green);
 
-  color:
-    var(--text);
+  color: var(--text);
 
-  font-family:
-    var(--mono);
+  font-family: var(--mono);
 
-  font-size:
-    18px;
+  font-size: 18px;
 
-  line-height:
-    1.4;
+  line-height: 1.4;
 
-  -webkit-font-smoothing:
-    antialiased;
+  -webkit-font-smoothing: antialiased;
 
 }
 
@@ -85,8 +79,7 @@ button {
 
   height: 1px;
 
-  background:
-    var(--line);
+  background: var(--line);
 
 }
 
@@ -106,11 +99,9 @@ button {
 
   width: 100%;
 
-  height:
-    var(--menu-height);
+  height: var(--menu-height);
 
-  padding:
-    0 3vw;
+  padding: 0 3vw;
 
   display: flex;
 
@@ -118,14 +109,25 @@ button {
 
   justify-content: space-between;
 
-  background:
-    var(--green);
+  /*
+    IMPORTANT:
+    no coloured menu bar.
+    The page underneath remains visible.
+  */
+  background: transparent;
+
+  border: 0;
+
+  pointer-events: none;
 
 }
 
 
-/* no hairline between menu and hero */
-
+/*
+  The duplicate LIBRARY / CONTRIBUTE pair
+  in the fixed menu is not used on desktop.
+  The pair from the hero travels upward instead.
+*/
 
 .menu-left {
 
@@ -135,25 +137,16 @@ button {
 
   opacity: 0;
 
-  transform:
-    translateY(12px);
-
   pointer-events: none;
-
-  transition:
-    opacity 250ms ease,
-    transform 350ms ease;
 
 }
 
 
-body.menu-settled
-.menu-left {
+/*
+  ABOUT remains clickable.
+*/
 
-  opacity: 1;
-
-  transform:
-    translateY(0);
+.top-menu > .menu-pill {
 
   pointer-events: auto;
 
@@ -166,19 +159,11 @@ body.menu-settled
 
 .menu-pill {
 
-  --pill-x: 50%;
-  --pill-y: 50%;
-
   position: relative;
-
-  overflow: hidden;
-
-  isolation: isolate;
 
   min-width: 108px;
 
-  padding:
-    9px 18px;
+  padding: 9px 18px;
 
   display: inline-flex;
 
@@ -186,62 +171,43 @@ body.menu-settled
 
   justify-content: center;
 
-  border:
-    1px solid var(--text);
+  border: 1px solid var(--text);
 
-  border-radius:
-    999px;
+  border-radius: 999px;
 
-  background:
-    transparent;
+  /*
+    Transparent means the button always
+    takes on the colour of whatever section
+    is currently behind it.
+  */
+  background: transparent;
 
-  color:
-    var(--text);
+  color: var(--text);
 
-  text-decoration:
-    none;
+  text-decoration: none;
 
-  font-size:
-    0.82rem;
+  font-size: 0.82rem;
 
-  line-height:
-    1;
+  line-height: 1;
 
 }
 
+
+/*
+  No permanent fill behind menu buttons.
+*/
 
 .menu-pill::before {
-
-  content: "";
-
-  position: absolute;
-
-  inset: 0;
-
-  z-index: -1;
-
-  background:
-    radial-gradient(
-      circle 62px
-      at
-      var(--pill-x)
-      var(--pill-y),
-
-      rgba(247, 241, 220, 1) 0%,
-      rgba(247, 241, 220, 0.74) 42%,
-      rgba(247, 241, 220, 0) 78%
-    );
-
-  opacity: 0;
-
-  transition:
-    opacity 170ms ease;
-
+  display: none;
 }
 
 
-.menu-pill:hover::before {
-  opacity: 1;
+.menu-pill:hover {
+
+  background: transparent;
+
+  opacity: 0.65;
+
 }
 
 
@@ -255,11 +221,9 @@ body.menu-settled
 
   min-height: 100vh;
 
-  padding-top:
-    var(--menu-height);
+  padding-top: var(--menu-height);
 
-  background:
-    var(--green);
+  background: var(--green);
 
   overflow: hidden;
 
@@ -279,14 +243,11 @@ body.menu-settled
       var(--menu-height) + 34px
     );
 
-  left:
-    2.8vw;
+  left: 2.8vw;
 
-  color:
-    var(--text);
+  color: var(--text);
 
-  text-decoration:
-    none;
+  text-decoration: none;
 
   font-size:
     clamp(
@@ -295,14 +256,11 @@ body.menu-settled
       4.8rem
     );
 
-  line-height:
-    1.02;
+  line-height: 1.02;
 
-  letter-spacing:
-    -0.025em;
+  letter-spacing: -0.025em;
 
-  font-weight:
-    400;
+  font-weight: 400;
 
 }
 
@@ -320,14 +278,15 @@ body.menu-settled
 
   position: absolute;
 
-  left:
-    2.8vw;
+  left: 2.8vw;
 
-  bottom:
-    5vh;
+  bottom: 5vh;
 
   width:
-    min(520px, 34vw);
+    min(
+      520px,
+      34vw
+    );
 
   margin: 0;
 
@@ -338,8 +297,7 @@ body.menu-settled
       2rem
     );
 
-  line-height:
-    1.28;
+  line-height: 1.28;
 
 }
 
@@ -405,17 +363,13 @@ body.menu-settled
 
 .feature-label {
 
-  margin-bottom:
-    28px;
+  margin-bottom: 28px;
 
-  font-size:
-    0.86rem;
+  font-size: 0.86rem;
 
-  line-height:
-    1;
+  line-height: 1;
 
-  font-weight:
-    700;
+  font-weight: 700;
 
 }
 
@@ -430,8 +384,7 @@ body.menu-settled
 
   width: 100%;
 
-  min-height:
-    300px;
+  min-height: 300px;
 
   overflow: visible;
 
@@ -452,8 +405,7 @@ body.menu-settled
   transform:
     translateX(110vw);
 
-  pointer-events:
-    none;
+  pointer-events: none;
 
   transition:
 
@@ -480,8 +432,7 @@ body.menu-settled
   transform:
     translateX(0);
 
-  pointer-events:
-    auto;
+  pointer-events: auto;
 
 }
 
@@ -503,7 +454,10 @@ body.menu-settled
 .carousel-advice {
 
   width:
-    min(850px, 100%);
+    min(
+      850px,
+      100%
+    );
 
   margin: 0;
 
@@ -514,8 +468,7 @@ body.menu-settled
       2rem
     );
 
-  line-height:
-    1.28;
+  line-height: 1.28;
 
 }
 
@@ -527,10 +480,12 @@ body.menu-settled
 .carousel-meta {
 
   width:
-    min(850px, 100%);
+    min(
+      850px,
+      100%
+    );
 
-  margin-top:
-    36px;
+  margin-top: 36px;
 
   font-size:
     clamp(
@@ -539,8 +494,7 @@ body.menu-settled
       1.08rem
     );
 
-  line-height:
-    1.35;
+  line-height: 1.35;
 
 }
 
@@ -580,33 +534,24 @@ body.menu-settled
 
   border: 0;
 
-  border-radius: 0;
+  background: transparent;
 
-  background:
-    transparent;
+  cursor: pointer;
 
-  cursor:
-    pointer;
+  pointer-events: auto;
 
-  pointer-events:
-    auto;
+  font-size: 1.25rem;
 
-  font-size:
-    1.25rem;
-
-  line-height:
-    1;
+  line-height: 1;
 
 }
 
 
 .carousel-arrow:hover {
 
-  background:
-    transparent;
+  background: transparent;
 
-  opacity:
-    0.55;
+  opacity: 0.55;
 
 }
 
@@ -617,36 +562,9 @@ body.menu-settled
 
 .hero-menu-links {
 
-  margin-top:
-    24px;
+  display: flex;
 
-  display:
-    flex;
-
-  gap:
-    12px;
-
-  transition:
-    opacity 250ms ease,
-    transform 500ms
-    cubic-bezier(
-      0.76,
-      0,
-      0.24,
-      1
-    );
-
-}
-
-
-body.menu-settled
-.hero-menu-links {
-
-  opacity:
-    0;
-
-  pointer-events:
-    none;
+  gap: 12px;
 
 }
 
@@ -657,14 +575,11 @@ body.menu-settled
 
 .section-label {
 
-  font-size:
-    0.9rem;
+  font-size: 0.9rem;
 
-  line-height:
-    1;
+  line-height: 1;
 
-  font-weight:
-    700;
+  font-weight: 700;
 
 }
 
@@ -675,11 +590,9 @@ body.menu-settled
 
 .library-section {
 
-  width:
-    100%;
+  width: 100%;
 
-  background:
-    var(--yellow);
+  background: var(--yellow);
 
   padding:
     clamp(75px, 7vw, 115px)
@@ -691,20 +604,15 @@ body.menu-settled
 
 .library-intro {
 
-  margin-bottom:
-    65px;
+  margin-bottom: 65px;
 
-  display:
-    flex;
+  display: flex;
 
-  justify-content:
-    space-between;
+  justify-content: space-between;
 
-  align-items:
-    flex-start;
+  align-items: flex-start;
 
-  gap:
-    50px;
+  gap: 50px;
 
 }
 
@@ -712,10 +620,15 @@ body.menu-settled
 .library-description {
 
   width:
-    min(850px, 80vw);
+    min(
+      850px,
+      80vw
+    );
 
   margin:
-    25px 0 0;
+    25px
+    0
+    0;
 
   font-size:
     clamp(
@@ -724,20 +637,15 @@ body.menu-settled
       3.8rem
     );
 
-  line-height:
-    1.08;
+  line-height: 1.08;
 
-  letter-spacing:
-    -0.025em;
+  letter-spacing: -0.025em;
 
 }
 
 
 .library-count {
-
-  font-size:
-    0.95rem;
-
+  font-size: 0.95rem;
 }
 
 
@@ -747,39 +655,32 @@ body.menu-settled
 
 .library-filters {
 
-  margin-bottom:
-    52px;
+  margin-bottom: 52px;
 
-  display:
-    grid;
+  display: grid;
 
   grid-template-columns:
     1fr 1fr;
 
-  gap:
-    9vw;
+  gap: 9vw;
 
 }
 
 
 .filter-heading {
 
-  margin-bottom:
-    20px;
+  margin-bottom: 20px;
 
-  font-size:
-    0.9rem;
+  font-size: 0.9rem;
 
-  font-weight:
-    700;
+  font-weight: 700;
 
 }
 
 
 .filter-columns {
 
-  display:
-    grid;
+  display: grid;
 
   grid-template-columns:
     repeat(
@@ -796,23 +697,17 @@ body.menu-settled
 
 .filter {
 
-  width:
-    fit-content;
+  width: fit-content;
 
-  padding:
-    3px 0;
+  padding: 3px 0;
 
-  border:
-    0;
+  border: 0;
 
-  background:
-    transparent;
+  background: transparent;
 
-  cursor:
-    pointer;
+  cursor: pointer;
 
-  text-align:
-    left;
+  text-align: left;
 
   font-size:
     clamp(
@@ -841,14 +736,11 @@ body.menu-settled
 
 .filter-count {
 
-  margin-left:
-    5px;
+  margin-left: 5px;
 
-  opacity:
-    0.5;
+  opacity: 0.5;
 
-  font-size:
-    0.82em;
+  font-size: 0.82em;
 
 }
 
@@ -864,14 +756,11 @@ body.menu-settled
 
 .library-controls {
 
-  margin-bottom:
-    15px;
+  margin-bottom: 15px;
 
-  display:
-    flex;
+  display: flex;
 
-  justify-content:
-    flex-end;
+  justify-content: flex-end;
 
 }
 
@@ -882,14 +771,11 @@ body.menu-settled
 
   border: 0;
 
-  background:
-    transparent;
+  background: transparent;
 
-  cursor:
-    pointer;
+  cursor: pointer;
 
-  font-size:
-    0.88rem;
+  font-size: 0.88rem;
 
 }
 
@@ -900,26 +786,17 @@ body.menu-settled
 
 .library-grid {
 
-  --mouse-x:
-    50%;
+  --mouse-x: 50%;
+  --mouse-y: 50%;
+  --spotlight-opacity: 0;
 
-  --mouse-y:
-    50%;
+  position: relative;
 
-  --spotlight-opacity:
-    0;
+  isolation: isolate;
 
-  position:
-    relative;
+  width: 100%;
 
-  isolation:
-    isolate;
-
-  width:
-    100%;
-
-  display:
-    grid;
+  display: grid;
 
   grid-template-columns:
     repeat(
@@ -927,8 +804,7 @@ body.menu-settled
       minmax(0, 1fr)
     );
 
-  background:
-    var(--green);
+  background: var(--green);
 
   border-top:
     1px solid var(--line);
@@ -940,24 +816,20 @@ body.menu-settled
 
 
 /* =========================================
-   MOVING LIBRARY GRADIENT
+   LIBRARY GRADIENT
 ========================================= */
 
 .library-grid::before {
 
   content: "";
 
-  position:
-    absolute;
+  position: absolute;
 
-  inset:
-    0;
+  inset: 0;
 
-  z-index:
-    0;
+  z-index: 0;
 
-  pointer-events:
-    none;
+  pointer-events: none;
 
   background:
     radial-gradient(
@@ -988,27 +860,21 @@ body.menu-settled
 
 .library-card {
 
-  position:
-    relative;
+  position: relative;
 
-  z-index:
-    1;
+  z-index: 1;
 
-  min-width:
-    0;
+  min-width: 0;
 
-  height:
-    440px;
+  height: 440px;
 
-  display:
-    grid;
+  display: grid;
 
   grid-template-rows:
     minmax(0, 1fr)
     auto;
 
-  background:
-    transparent;
+  background: transparent;
 
   border-right:
     1px solid var(--line);
@@ -1025,42 +891,33 @@ body.menu-settled
 
 .card-advice-area {
 
-  position:
-    relative;
+  position: relative;
 
-  z-index:
-    2;
+  z-index: 2;
 
-  min-height:
-    0;
+  min-height: 0;
 
   padding:
     32px
     30px
     28px;
 
-  overflow:
-    hidden;
+  overflow: hidden;
 
 }
 
 
 .card-advice {
 
-  height:
-    100%;
+  height: 100%;
 
-  margin:
-    0;
+  margin: 0;
 
-  padding-right:
-    7px;
+  padding-right: 7px;
 
-  overflow-y:
-    auto;
+  overflow-y: auto;
 
-  overscroll-behavior:
-    contain;
+  overscroll-behavior: contain;
 
   font-size:
     clamp(
@@ -1069,11 +926,9 @@ body.menu-settled
       1.46rem
     );
 
-  line-height:
-    1.35;
+  line-height: 1.35;
 
-  scrollbar-width:
-    thin;
+  scrollbar-width: thin;
 
   scrollbar-color:
     var(--line)
@@ -1103,29 +958,21 @@ body.menu-settled
 
 .card-advice-area.has-overflow::after {
 
-  content:
-    "…";
+  content: "…";
 
-  position:
-    absolute;
+  position: absolute;
 
-  right:
-    17px;
+  right: 17px;
 
-  bottom:
-    11px;
+  bottom: 11px;
 
-  padding:
-    1px 4px;
+  padding: 1px 4px;
 
-  background:
-    var(--green);
+  background: var(--green);
 
-  font-size:
-    1.2rem;
+  font-size: 1.2rem;
 
-  line-height:
-    1;
+  line-height: 1;
 
 }
 
@@ -1141,62 +988,48 @@ body.menu-settled
 
 .card-info {
 
-  position:
-    relative;
+  position: relative;
 
-  z-index:
-    2;
+  z-index: 2;
 
-  min-height:
-    105px;
+  min-height: 105px;
 
   padding:
     20px
     24px
     21px;
 
-  display:
-    block;
+  display: block;
 
 }
 
 
 .card-info::before {
 
-  content:
-    "";
+  content: "";
 
-  position:
-    absolute;
+  position: absolute;
 
-  top:
-    0;
+  top: 0;
 
-  left:
-    24px;
+  left: 24px;
 
-  right:
-    24px;
+  right: 24px;
 
-  height:
-    1px;
+  height: 1px;
 
-  background:
-    var(--soft-line);
+  background: var(--soft-line);
 
 }
 
 
 .card-role {
 
-  margin-bottom:
-    3px;
+  margin-bottom: 3px;
 
-  font-size:
-    1rem;
+  font-size: 1rem;
 
-  font-weight:
-    700;
+  font-weight: 700;
 
 }
 
@@ -1204,45 +1037,37 @@ body.menu-settled
 .card-working,
 .card-salary {
 
-  font-size:
-    0.9rem;
+  font-size: 0.9rem;
 
-  line-height:
-    1.3;
+  line-height: 1.3;
 
 }
 
 
 .card-category-list {
 
-  margin-top:
-    9px;
+  margin-top: 9px;
 
-  display:
-    flex;
+  display: flex;
 
-  flex-direction:
-    row;
+  flex-direction: row;
 
-  flex-wrap:
-    wrap;
+  flex-wrap: wrap;
 
   gap:
-    5px 14px;
+    5px
+    14px;
 
 }
 
 
 .card-category {
 
-  font-size:
-    0.91rem;
+  font-size: 0.91rem;
 
-  font-weight:
-    700;
+  font-weight: 700;
 
-  text-transform:
-    lowercase;
+  text-transform: lowercase;
 
 }
 
@@ -1253,24 +1078,21 @@ body.menu-settled
 
 .contribute-section {
 
-  min-height:
-    610px;
+  min-height: 610px;
 
   padding:
     clamp(78px, 8vw, 125px)
     5vw;
 
-  background:
-    var(--green);
+  background: var(--green);
 
-  display:
-    grid;
+  display: grid;
 
   grid-template-columns:
-    1fr 0.4fr;
+    1fr
+    0.4fr;
 
-  gap:
-    60px;
+  gap: 60px;
 
 }
 
@@ -1280,8 +1102,7 @@ body.menu-settled
   margin:
     30px 0;
 
-  max-width:
-    950px;
+  max-width: 950px;
 
   font-size:
     clamp(
@@ -1290,22 +1111,18 @@ body.menu-settled
       5.3rem
     );
 
-  line-height:
-    1;
+  line-height: 1;
 
-  letter-spacing:
-    -0.025em;
+  letter-spacing: -0.025em;
 
-  font-weight:
-    400;
+  font-weight: 400;
 
 }
 
 
 .contribute-copy p {
 
-  max-width:
-    670px;
+  max-width: 670px;
 
   font-size:
     clamp(
@@ -1319,72 +1136,57 @@ body.menu-settled
 
 .anonymous-note {
 
-  margin-top:
-    28px;
+  margin-top: 28px;
 
-  font-weight:
-    700;
+  font-weight: 700;
 
 }
 
 
 .contribute-action {
 
-  display:
-    flex;
+  display: flex;
 
-  align-items:
-    flex-end;
+  align-items: flex-end;
 
-  justify-content:
-    flex-end;
+  justify-content: flex-end;
 
 }
 
 
 .contribute-button {
 
-  min-width:
-    175px;
+  min-width: 175px;
 
   padding:
     13px
     28px;
 
-  display:
-    inline-flex;
+  display: inline-flex;
 
-  justify-content:
-    center;
+  justify-content: center;
 
   border:
     1px solid var(--text);
 
-  border-radius:
-    999px;
+  border-radius: 999px;
 
-  background:
-    var(--text);
+  background: var(--text);
 
-  color:
-    var(--green);
+  color: var(--green);
 
-  text-decoration:
-    none;
+  text-decoration: none;
 
-  font-size:
-    0.88rem;
+  font-size: 0.88rem;
 
 }
 
 
 .contribute-button:hover {
 
-  background:
-    var(--beige);
+  background: var(--beige);
 
-  color:
-    var(--text);
+  color: var(--text);
 
 }
 
@@ -1395,16 +1197,14 @@ body.menu-settled
 
 .about-section {
 
-  min-height:
-    570px;
+  min-height: 570px;
 
   padding:
     clamp(78px, 8vw, 125px)
     5vw
     clamp(110px, 11vw, 175px);
 
-  background:
-    var(--yellow);
+  background: var(--yellow);
 
 }
 
@@ -1412,10 +1212,12 @@ body.menu-settled
 .about-copy {
 
   width:
-    min(690px, 56%);
+    min(
+      690px,
+      56%
+    );
 
-  margin-top:
-    48px;
+  margin-top: 48px;
 
 }
 
@@ -1423,7 +1225,9 @@ body.menu-settled
 .about-copy p {
 
   margin:
-    0 0 25px;
+    0
+    0
+    25px;
 
   font-size:
     clamp(
@@ -1432,8 +1236,7 @@ body.menu-settled
       1.3rem
     );
 
-  line-height:
-    1.45;
+  line-height: 1.45;
 
 }
 
@@ -1461,17 +1264,13 @@ footer {
     25px
     5vw;
 
-  background:
-    var(--yellow);
+  background: var(--yellow);
 
-  display:
-    flex;
+  display: flex;
 
-  justify-content:
-    space-between;
+  justify-content: space-between;
 
-  font-size:
-    0.9rem;
+  font-size: 0.9rem;
 
 }
 
@@ -1482,20 +1281,16 @@ footer {
 
 .empty-state {
 
-  position:
-    relative;
+  position: relative;
 
-  z-index:
-    1;
+  z-index: 1;
 
   grid-column:
     1 / -1;
 
-  min-height:
-    220px;
+  min-height: 220px;
 
-  padding:
-    30px;
+  padding: 30px;
 
   border-right:
     1px solid var(--line);
@@ -1507,26 +1302,23 @@ footer {
 
 
 /* =========================================================
-   CLEAN DESKTOP HERO
+   DESKTOP HERO
 ========================================================= */
 
 @media (min-width: 601px) {
 
   .hero {
 
-    position:
-      relative;
+    position: relative;
 
-    min-height:
-      100vh;
+    min-height: 100vh;
 
     padding:
       var(--menu-height)
       4vw
       5vh;
 
-    display:
-      grid;
+    display: grid;
 
     grid-template-columns:
       minmax(300px, 0.8fr)
@@ -1537,14 +1329,11 @@ footer {
       1fr
       auto;
 
-    column-gap:
-      7vw;
+    column-gap: 7vw;
 
-    background:
-      var(--green);
+    background: var(--green);
 
-    overflow:
-      hidden;
+    overflow: hidden;
 
   }
 
@@ -1553,23 +1342,21 @@ footer {
 
   .hero-title {
 
-    position:
-      static;
+    position: static;
 
-    grid-column:
-      1;
+    grid-column: 1;
 
-    grid-row:
-      1;
+    grid-row: 1;
 
-    align-self:
-      start;
+    align-self: start;
 
-    margin-top:
-      34px;
+    margin-top: 34px;
 
     width:
-      min(650px, 100%);
+      min(
+        650px,
+        100%
+      );
 
     font-size:
       clamp(
@@ -1578,36 +1365,39 @@ footer {
         4.6rem
       );
 
-    line-height:
-      1.03;
+    line-height: 1.03;
 
-    letter-spacing:
-      -0.025em;
+    letter-spacing: -0.025em;
 
   }
 
 
-  /* DESCRIPTION */
+  /* HERO DESCRIPTION */
 
   .hero-description {
 
-    position:
-      static;
+    position: static;
 
-    grid-column:
-      1;
+    grid-column: 1;
 
-    grid-row:
-      3;
+    grid-row: 3;
 
-    align-self:
-      end;
+    align-self: end;
 
     width:
-      min(520px, 100%);
+      min(
+        520px,
+        100%
+      );
 
+    /*
+      Leave enough room for the two travelling
+      buttons at the very bottom.
+    */
     margin:
-      0 0 1vh;
+      0
+      0
+      70px;
 
     font-size:
       clamp(
@@ -1616,79 +1406,59 @@ footer {
         1.9rem
       );
 
-    line-height:
-      1.3;
+    line-height: 1.3;
 
   }
 
 
-  /* ADVICE AREA */
+  /* FEATURE */
 
   .hero-feature {
 
-    position:
-      relative;
+    position: relative;
 
-    top:
-      auto;
+    top: auto;
+    left: auto;
+    right: auto;
 
-    left:
-      auto;
-
-    right:
-      auto;
-
-    grid-column:
-      2;
+    grid-column: 2;
 
     grid-row:
       1 / 4;
 
-    align-self:
-      center;
+    align-self: center;
 
-    width:
-      100%;
+    width: 100%;
 
     transform:
-      translateY(7vh);
+      translateY(5vh);
 
-    isolation:
-      isolate;
+    isolation: isolate;
 
-    overflow:
-      visible;
+    overflow: visible;
 
   }
 
 
-  /* SOFT GRADIENT */
+  /* HERO GRADIENT */
 
   .hero-feature::before {
 
-    content:
-      "";
+    content: "";
 
-    position:
-      absolute;
+    position: absolute;
 
-    width:
-      620px;
+    width: 620px;
 
-    height:
-      620px;
+    height: 620px;
 
-    left:
-      -150px;
+    left: -150px;
 
-    top:
-      -195px;
+    top: -195px;
 
-    z-index:
-      -1;
+    z-index: -1;
 
-    pointer-events:
-      none;
+    pointer-events: none;
 
     background:
       radial-gradient(
@@ -1710,78 +1480,114 @@ footer {
   .feature-label {
 
     width:
-      calc(100% - 120px);
+      calc(
+        100% - 120px
+      );
 
     margin:
-      0 60px 30px;
+      0
+      60px
+      30px;
 
-    font-size:
-      0.86rem;
-
-    line-height:
-      1;
-
-    font-weight:
-      700;
+    font-size: 0.86rem;
 
   }
 
 
-  /* CAROUSEL */
+  /* -----------------------------------------
+     FEATURED ADVICE AREA
+
+     Long entries now scroll rather than
+     stretching / breaking the hero.
+  ----------------------------------------- */
 
   .carousel-track {
 
-    position:
-      relative;
+    position: relative;
 
     width:
-      calc(100% - 120px);
+      calc(
+        100% - 120px
+      );
 
-    min-height:
-      255px;
+    height: 280px;
+
+    min-height: 280px;
 
     margin:
-      0 60px;
+      0
+      60px;
 
-    overflow:
-      visible;
+    overflow: visible;
 
   }
 
 
   .carousel-slide {
+
     width: 100%;
+
+    max-height: 280px;
+
+    padding-right: 12px;
+
+    overflow-y: auto;
+
+    overscroll-behavior: contain;
+
+    scrollbar-width: thin;
+
+    scrollbar-color:
+      var(--line)
+      transparent;
+
+  }
+
+
+  .carousel-slide::-webkit-scrollbar {
+    width: 4px;
+  }
+
+
+  .carousel-slide::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+
+  .carousel-slide::-webkit-scrollbar-thumb {
+    background: var(--line);
   }
 
 
   .carousel-advice {
 
-    width:
-      100%;
+    width: 100%;
 
-    margin:
-      0;
+    margin: 0;
 
+    /*
+      Slightly more responsive so longer
+      pieces still fit more comfortably.
+    */
     font-size:
       clamp(
-        1.35rem,
-        1.75vw,
-        1.9rem
+        1.25rem,
+        1.65vw,
+        1.85rem
       );
 
-    line-height:
-      1.3;
+    line-height: 1.3;
 
   }
 
 
   .carousel-meta {
 
-    width:
-      100%;
+    width: 100%;
 
-    margin-top:
-      34px;
+    margin-top: 32px;
+
+    padding-bottom: 8px;
 
     font-size:
       clamp(
@@ -1790,8 +1596,7 @@ footer {
         1.05rem
       );
 
-    line-height:
-      1.4;
+    line-height: 1.4;
 
   }
 
@@ -1800,169 +1605,157 @@ footer {
 
   .carousel-controls {
 
-    position:
-      absolute;
+    position: absolute;
 
-    left:
-      0;
+    left: 0;
+    right: 0;
 
-    right:
-      0;
+    top: 150px;
 
-    top:
-      135px;
+    margin: 0;
 
-    margin:
-      0;
+    display: flex;
 
-    display:
-      flex;
+    align-items: center;
 
-    align-items:
-      center;
+    justify-content: space-between;
 
-    justify-content:
-      space-between;
-
-    pointer-events:
-      none;
+    pointer-events: none;
 
   }
 
 
   .carousel-arrow {
 
-    position:
-      relative;
+    position: relative;
 
-    z-index:
-      5;
+    z-index: 5;
 
-    width:
-      42px;
+    width: 42px;
 
-    height:
-      42px;
+    height: 42px;
 
-    padding:
-      0;
+    padding: 0;
 
-    display:
-      flex;
+    display: flex;
 
-    align-items:
-      center;
+    align-items: center;
 
-    justify-content:
-      center;
+    justify-content: center;
 
-    border:
-      0;
+    border: 0;
 
-    border-radius:
-      0;
+    background: transparent;
 
-    background:
-      transparent;
+    pointer-events: auto;
 
-    pointer-events:
-      auto;
+    cursor: pointer;
 
-    cursor:
-      pointer;
+    font-size: 1.35rem;
 
-    font-size:
-      1.35rem;
-
-    line-height:
-      1;
+    line-height: 1;
 
   }
 
 
   .carousel-arrow:hover {
 
-    background:
-      transparent;
+    background: transparent;
 
-    opacity:
-      0.5;
+    opacity: 0.5;
 
   }
 
 
   /* -----------------------------------------
-     HERO LIBRARY / CONTRIBUTE
-     Aligned to fixed nav position
+     TRAVELLING MENU BUTTONS
+
+     They exist at their final TOP position
+     from the beginning, but are translated
+     vertically down to the bottom of the
+     viewport.
+
+     When .menu-settled is added, transform
+     becomes 0.
+
+     Therefore:
+       no horizontal movement
+       no swap
+       no jump
+       same two buttons throughout
   ----------------------------------------- */
 
   .hero-menu-links {
 
-    position:
-      fixed;
+    position: fixed;
 
-    left:
-      3vw;
+    top: 18px;
 
-    bottom:
-      7vh;
+    left: 3vw;
 
-    z-index:
-      20;
+    z-index: 1002;
 
-    width:
-      auto;
+    width: auto;
 
-    margin:
-      0;
+    margin: 0;
 
-    display:
-      flex;
+    display: flex;
 
-    gap:
-      12px;
+    gap: 12px;
+
+    /*
+      This places the buttons at the bottom
+      of the hero at first.
+    */
+    transform:
+      translateY(
+        calc(
+          100vh -
+          var(--menu-height) -
+          38px
+        )
+      );
 
     transition:
-      bottom 550ms
+      transform
+      650ms
       cubic-bezier(
         0.76,
         0,
         0.24,
         1
-      ),
-      opacity 220ms ease;
+      );
 
   }
 
 
   /*
-    They now move vertically upward only.
-    No horizontal jump.
+    Once the user reaches the end of the hero,
+    exactly the same pair arrives in the menu
+    and remains fixed there.
   */
 
   body.menu-settled
   .hero-menu-links {
 
-    bottom:
-      calc(
-        100vh -
-        var(--menu-height) +
-        17px
-      );
+    transform:
+      translateY(0);
 
-    opacity:
-      0;
+  }
 
-    pointer-events:
-      none;
 
+  /*
+    Hide duplicate top-menu buttons on desktop.
+  */
+
+  .menu-left {
+    display: none;
   }
 
 
   .carousel-slide.exit-left {
 
-    opacity:
-      0;
+    opacity: 0;
 
     transform:
       translateX(-110vw);
@@ -1984,14 +1777,11 @@ footer {
       minmax(260px, 0.72fr)
       minmax(430px, 1.28fr);
 
-    column-gap:
-      4vw;
+    column-gap: 4vw;
 
-    padding-left:
-      3.5vw;
+    padding-left: 3.5vw;
 
-    padding-right:
-      3.5vw;
+    padding-right: 3.5vw;
 
   }
 
@@ -2011,7 +1801,7 @@ footer {
   .hero-feature {
 
     transform:
-      translateY(5vh);
+      translateY(4vh);
 
   }
 
@@ -2020,13 +1810,13 @@ footer {
   .carousel-track {
 
     width:
-      calc(100% - 90px);
+      calc(
+        100% - 90px
+      );
 
-    margin-left:
-      45px;
+    margin-left: 45px;
 
-    margin-right:
-      45px;
+    margin-right: 45px;
 
   }
 
@@ -2036,16 +1826,16 @@ footer {
 
     font-size:
       clamp(
-        1.2rem,
+        1.16rem,
         2vw,
-        1.55rem
+        1.5rem
       );
 
   }
 
 
   .carousel-controls {
-    top: 135px;
+    top: 150px;
   }
 
 }
@@ -2101,6 +1891,7 @@ footer {
 
 /* =========================================================
    MOBILE
+   Kept as before
 ========================================================= */
 
 @media (max-width: 600px) {
@@ -2113,14 +1904,11 @@ footer {
   html,
   body {
 
-    width:
-      100%;
+    width: 100%;
 
-    max-width:
-      100%;
+    max-width: 100%;
 
-    overflow-x:
-      hidden;
+    overflow-x: hidden;
 
   }
 
@@ -2130,74 +1918,63 @@ footer {
   }
 
 
-
   /* MOBILE MENU */
 
   .top-menu {
 
-    position:
-      fixed;
+    position: fixed;
 
-    top:
-      0;
+    top: 0;
+    left: 0;
+    right: 0;
 
-    left:
-      0;
+    width: 100%;
 
-    right:
-      0;
-
-    width:
-      100%;
-
-    height:
-      var(--menu-height);
+    height: var(--menu-height);
 
     padding:
-      0 4vw;
+      0
+      4vw;
 
-    background:
-      var(--green);
+    background: transparent;
 
-    z-index:
-      1000;
+    border: 0;
+
+    z-index: 1000;
+
+    pointer-events: auto;
 
   }
 
 
   .menu-left {
 
-    display:
-      flex;
+    display: flex;
 
-    gap:
-      5px;
+    gap: 5px;
 
-    opacity:
-      1;
+    opacity: 1;
 
-    transform:
-      none;
+    transform: none;
 
-    pointer-events:
-      auto;
+    pointer-events: auto;
 
-    transition:
-      none;
+    transition: none;
 
   }
 
 
   .menu-pill {
 
-    min-width:
-      auto;
+    min-width: auto;
 
     padding:
-      7px 10px;
+      7px
+      10px;
 
-    font-size:
-      0.63rem;
+    font-size: 0.63rem;
+
+    background: transparent;
 
   }
 
@@ -2207,16 +1984,13 @@ footer {
   }
 
 
-
   /* MOBILE HERO */
 
   .hero {
 
-    position:
-      relative;
+    position: relative;
 
-    min-height:
-      100svh;
+    min-height: 100svh;
 
     padding:
       calc(
@@ -2225,31 +1999,24 @@ footer {
       5vw
       40px;
 
-    display:
-      flex;
+    display: flex;
 
-    flex-direction:
-      column;
+    flex-direction: column;
 
-    background:
-      var(--green);
+    background: var(--green);
 
-    overflow:
-      hidden;
+    overflow: hidden;
 
   }
 
 
   .hero-title {
 
-    position:
-      static;
+    position: static;
 
-    width:
-      100%;
+    width: 100%;
 
-    margin:
-      0;
+    margin: 0;
 
     font-size:
       clamp(
@@ -2258,54 +2025,39 @@ footer {
         2.8rem
       );
 
-    line-height:
-      1.04;
+    line-height: 1.04;
 
   }
 
 
   .hero-feature {
 
-    position:
-      relative;
+    position: relative;
 
-    top:
-      auto;
+    top: auto;
+    left: auto;
+    right: auto;
 
-    left:
-      auto;
+    width: 100%;
 
-    right:
-      auto;
+    margin-top: 14vh;
 
-    width:
-      100%;
+    transform: none;
 
-    margin-top:
-      14vh;
-
-    transform:
-      none;
-
-    isolation:
-      isolate;
+    isolation: isolate;
 
   }
 
 
   .hero-feature::before {
 
-    width:
-      420px;
+    width: 420px;
 
-    height:
-      420px;
+    height: 420px;
 
-    left:
-      -150px;
+    left: -150px;
 
-    top:
-      -140px;
+    top: -140px;
 
     background:
       radial-gradient(
@@ -2322,159 +2074,142 @@ footer {
 
   .feature-label {
 
-    width:
-      100%;
+    width: 100%;
 
     margin:
-      0 0 24px;
+      0
+      0
+      24px;
 
-    font-size:
-      0.72rem;
+    font-size: 0.72rem;
 
   }
 
 
   .carousel-track {
 
-    width:
-      100%;
+    width: 100%;
 
-    min-height:
-      260px;
+    height: auto;
 
-    margin:
-      0;
+    min-height: 260px;
+
+    margin: 0;
+
+    overflow: visible;
+
+  }
+
+
+  .carousel-slide {
+
+    max-height: none;
+
+    padding-right: 0;
+
+    overflow-y: visible;
+
+    scrollbar-width: auto;
 
   }
 
 
   .carousel-advice {
 
-    width:
-      100%;
+    width: 100%;
 
-    font-size:
-      1.22rem;
+    font-size: 1.22rem;
 
-    line-height:
-      1.34;
+    line-height: 1.34;
 
   }
 
 
   .carousel-meta {
 
-    width:
-      100%;
+    width: 100%;
 
-    margin-top:
-      28px;
+    margin-top: 28px;
 
-    font-size:
-      0.82rem;
+    font-size: 0.82rem;
 
-    line-height:
-      1.4;
+    line-height: 1.4;
 
   }
 
 
   .carousel-controls {
 
-    position:
-      absolute;
+    position: absolute;
 
-    left:
-      -1vw;
+    left: -1vw;
+    right: -1vw;
 
-    right:
-      -1vw;
+    top: 47%;
 
-    top:
-      47%;
+    margin: 0;
 
-    margin:
-      0;
+    display: flex;
 
-    display:
-      flex;
+    justify-content: space-between;
 
-    justify-content:
-      space-between;
-
-    pointer-events:
-      none;
+    pointer-events: none;
 
   }
 
 
   .carousel-arrow {
 
-    width:
-      auto;
+    width: auto;
+    height: auto;
 
-    height:
-      auto;
+    border: 0;
 
-    border:
-      0;
+    background: transparent;
 
-    background:
-      transparent;
+    pointer-events: auto;
 
-    pointer-events:
-      auto;
-
-    font-size:
-      1.2rem;
+    font-size: 1.2rem;
 
   }
 
 
   .hero-description {
 
-    position:
-      static;
+    position: static;
 
-    width:
-      100%;
+    width: 100%;
 
     margin:
-      auto 0 0;
+      auto
+      0
+      0;
 
-    padding-top:
-      60px;
+    padding-top: 60px;
 
-    font-size:
-      1.22rem;
+    font-size: 1.22rem;
 
-    line-height:
-      1.32;
+    line-height: 1.32;
 
   }
-
 
 
   /* MOBILE LIBRARY */
 
   .library-section {
 
-    width:
-      100%;
+    width: 100%;
 
-    min-width:
-      100%;
+    min-width: 100%;
 
-    margin:
-      0;
+    margin: 0;
 
     padding:
       58px
       0
       85px;
 
-    background:
-      var(--yellow);
+    background: var(--yellow);
 
   }
 
@@ -2483,33 +2218,27 @@ footer {
   .library-filters,
   .library-controls {
 
-    margin-left:
-      5vw;
+    margin-left: 5vw;
 
-    margin-right:
-      5vw;
+    margin-right: 5vw;
 
   }
 
 
   .library-intro {
 
-    margin-bottom:
-      55px;
+    margin-bottom: 55px;
 
-    align-items:
-      flex-start;
+    align-items: flex-start;
 
   }
 
 
   .library-description {
 
-    width:
-      80vw;
+    width: 80vw;
 
-    margin-top:
-      20px;
+    margin-top: 20px;
 
     font-size:
       clamp(
@@ -2518,33 +2247,27 @@ footer {
         2.8rem
       );
 
-    line-height:
-      1.05;
+    line-height: 1.05;
 
   }
 
 
   .library-count {
 
-    flex-shrink:
-      0;
+    flex-shrink: 0;
 
-    font-size:
-      0.78rem;
+    font-size: 0.78rem;
 
   }
 
 
   .library-filters {
 
-    grid-template-columns:
-      1fr;
+    grid-template-columns: 1fr;
 
-    gap:
-      45px;
+    gap: 45px;
 
-    margin-bottom:
-      40px;
+    margin-bottom: 40px;
 
   }
 
@@ -2569,49 +2292,36 @@ footer {
   }
 
 
-
   /* HORIZONTAL MOBILE LIBRARY */
 
   .library-grid {
 
-    width:
-      100%;
+    width: 100%;
 
-    display:
-      flex;
+    display: flex;
 
-    grid-template-columns:
-      none;
+    grid-template-columns: none;
 
-    gap:
-      0;
+    gap: 0;
 
-    overflow-x:
-      auto;
+    overflow-x: auto;
 
-    overflow-y:
-      hidden;
+    overflow-y: hidden;
 
     scroll-snap-type:
       x mandatory;
 
-    scroll-padding-left:
-      5vw;
+    scroll-padding-left: 5vw;
 
-    -webkit-overflow-scrolling:
-      touch;
+    -webkit-overflow-scrolling: touch;
 
-    background:
-      var(--green);
+    background: var(--green);
 
-    border-left:
-      0;
+    border-left: 0;
 
-    border-right:
-      0;
+    border-right: 0;
 
-    scrollbar-width:
-      none;
+    scrollbar-width: none;
 
   }
 
@@ -2629,16 +2339,14 @@ footer {
   .library-card {
 
     flex:
-      0 0 86vw;
-
-    width:
+      0 0
       86vw;
 
-    height:
-      410px;
+    width: 86vw;
 
-    scroll-snap-align:
-      start;
+    height: 410px;
+
+    scroll-snap-align: start;
 
     border-right:
       1px solid var(--line);
@@ -2651,8 +2359,7 @@ footer {
 
   .library-card:first-child {
 
-    margin-left:
-      5vw;
+    margin-left: 5vw;
 
     border-left:
       1px solid var(--line);
@@ -2677,38 +2384,32 @@ footer {
 
   .card-advice {
 
-    font-size:
-      1.08rem;
+    font-size: 1.08rem;
 
-    line-height:
-      1.38;
+    line-height: 1.38;
 
   }
 
 
   .card-info {
 
-    min-height:
-      96px;
+    min-height: 96px;
 
     padding:
       18px
       21px
       18px;
 
-    display:
-      block;
+    display: block;
 
   }
 
 
   .card-info::before {
 
-    left:
-      21px;
+    left: 21px;
 
-    right:
-      21px;
+    right: 21px;
 
   }
 
@@ -2721,59 +2422,48 @@ footer {
   .card-working,
   .card-salary,
   .card-category {
-
-    font-size:
-      0.78rem;
-
+    font-size: 0.78rem;
   }
 
 
   .card-category-list {
 
-    margin-top:
-      7px;
+    margin-top: 7px;
 
-    display:
-      flex;
+    display: flex;
 
-    flex-direction:
-      row;
+    flex-direction: row;
 
-    flex-wrap:
-      wrap;
+    flex-wrap: wrap;
 
     gap:
-      4px 11px;
+      4px
+      11px;
 
   }
-
 
 
   /* MOBILE CONTRIBUTE */
 
   .contribute-section {
 
-    display:
-      block;
+    display: block;
 
-    min-height:
-      100svh;
+    min-height: 100svh;
 
     padding:
       65px
       5vw
       80px;
 
-    background:
-      var(--green);
+    background: var(--green);
 
   }
 
 
   .contribute-copy h2 {
 
-    margin-top:
-      28px;
+    margin-top: 28px;
 
     font-size:
       clamp(
@@ -2782,41 +2472,34 @@ footer {
         3.3rem
       );
 
-    line-height:
-      1;
+    line-height: 1;
 
   }
 
 
   .contribute-action {
 
-    margin-top:
-      60px;
+    margin-top: 60px;
 
-    justify-content:
-      flex-start;
+    justify-content: flex-start;
 
   }
-
 
 
   /* MOBILE ABOUT */
 
   .about-section {
 
-    width:
-      100%;
+    width: 100%;
 
-    min-height:
-      100svh;
+    min-height: 100svh;
 
     padding:
       65px
       5vw
       100px;
 
-    background:
-      var(--yellow);
+    background: var(--yellow);
 
   }
 

@@ -85,7 +85,7 @@ button {
 
 
 /* =========================================
-   FIXED MENU
+   TOP MENU
 ========================================= */
 
 .top-menu {
@@ -101,7 +101,8 @@ button {
 
   height: var(--menu-height);
 
-  padding: 0 3vw;
+  padding:
+    0 3vw;
 
   display: flex;
 
@@ -109,11 +110,6 @@ button {
 
   justify-content: space-between;
 
-  /*
-    IMPORTANT:
-    no coloured menu bar.
-    The page underneath remains visible.
-  */
   background: transparent;
 
   border: 0;
@@ -124,9 +120,8 @@ button {
 
 
 /*
-  The duplicate LIBRARY / CONTRIBUTE pair
-  in the fixed menu is not used on desktop.
-  The pair from the hero travels upward instead.
+  top left buttons only become visible
+  after the travelling pair reaches the menu
 */
 
 .menu-left {
@@ -142,11 +137,22 @@ button {
 }
 
 
+body.menu-settled .menu-left {
+
+  opacity: 1;
+
+  pointer-events: auto;
+
+}
+
+
 /*
-  ABOUT remains clickable.
+  ABOUT is always visible on the right
 */
 
-.top-menu > .menu-pill {
+.about-pill {
+
+  margin-left: auto;
 
   pointer-events: auto;
 
@@ -154,16 +160,15 @@ button {
 
 
 /* =========================================
-   MENU BUTTONS
+   MENU PILLS
 ========================================= */
 
 .menu-pill {
 
-  position: relative;
-
   min-width: 108px;
 
-  padding: 9px 18px;
+  padding:
+    9px 18px;
 
   display: inline-flex;
 
@@ -171,16 +176,12 @@ button {
 
   justify-content: center;
 
-  border: 1px solid var(--text);
+  border:
+    1px solid var(--text);
 
   border-radius: 999px;
 
-  /*
-    Transparent means the button always
-    takes on the colour of whatever section
-    is currently behind it.
-  */
-  background: transparent;
+  background: var(--green);
 
   color: var(--text);
 
@@ -190,29 +191,19 @@ button {
 
   line-height: 1;
 
-}
+  transition:
+    opacity 160ms ease;
 
-
-/*
-  No permanent fill behind menu buttons.
-*/
-
-.menu-pill::before {
-  display: none;
 }
 
 
 .menu-pill:hover {
-
-  background: transparent;
-
-  opacity: 0.65;
-
+  opacity: 0.68;
 }
 
 
 /* =========================================
-   HERO BASE
+   HERO
 ========================================= */
 
 .hero {
@@ -221,7 +212,23 @@ button {
 
   min-height: 100vh;
 
-  padding-top: var(--menu-height);
+  padding:
+    var(--menu-height)
+    4vw
+    5vh;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 0.82fr)
+    minmax(0, 1.18fr);
+
+  grid-template-rows:
+    auto
+    1fr
+    auto;
+
+  column-gap: 7vw;
 
   background: var(--green);
 
@@ -231,19 +238,20 @@ button {
 
 
 /* =========================================
-   TITLE
+   HERO TITLE
 ========================================= */
 
 .hero-title {
 
-  position: absolute;
+  grid-column: 1;
 
-  top:
-    calc(
-      var(--menu-height) + 34px
-    );
+  grid-row: 1;
 
-  left: 2.8vw;
+  align-self: start;
+
+  margin-top: 34px;
+
+  width: 100%;
 
   color: var(--text);
 
@@ -251,17 +259,22 @@ button {
 
   font-size:
     clamp(
-      2.6rem,
-      4vw,
-      4.8rem
+      2.5rem,
+      3.8vw,
+      4.6rem
     );
 
-  line-height: 1.02;
+  line-height: 1.03;
 
   letter-spacing: -0.025em;
 
   font-weight: 400;
 
+}
+
+
+.hero-title span {
+  display: block;
 }
 
 
@@ -276,29 +289,37 @@ button {
 
 .hero-description {
 
-  position: absolute;
+  grid-column: 1;
 
-  left: 2.8vw;
+  grid-row: 3;
 
-  bottom: 5vh;
+  align-self: end;
 
   width:
     min(
-      520px,
-      34vw
+      560px,
+      100%
     );
 
-  margin: 0;
+  margin:
+    0
+    0
+    65px;
 
   font-size:
     clamp(
-      1.45rem,
-      1.85vw,
-      2rem
+      1.35rem,
+      1.75vw,
+      1.9rem
     );
 
-  line-height: 1.28;
+  line-height: 1.3;
 
+}
+
+
+.description-medium {
+  display: none;
 }
 
 
@@ -308,13 +329,19 @@ button {
 
 .hero-feature {
 
-  position: absolute;
+  position: relative;
 
-  top: 36%;
+  grid-column: 2;
 
-  left: 43%;
+  grid-row:
+    1 / 4;
 
-  right: 4vw;
+  align-self: center;
+
+  width: 100%;
+
+  transform:
+    translateY(4vh);
 
   isolation: isolate;
 
@@ -333,10 +360,10 @@ button {
 
   position: absolute;
 
-  width: 580px;
-  height: 580px;
+  width: 620px;
+  height: 620px;
 
-  left: -170px;
+  left: -150px;
   top: -195px;
 
   z-index: -1;
@@ -346,12 +373,12 @@ button {
   background:
     radial-gradient(
       circle at center,
-
-      rgba(247, 241, 220, 0.84) 0%,
-      rgba(247, 241, 220, 0.58) 24%,
-      rgba(247, 241, 220, 0.30) 44%,
-      rgba(247, 241, 220, 0.11) 61%,
-      rgba(247, 241, 220, 0) 76%
+      rgba(247, 241, 220, 0.74) 0%,
+      rgba(247, 241, 220, 0.50) 19%,
+      rgba(247, 241, 220, 0.27) 35%,
+      rgba(247, 241, 220, 0.11) 50%,
+      rgba(247, 241, 220, 0.035) 63%,
+      rgba(247, 241, 220, 0) 75%
     );
 
 }
@@ -363,7 +390,15 @@ button {
 
 .feature-label {
 
-  margin-bottom: 28px;
+  width:
+    calc(
+      100% - 120px
+    );
+
+  margin:
+    0
+    60px
+    30px;
 
   font-size: 0.86rem;
 
@@ -382,9 +417,18 @@ button {
 
   position: relative;
 
-  width: 100%;
+  width:
+    calc(
+      100% - 120px
+    );
 
-  min-height: 300px;
+  height: 290px;
+
+  min-height: 290px;
+
+  margin:
+    0
+    60px;
 
   overflow: visible;
 
@@ -400,6 +444,12 @@ button {
 
   width: 100%;
 
+  max-height: 290px;
+
+  padding-right: 10px;
+
+  overflow-y: auto;
+
   opacity: 0;
 
   transform:
@@ -407,8 +457,15 @@ button {
 
   pointer-events: none;
 
-  transition:
+  overscroll-behavior: contain;
 
+  scrollbar-width: thin;
+
+  scrollbar-color:
+    var(--line)
+    transparent;
+
+  transition:
     transform
     850ms
     cubic-bezier(
@@ -417,7 +474,6 @@ button {
       0.24,
       1
     ),
-
     opacity
     260ms
     ease;
@@ -442,8 +498,23 @@ button {
   opacity: 0;
 
   transform:
-    translateX(-120vw);
+    translateX(-110vw);
 
+}
+
+
+.carousel-slide::-webkit-scrollbar {
+  width: 4px;
+}
+
+
+.carousel-slide::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
+.carousel-slide::-webkit-scrollbar-thumb {
+  background: var(--line);
 }
 
 
@@ -453,22 +524,18 @@ button {
 
 .carousel-advice {
 
-  width:
-    min(
-      850px,
-      100%
-    );
+  width: 100%;
 
   margin: 0;
 
   font-size:
     clamp(
-      1.45rem,
-      1.85vw,
-      2rem
+      1.23rem,
+      1.6vw,
+      1.82rem
     );
 
-  line-height: 1.28;
+  line-height: 1.3;
 
 }
 
@@ -479,40 +546,36 @@ button {
 
 .carousel-meta {
 
-  width:
-    min(
-      850px,
-      100%
-    );
+  width: 100%;
 
-  margin-top: 36px;
+  margin-top: 32px;
+
+  padding-bottom: 8px;
 
   font-size:
     clamp(
-      0.92rem,
-      1vw,
-      1.08rem
+      0.9rem,
+      0.95vw,
+      1.05rem
     );
 
-  line-height: 1.35;
+  line-height: 1.4;
 
 }
 
 
 /* =========================================
-   ARROWS
+   CAROUSEL ARROWS
 ========================================= */
 
 .carousel-controls {
 
   position: absolute;
 
-  left: -110px;
-  right: -20px;
+  left: 0;
+  right: 0;
 
-  top: 42%;
-
-  margin: 0;
+  top: 150px;
 
   display: flex;
 
@@ -527,20 +590,31 @@ button {
 
 .carousel-arrow {
 
-  width: auto;
-  height: auto;
+  position: relative;
+
+  z-index: 5;
+
+  width: 42px;
+
+  height: 42px;
 
   padding: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
 
   border: 0;
 
   background: transparent;
 
-  cursor: pointer;
-
   pointer-events: auto;
 
-  font-size: 1.25rem;
+  cursor: pointer;
+
+  font-size: 1.35rem;
 
   line-height: 1;
 
@@ -548,29 +622,93 @@ button {
 
 
 .carousel-arrow:hover {
-
-  background: transparent;
-
-  opacity: 0.55;
-
+  opacity: 0.5;
 }
 
 
 /* =========================================
-   HERO MENU LINKS
+   TRAVELLING DESKTOP BUTTONS
 ========================================= */
 
 .hero-menu-links {
+
+  position: fixed;
+
+  right: 3vw;
+
+  bottom: 28px;
+
+  z-index: 1001;
 
   display: flex;
 
   gap: 12px;
 
+  transition:
+    bottom
+    600ms
+    cubic-bezier(
+      0.76,
+      0,
+      0.24,
+      1
+    );
+
+}
+
+
+/*
+  Straight upward movement only.
+  Same right alignment the whole time.
+*/
+
+body.menu-settled
+.hero-menu-links {
+
+  bottom:
+    calc(
+      100vh -
+      var(--menu-height) +
+      18px
+    );
+
+}
+
+
+/*
+  once they reach top, hide travelling pair
+  and reveal identical fixed menu pair
+*/
+
+body.menu-settled
+.hero-menu-links {
+
+  opacity: 0;
+
+  pointer-events: none;
+
+}
+
+
+body.menu-settled
+.menu-left {
+
+  position: fixed;
+
+  top: 18px;
+
+  right:
+    calc(
+      3vw + 132px
+    );
+
+  left: auto;
+
 }
 
 
 /* =========================================
-   LABELS
+   SECTION LABELS
 ========================================= */
 
 .section-label {
@@ -626,9 +764,7 @@ button {
     );
 
   margin:
-    25px
-    0
-    0;
+    25px 0 0;
 
   font-size:
     clamp(
@@ -689,8 +825,7 @@ button {
     );
 
   gap:
-    8px
-    28px;
+    8px 28px;
 
 }
 
@@ -837,7 +972,6 @@ button {
       at
       var(--mouse-x)
       var(--mouse-y),
-
       rgba(247, 241, 220, 1) 0%,
       rgba(247, 241, 220, 0.92) 20%,
       rgba(247, 241, 220, 0.65) 40%,
@@ -953,7 +1087,7 @@ button {
 
 
 /* =========================================
-   OVERFLOW ELLIPSIS
+   CARD OVERFLOW
 ========================================= */
 
 .card-advice-area.has-overflow::after {
@@ -1055,8 +1189,7 @@ button {
   flex-wrap: wrap;
 
   gap:
-    5px
-    14px;
+    5px 14px;
 
 }
 
@@ -1089,8 +1222,7 @@ button {
   display: grid;
 
   grid-template-columns:
-    1fr
-    0.4fr;
+    1fr 0.4fr;
 
   gap: 60px;
 
@@ -1159,8 +1291,7 @@ button {
   min-width: 175px;
 
   padding:
-    13px
-    28px;
+    13px 28px;
 
   display: inline-flex;
 
@@ -1302,471 +1433,7 @@ footer {
 
 
 /* =========================================================
-   DESKTOP HERO
-========================================================= */
-
-@media (min-width: 601px) {
-
-  .hero {
-
-    position: relative;
-
-    min-height: 100vh;
-
-    padding:
-      var(--menu-height)
-      4vw
-      5vh;
-
-    display: grid;
-
-    grid-template-columns:
-      minmax(300px, 0.8fr)
-      minmax(500px, 1.2fr);
-
-    grid-template-rows:
-      auto
-      1fr
-      auto;
-
-    column-gap: 7vw;
-
-    background: var(--green);
-
-    overflow: hidden;
-
-  }
-
-
-  /* TITLE */
-
-  .hero-title {
-
-    position: static;
-
-    grid-column: 1;
-
-    grid-row: 1;
-
-    align-self: start;
-
-    margin-top: 34px;
-
-    width:
-      min(
-        650px,
-        100%
-      );
-
-    font-size:
-      clamp(
-        2.5rem,
-        3.8vw,
-        4.6rem
-      );
-
-    line-height: 1.03;
-
-    letter-spacing: -0.025em;
-
-  }
-
-
-  /* HERO DESCRIPTION */
-
-  .hero-description {
-
-    position: static;
-
-    grid-column: 1;
-
-    grid-row: 3;
-
-    align-self: end;
-
-    width:
-      min(
-        520px,
-        100%
-      );
-
-    /*
-      Leave enough room for the two travelling
-      buttons at the very bottom.
-    */
-    margin:
-      0
-      0
-      70px;
-
-    font-size:
-      clamp(
-        1.35rem,
-        1.75vw,
-        1.9rem
-      );
-
-    line-height: 1.3;
-
-  }
-
-
-  /* FEATURE */
-
-  .hero-feature {
-
-    position: relative;
-
-    top: auto;
-    left: auto;
-    right: auto;
-
-    grid-column: 2;
-
-    grid-row:
-      1 / 4;
-
-    align-self: center;
-
-    width: 100%;
-
-    transform:
-      translateY(5vh);
-
-    isolation: isolate;
-
-    overflow: visible;
-
-  }
-
-
-  /* HERO GRADIENT */
-
-  .hero-feature::before {
-
-    content: "";
-
-    position: absolute;
-
-    width: 620px;
-
-    height: 620px;
-
-    left: -150px;
-
-    top: -195px;
-
-    z-index: -1;
-
-    pointer-events: none;
-
-    background:
-      radial-gradient(
-        circle at center,
-
-        rgba(247, 241, 220, 0.74) 0%,
-        rgba(247, 241, 220, 0.50) 19%,
-        rgba(247, 241, 220, 0.27) 35%,
-        rgba(247, 241, 220, 0.11) 50%,
-        rgba(247, 241, 220, 0.035) 63%,
-        rgba(247, 241, 220, 0) 75%
-      );
-
-  }
-
-
-  /* FEATURE LABEL */
-
-  .feature-label {
-
-    width:
-      calc(
-        100% - 120px
-      );
-
-    margin:
-      0
-      60px
-      30px;
-
-    font-size: 0.86rem;
-
-  }
-
-
-  /* -----------------------------------------
-     FEATURED ADVICE AREA
-
-     Long entries now scroll rather than
-     stretching / breaking the hero.
-  ----------------------------------------- */
-
-  .carousel-track {
-
-    position: relative;
-
-    width:
-      calc(
-        100% - 120px
-      );
-
-    height: 280px;
-
-    min-height: 280px;
-
-    margin:
-      0
-      60px;
-
-    overflow: visible;
-
-  }
-
-
-  .carousel-slide {
-
-    width: 100%;
-
-    max-height: 280px;
-
-    padding-right: 12px;
-
-    overflow-y: auto;
-
-    overscroll-behavior: contain;
-
-    scrollbar-width: thin;
-
-    scrollbar-color:
-      var(--line)
-      transparent;
-
-  }
-
-
-  .carousel-slide::-webkit-scrollbar {
-    width: 4px;
-  }
-
-
-  .carousel-slide::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-
-  .carousel-slide::-webkit-scrollbar-thumb {
-    background: var(--line);
-  }
-
-
-  .carousel-advice {
-
-    width: 100%;
-
-    margin: 0;
-
-    /*
-      Slightly more responsive so longer
-      pieces still fit more comfortably.
-    */
-    font-size:
-      clamp(
-        1.25rem,
-        1.65vw,
-        1.85rem
-      );
-
-    line-height: 1.3;
-
-  }
-
-
-  .carousel-meta {
-
-    width: 100%;
-
-    margin-top: 32px;
-
-    padding-bottom: 8px;
-
-    font-size:
-      clamp(
-        0.9rem,
-        0.95vw,
-        1.05rem
-      );
-
-    line-height: 1.4;
-
-  }
-
-
-  /* ARROWS */
-
-  .carousel-controls {
-
-    position: absolute;
-
-    left: 0;
-    right: 0;
-
-    top: 150px;
-
-    margin: 0;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    pointer-events: none;
-
-  }
-
-
-  .carousel-arrow {
-
-    position: relative;
-
-    z-index: 5;
-
-    width: 42px;
-
-    height: 42px;
-
-    padding: 0;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    border: 0;
-
-    background: transparent;
-
-    pointer-events: auto;
-
-    cursor: pointer;
-
-    font-size: 1.35rem;
-
-    line-height: 1;
-
-  }
-
-
-  .carousel-arrow:hover {
-
-    background: transparent;
-
-    opacity: 0.5;
-
-  }
-
-
-  /* -----------------------------------------
-     TRAVELLING MENU BUTTONS
-
-     They exist at their final TOP position
-     from the beginning, but are translated
-     vertically down to the bottom of the
-     viewport.
-
-     When .menu-settled is added, transform
-     becomes 0.
-
-     Therefore:
-       no horizontal movement
-       no swap
-       no jump
-       same two buttons throughout
-  ----------------------------------------- */
-
-  .hero-menu-links {
-
-    position: fixed;
-
-    top: 18px;
-
-    left: 3vw;
-
-    z-index: 1002;
-
-    width: auto;
-
-    margin: 0;
-
-    display: flex;
-
-    gap: 12px;
-
-    /*
-      This places the buttons at the bottom
-      of the hero at first.
-    */
-    transform:
-      translateY(
-        calc(
-          100vh -
-          var(--menu-height) -
-          38px
-        )
-      );
-
-    transition:
-      transform
-      650ms
-      cubic-bezier(
-        0.76,
-        0,
-        0.24,
-        1
-      );
-
-  }
-
-
-  /*
-    Once the user reaches the end of the hero,
-    exactly the same pair arrives in the menu
-    and remains fixed there.
-  */
-
-  body.menu-settled
-  .hero-menu-links {
-
-    transform:
-      translateY(0);
-
-  }
-
-
-  /*
-    Hide duplicate top-menu buttons on desktop.
-  */
-
-  .menu-left {
-    display: none;
-  }
-
-
-  .carousel-slide.exit-left {
-
-    opacity: 0;
-
-    transform:
-      translateX(-110vw);
-
-  }
-
-}
-
-
-/* =========================================================
-   MEDIUM BROWSER WIDTHS
+   MEDIUM DESKTOP
 ========================================================= */
 
 @media (min-width: 601px) and (max-width: 1050px) {
@@ -1774,8 +1441,8 @@ footer {
   .hero {
 
     grid-template-columns:
-      minmax(260px, 0.72fr)
-      minmax(430px, 1.28fr);
+      minmax(0, 0.78fr)
+      minmax(0, 1.22fr);
 
     column-gap: 4vw;
 
@@ -1790,19 +1457,16 @@ footer {
 
     font-size:
       clamp(
-        2.15rem,
+        2.05rem,
         4.3vw,
-        3.25rem
+        3.15rem
       );
 
   }
 
 
   .hero-feature {
-
-    transform:
-      translateY(4vh);
-
+    transform: translateY(3vh);
   }
 
 
@@ -1821,21 +1485,37 @@ footer {
   }
 
 
-  .carousel-advice,
+  .carousel-advice {
+
+    font-size:
+      clamp(
+        1.14rem,
+        1.95vw,
+        1.48rem
+      );
+
+  }
+
+
   .hero-description {
 
     font-size:
       clamp(
-        1.16rem,
-        2vw,
+        1.15rem,
+        1.9vw,
         1.5rem
       );
 
   }
 
 
-  .carousel-controls {
-    top: 150px;
+  .description-wide {
+    display: none;
+  }
+
+
+  .description-medium {
+    display: inline;
   }
 
 }
@@ -1891,7 +1571,6 @@ footer {
 
 /* =========================================================
    MOBILE
-   Kept as before
 ========================================================= */
 
 @media (max-width: 600px) {
@@ -1933,12 +1612,9 @@ footer {
     height: var(--menu-height);
 
     padding:
-      0
-      4vw;
+      0 4vw;
 
     background: transparent;
-
-    border: 0;
 
     z-index: 1000;
 
@@ -1955,11 +1631,15 @@ footer {
 
     opacity: 1;
 
-    transform: none;
-
     pointer-events: auto;
 
-    transition: none;
+  }
+
+
+  body.menu-settled
+  .menu-left {
+
+    position: static;
 
   }
 
@@ -1969,13 +1649,17 @@ footer {
     min-width: auto;
 
     padding:
-      7px
-      10px;
+      7px 10px;
 
     font-size: 0.63rem;
 
-    background: transparent;
+    background: var(--green);
 
+  }
+
+
+  .about-pill {
+    margin-left: auto;
   }
 
 
@@ -2012,8 +1696,6 @@ footer {
 
   .hero-title {
 
-    position: static;
-
     width: 100%;
 
     margin: 0;
@@ -2032,19 +1714,11 @@ footer {
 
   .hero-feature {
 
-    position: relative;
-
-    top: auto;
-    left: auto;
-    right: auto;
-
     width: 100%;
 
     margin-top: 14vh;
 
     transform: none;
-
-    isolation: isolate;
 
   }
 
@@ -2058,16 +1732,6 @@ footer {
     left: -150px;
 
     top: -140px;
-
-    background:
-      radial-gradient(
-        circle at center,
-
-        rgba(247, 241, 220, 0.70) 0%,
-        rgba(247, 241, 220, 0.40) 30%,
-        rgba(247, 241, 220, 0.15) 51%,
-        rgba(247, 241, 220, 0) 72%
-      );
 
   }
 
@@ -2096,8 +1760,6 @@ footer {
 
     margin: 0;
 
-    overflow: visible;
-
   }
 
 
@@ -2108,8 +1770,6 @@ footer {
     padding-right: 0;
 
     overflow-y: visible;
-
-    scrollbar-width: auto;
 
   }
 
@@ -2147,27 +1807,14 @@ footer {
 
     top: 47%;
 
-    margin: 0;
-
-    display: flex;
-
-    justify-content: space-between;
-
-    pointer-events: none;
-
   }
 
 
   .carousel-arrow {
 
     width: auto;
+
     height: auto;
-
-    border: 0;
-
-    background: transparent;
-
-    pointer-events: auto;
 
     font-size: 1.2rem;
 
@@ -2175,8 +1822,6 @@ footer {
 
 
   .hero-description {
-
-    position: static;
 
     width: 100%;
 
@@ -2191,6 +1836,16 @@ footer {
 
     line-height: 1.32;
 
+  }
+
+
+  .description-wide {
+    display: inline;
+  }
+
+
+  .description-medium {
+    display: none;
   }
 
 
@@ -2281,8 +1936,7 @@ footer {
       );
 
     gap:
-      11px
-      18px;
+      11px 18px;
 
   }
 
@@ -2292,7 +1946,7 @@ footer {
   }
 
 
-  /* HORIZONTAL MOBILE LIBRARY */
+  /* MOBILE HORIZONTAL LIBRARY */
 
   .library-grid {
 
@@ -2400,8 +2054,6 @@ footer {
       21px
       18px;
 
-    display: block;
-
   }
 
 
@@ -2430,15 +2082,8 @@ footer {
 
     margin-top: 7px;
 
-    display: flex;
-
-    flex-direction: row;
-
-    flex-wrap: wrap;
-
     gap:
-      4px
-      11px;
+      4px 11px;
 
   }
 

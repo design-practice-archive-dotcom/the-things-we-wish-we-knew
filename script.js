@@ -12,7 +12,9 @@ let carouselLocked = false;
 
 
 
-/* DOM */
+/* =========================================
+   DOM
+========================================= */
 
 const libraryGrid =
   document.getElementById(
@@ -66,7 +68,9 @@ const hero =
 
 
 
-/* LOAD DATA */
+/* =========================================
+   LOAD DATA
+========================================= */
 
 async function loadInsights() {
 
@@ -166,7 +170,9 @@ async function loadInsights() {
 
 
 
-/* PARSE */
+/* =========================================
+   PARSE RESPONSE
+========================================= */
 
 function parseResponseText(
   text
@@ -230,7 +236,9 @@ function parseResponseText(
 
 
 
-/* EXTRACT ARRAY */
+/* =========================================
+   EXTRACT ARRAY
+========================================= */
 
 function extractArray(
   value
@@ -293,7 +301,9 @@ function extractArray(
 
 
 
-/* JSONP FALLBACK */
+/* =========================================
+   JSONP FALLBACK
+========================================= */
 
 function loadWithJSONP() {
 
@@ -495,7 +505,9 @@ function loadWithJSONP() {
 
 
 
-/* NORMALISE */
+/* =========================================
+   NORMALISE
+========================================= */
 
 function useLoadedData(
   data
@@ -625,7 +637,9 @@ function normalizeInsight(
 
 
 
-/* PROPERTY LOOKUP */
+/* =========================================
+   PROPERTY LOOKUP
+========================================= */
 
 function firstValue(
   object,
@@ -704,7 +718,9 @@ function firstValue(
 
 
 
-/* CLEANING */
+/* =========================================
+   CLEANING
+========================================= */
 
 function clean(
   value
@@ -772,7 +788,9 @@ function same(
 
 
 
-/* CATEGORY DEFINITIONS */
+/* =========================================
+   CATEGORIES
+========================================= */
 
 const categoryDefinitions = [
 
@@ -907,7 +925,9 @@ function getCategories(
 
 
 
-/* WORKING TYPES */
+/* =========================================
+   WORKING TYPES
+========================================= */
 
 const workingDefinitions = [
 
@@ -1040,7 +1060,9 @@ function getWorkingTypes(
 
 
 
-/* AVAILABLE VALUES */
+/* =========================================
+   AVAILABLE FILTER VALUES
+========================================= */
 
 function getAvailableCategories() {
 
@@ -1104,7 +1126,9 @@ function getAvailableWorkingTypes() {
 
 
 
-/* FILTER COUNTS */
+/* =========================================
+   FILTER COUNTS
+========================================= */
 
 function countCategory(
   category
@@ -1172,7 +1196,9 @@ function countWorking(
 
 
 
-/* BUILD FILTERS */
+/* =========================================
+   BUILD FILTERS
+========================================= */
 
 function createCategoryFilters() {
 
@@ -1321,7 +1347,9 @@ function createWorkingFilters() {
 
 
 
-/* FILTER BUTTON */
+/* =========================================
+   FILTER BUTTON
+========================================= */
 
 function addFilter({
   container,
@@ -1437,7 +1465,9 @@ function addFilter({
 
 
 
-/* FILTER RESULTS */
+/* =========================================
+   FILTER RESULTS
+========================================= */
 
 function getFilteredInsights() {
 
@@ -1501,7 +1531,9 @@ function getFilteredInsights() {
 
 
 
-/* DISPLAY LIBRARY */
+/* =========================================
+   DISPLAY LIBRARY
+========================================= */
 
 function displayLibrary() {
 
@@ -1631,45 +1663,43 @@ function displayLibrary() {
 
         <div class="card-info">
 
-          <div>
+          ${
+            role
+              ? `
+                <div class="card-role">
+                  ${escapeHTML(role)}
+                </div>
+              `
+              : ""
+          }
 
-            ${
-              role
-                ? `
-                  <div class="card-role">
-                    ${escapeHTML(role)}
-                  </div>
-                `
-                : ""
-            }
 
-            ${
-              secondary.length
-                ? `
-                  <div class="card-working">
-                    ${escapeHTML(
-                      secondary.join(
-                        " · "
-                      )
-                    )}
-                  </div>
-                `
-                : ""
-            }
+          ${
+            secondary.length
+              ? `
+                <div class="card-working">
+                  ${escapeHTML(
+                    secondary.join(
+                      " · "
+                    )
+                  )}
+                </div>
+              `
+              : ""
+          }
 
-            ${
-              insight.salary
-                ? `
-                  <div class="card-salary">
-                    ${escapeHTML(
-                      insight.salary
-                    )}
-                  </div>
-                `
-                : ""
-            }
 
-          </div>
+          ${
+            insight.salary
+              ? `
+                <div class="card-salary">
+                  ${escapeHTML(
+                    insight.salary
+                  )}
+                </div>
+              `
+              : ""
+          }
 
 
           <div class="card-category-list">
@@ -1697,7 +1727,9 @@ function displayLibrary() {
 
 
 
-/* CARD OVERFLOW */
+/* =========================================
+   CARD OVERFLOW
+========================================= */
 
 function initialiseCardOverflow() {
 
@@ -1771,7 +1803,9 @@ function initialiseCardOverflow() {
 
 
 
-/* CAROUSEL */
+/* =========================================
+   CAROUSEL
+========================================= */
 
 function buildCarousel() {
 
@@ -1893,10 +1927,9 @@ function buildCarousel() {
       `;
 
 
-      carouselTrack
-        .appendChild(
-          slide
-        );
+      carouselTrack.appendChild(
+        slide
+      );
 
     }
   );
@@ -1905,7 +1938,9 @@ function buildCarousel() {
 
 
 
-/* CAROUSEL MOVEMENT */
+/* =========================================
+   CAROUSEL MOVEMENT
+========================================= */
 
 function moveCarousel(
   direction
@@ -2100,7 +2135,9 @@ previousButton.addEventListener(
 
 
 
-/* HERO MENU TRANSITION */
+/* =========================================
+   HERO MENU TRANSITION
+========================================= */
 
 function initialiseHeroMenuTransition() {
 
@@ -2109,10 +2146,6 @@ function initialiseHeroMenuTransition() {
       "(max-width: 600px)"
     ).matches;
 
-
-  /*
-    On mobile the menu stays in place.
-  */
 
   if (
     isMobile
@@ -2172,7 +2205,9 @@ function initialiseHeroMenuTransition() {
 
 
 
-/* MENU GRADIENT */
+/* =========================================
+   MENU GRADIENT
+========================================= */
 
 function initialiseMenuGradient() {
 
@@ -2217,7 +2252,9 @@ function initialiseMenuGradient() {
 
 
 
-/* LIBRARY SPOTLIGHT */
+/* =========================================
+   LIBRARY SPOTLIGHT
+========================================= */
 
 function initialiseLibrarySpotlight() {
 
@@ -2286,7 +2323,9 @@ function initialiseLibrarySpotlight() {
 
 
 
-/* SPOTLIGHT POSITION */
+/* =========================================
+   SPOTLIGHT POSITION
+========================================= */
 
 function updateLibrarySpotlight(
   event
@@ -2322,7 +2361,9 @@ function updateLibrarySpotlight(
 
 
 
-/* CLEAR FILTERS */
+/* =========================================
+   CLEAR FILTERS
+========================================= */
 
 clearFilters.addEventListener(
   "click",
@@ -2348,7 +2389,9 @@ clearFilters.addEventListener(
 
 
 
-/* ERROR */
+/* =========================================
+   ERROR
+========================================= */
 
 function showError() {
 
@@ -2381,7 +2424,9 @@ function showError() {
 
 
 
-/* UTILITIES */
+/* =========================================
+   UTILITIES
+========================================= */
 
 function containsTerm(
   text,
@@ -2499,7 +2544,9 @@ function escapeHTML(
 
 
 
-/* INITIALISE */
+/* =========================================
+   INITIALISE
+========================================= */
 
 function initialiseLibrary() {
 
@@ -2515,7 +2562,9 @@ function initialiseLibrary() {
 
 
 
-/* START */
+/* =========================================
+   START
+========================================= */
 
 initialiseHeroMenuTransition();
 

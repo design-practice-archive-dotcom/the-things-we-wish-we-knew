@@ -12,54 +12,61 @@ let carouselLocked = false;
 
 
 
-/* =========================================
-   DOM
-========================================= */
+/* DOM */
 
 const libraryGrid =
-  document.getElementById("library-grid");
+  document.getElementById(
+    "library-grid"
+  );
 
 const insightCount =
-  document.getElementById("insight-count");
+  document.getElementById(
+    "insight-count"
+  );
 
 const categoryFilters =
-  document.getElementById("category-filters");
+  document.getElementById(
+    "category-filters"
+  );
 
 const workingFilters =
-  document.getElementById("working-filters");
+  document.getElementById(
+    "working-filters"
+  );
 
 const workingFilterArea =
-  document.getElementById("working-filter-area");
+  document.getElementById(
+    "working-filter-area"
+  );
 
 const clearFilters =
-  document.getElementById("clear-filters");
+  document.getElementById(
+    "clear-filters"
+  );
 
 const carouselTrack =
-  document.getElementById("carousel-track");
-
-const carouselStage =
-  document.getElementById("carousel-stage");
-
-const carouselWindow =
-  document.getElementById("carousel-window");
+  document.getElementById(
+    "carousel-track"
+  );
 
 const previousButton =
-  document.getElementById("previous-button");
+  document.getElementById(
+    "previous-button"
+  );
 
 const nextButton =
-  document.getElementById("next-button");
+  document.getElementById(
+    "next-button"
+  );
 
-const movingNav =
-  document.getElementById("moving-nav");
-
-const aboutNav =
-  document.getElementById("about-nav");
-
+const hero =
+  document.getElementById(
+    "top"
+  );
 
 
-/* =========================================
-   LOAD DATA
-========================================= */
+
+/* LOAD DATA */
 
 async function loadInsights() {
 
@@ -67,7 +74,9 @@ async function loadInsights() {
 
     const response =
       await fetch(
-        DATA_URL + "?t=" + Date.now(),
+        DATA_URL +
+        "?t=" +
+        Date.now(),
         {
           method: "GET",
           cache: "no-store"
@@ -76,7 +85,12 @@ async function loadInsights() {
 
 
     if (!response.ok) {
-      throw new Error("HTTP " + response.status);
+
+      throw new Error(
+        "HTTP " +
+        response.status
+      );
+
     }
 
 
@@ -85,16 +99,22 @@ async function loadInsights() {
 
 
     const parsed =
-      parseResponseText(text);
+      parseResponseText(
+        text
+      );
 
 
     const rows =
-      extractArray(parsed);
+      extractArray(
+        parsed
+      );
 
 
     if (rows) {
 
-      useLoadedData(rows);
+      useLoadedData(
+        rows
+      );
 
       return;
 
@@ -105,7 +125,7 @@ async function loadInsights() {
   catch (error) {
 
     console.warn(
-      "Normal fetch failed:",
+      "Fetch failed:",
       error
     );
 
@@ -120,7 +140,9 @@ async function loadInsights() {
 
     if (rows) {
 
-      useLoadedData(rows);
+      useLoadedData(
+        rows
+      );
 
       return;
 
@@ -144,24 +166,28 @@ async function loadInsights() {
 
 
 
-/* =========================================
-   PARSE
-========================================= */
+/* PARSE */
 
-function parseResponseText(text) {
+function parseResponseText(
+  text
+) {
 
   const trimmed =
     clean(text);
 
 
   if (!trimmed) {
+
     return null;
+
   }
 
 
   try {
 
-    return JSON.parse(trimmed);
+    return JSON.parse(
+      trimmed
+    );
 
   }
 
@@ -176,7 +202,10 @@ function parseResponseText(text) {
     );
 
 
-  if (match && match[1]) {
+  if (
+    match &&
+    match[1]
+  ) {
 
     try {
 
@@ -201,16 +230,27 @@ function parseResponseText(text) {
 
 
 
-function extractArray(value) {
+/* EXTRACT ARRAY */
 
-  if (Array.isArray(value)) {
+function extractArray(
+  value
+) {
+
+  if (
+    Array.isArray(
+      value
+    )
+  ) {
+
     return value;
+
   }
 
 
   if (
     !value ||
-    typeof value !== "object"
+    typeof value !==
+      "object"
   ) {
 
     return null;
@@ -227,7 +267,10 @@ function extractArray(value) {
   ];
 
 
-  for (const property of keys) {
+  for (
+    const property
+    of keys
+  ) {
 
     if (
       Array.isArray(
@@ -235,7 +278,9 @@ function extractArray(value) {
       )
     ) {
 
-      return value[property];
+      return value[
+        property
+      ];
 
     }
 
@@ -248,22 +293,24 @@ function extractArray(value) {
 
 
 
-/* =========================================
-   JSONP FALLBACK
-========================================= */
+/* JSONP FALLBACK */
 
 function loadWithJSONP() {
 
   return new Promise(
-    (resolve, reject) => {
+    (
+      resolve,
+      reject
+    ) => {
 
 
       const callbackName =
-        "archiveCallback_" +
+        "libraryCallback_" +
         Date.now() +
         "_" +
         Math.floor(
-          Math.random() * 100000
+          Math.random() *
+          100000
         );
 
 
@@ -273,12 +320,18 @@ function loadWithJSONP() {
         );
 
 
-      let finished = false;
+      let finished =
+        false;
+
 
 
       function cleanup() {
 
-        if (window[callbackName]) {
+        if (
+          window[
+            callbackName
+          ]
+        ) {
 
           delete window[
             callbackName
@@ -287,7 +340,9 @@ function loadWithJSONP() {
         }
 
 
-        if (script.parentNode) {
+        if (
+          script.parentNode
+        ) {
 
           script.remove();
 
@@ -296,15 +351,25 @@ function loadWithJSONP() {
       }
 
 
+
       const timeout =
         setTimeout(
           () => {
 
-            if (finished) return;
 
-            finished = true;
+            if (finished) {
+
+              return;
+
+            }
+
+
+            finished =
+              true;
+
 
             cleanup();
+
 
             reject(
               new Error(
@@ -318,27 +383,43 @@ function loadWithJSONP() {
         );
 
 
-      window[callbackName] =
+
+      window[
+        callbackName
+      ] =
         function(data) {
 
-          if (finished) return;
 
-          finished = true;
+          if (finished) {
 
-          clearTimeout(timeout);
+            return;
+
+          }
+
+
+          finished =
+            true;
+
+
+          clearTimeout(
+            timeout
+          );
+
 
           cleanup();
 
 
           const rows =
-            extractArray(data);
+            extractArray(
+              data
+            );
 
 
           if (!rows) {
 
             reject(
               new Error(
-                "No data array found."
+                "No data array."
               )
             );
 
@@ -352,16 +433,29 @@ function loadWithJSONP() {
         };
 
 
+
       script.onerror =
         function() {
 
-          if (finished) return;
 
-          finished = true;
+          if (finished) {
 
-          clearTimeout(timeout);
+            return;
+
+          }
+
+
+          finished =
+            true;
+
+
+          clearTimeout(
+            timeout
+          );
+
 
           cleanup();
+
 
           reject(
             new Error(
@@ -370,6 +464,7 @@ function loadWithJSONP() {
           );
 
         };
+
 
 
       const separator =
@@ -400,19 +495,23 @@ function loadWithJSONP() {
 
 
 
-/* =========================================
-   NORMALISE
-========================================= */
+/* NORMALISE */
 
-function useLoadedData(data) {
+function useLoadedData(
+  data
+) {
 
   insights =
     data
-      .map(normalizeInsight)
+      .map(
+        normalizeInsight
+      )
       .filter(
         item =>
           item &&
-          clean(item.advice)
+          clean(
+            item.advice
+          )
       );
 
 
@@ -422,11 +521,14 @@ function useLoadedData(data) {
 
 
 
-function normalizeInsight(raw) {
+function normalizeInsight(
+  raw
+) {
 
   if (
     !raw ||
-    typeof raw !== "object"
+    typeof raw !==
+      "object"
   ) {
 
     return null;
@@ -523,12 +625,17 @@ function normalizeInsight(raw) {
 
 
 
+/* PROPERTY LOOKUP */
+
 function firstValue(
   object,
   names
 ) {
 
-  for (const name of names) {
+  for (
+    const name
+    of names
+  ) {
 
     if (
       Object.prototype
@@ -545,11 +652,14 @@ function firstValue(
 
       if (
         value !== null &&
-        value !== undefined &&
+        value !==
+          undefined &&
         clean(value) !== ""
       ) {
 
-        return clean(value);
+        return clean(
+          value
+        );
 
       }
 
@@ -559,10 +669,15 @@ function firstValue(
 
 
   const keys =
-    Object.keys(object);
+    Object.keys(
+      object
+    );
 
 
-  for (const wanted of names) {
+  for (
+    const wanted
+    of names
+  ) {
 
     const match =
       keys.find(
@@ -573,7 +688,11 @@ function firstValue(
 
 
     if (match) {
-      return clean(object[match]);
+
+      return clean(
+        object[match]
+      );
+
     }
 
   }
@@ -585,15 +704,16 @@ function firstValue(
 
 
 
-/* =========================================
-   HELPERS
-========================================= */
+/* CLEANING */
 
-function clean(value) {
+function clean(
+  value
+) {
 
   if (
     value === null ||
-    value === undefined
+    value ===
+      undefined
   ) {
 
     return "";
@@ -601,7 +721,11 @@ function clean(value) {
   }
 
 
-  if (Array.isArray(value)) {
+  if (
+    Array.isArray(
+      value
+    )
+  ) {
 
     return value
       .map(clean)
@@ -611,31 +735,44 @@ function clean(value) {
   }
 
 
-  return String(value).trim();
+  return String(
+    value
+  ).trim();
 
 }
 
 
 
-function key(value) {
+function key(
+  value
+) {
 
   return clean(value)
     .toLowerCase()
-    .replace(/\s+/g, " ");
+    .replace(
+      /\s+/g,
+      " "
+    );
 
 }
 
 
 
-function same(a, b) {
-  return key(a) === key(b);
+function same(
+  a,
+  b
+) {
+
+  return (
+    key(a) ===
+    key(b)
+  );
+
 }
 
 
 
-/* =========================================
-   CATEGORIES
-========================================= */
+/* CATEGORY DEFINITIONS */
 
 const categoryDefinitions = [
 
@@ -712,101 +849,108 @@ const categoryDefinitions = [
 
 
 
-function getCategories(insight) {
+function getCategories(
+  insight
+) {
 
   const raw =
-    key(insight.category);
+    key(
+      insight.category
+    );
 
 
   if (!raw) {
+
     return [];
+
   }
 
 
-  const result = [];
+  const result =
+    [];
 
 
-  categoryDefinitions.forEach(
-    definition => {
-
-      const found =
-        definition.terms.some(
-          term =>
-            containsTerm(
-              raw,
-              term
-            )
-        );
+  categoryDefinitions
+    .forEach(
+      definition => {
 
 
-      if (found) {
+        const found =
+          definition
+            .terms
+            .some(
+              term =>
+                containsTerm(
+                  raw,
+                  term
+                )
+            );
 
-        result.push(
-          definition.label
-        );
+
+        if (found) {
+
+          result.push(
+            definition.label
+          );
+
+        }
 
       }
+    );
 
-    }
+
+  return unique(
+    result
   );
-
-
-  if (!result.length) {
-
-    splitFallback(raw)
-      .forEach(
-        item =>
-          result.push(
-            titleCase(item)
-          )
-      );
-
-  }
-
-
-  return unique(result);
 
 }
 
 
 
-/* =========================================
-   WORKING TYPES
-========================================= */
+/* WORKING TYPES */
 
 const workingDefinitions = [
 
   {
-    label: "Employed",
+    label:
+      "Employed",
+
     terms: [
       "employed",
       "employee"
     ]
   },
 
+
   {
-    label: "Freelance",
+    label:
+      "Freelance",
+
     terms: [
       "freelance",
       "freelancer"
     ]
   },
 
+
   {
-    label: "Studio Founder",
+    label:
+      "Studio founder",
+
     terms: [
       "independent",
       "founder",
-      "founder / own studio",
-      "founder/own studio",
       "own studio",
       "studio owner",
       "studio founder"
     ]
   },
 
+
   {
-    label: "Academic / Research",
+    label:
+      "Academic / Research",
+
     terms: [
       "academic",
       "academia",
@@ -815,15 +959,21 @@ const workingDefinitions = [
     ]
   },
 
+
   {
-    label: "Student",
+    label:
+      "Student",
+
     terms: [
       "student"
     ]
   },
 
+
   {
-    label: "Other",
+    label:
+      "Other",
+
     terms: [
       "other"
     ]
@@ -833,71 +983,91 @@ const workingDefinitions = [
 
 
 
-function getWorkingTypes(insight) {
+function getWorkingTypes(
+  insight
+) {
 
   const raw =
-    key(insight.workingAs);
+    key(
+      insight.workingAs
+    );
 
 
   if (!raw) {
+
     return [];
+
   }
 
 
-  const result = [];
+  const result =
+    [];
 
 
-  workingDefinitions.forEach(
-    definition => {
-
-      const found =
-        definition.terms.some(
-          term =>
-            raw.includes(term)
-        );
+  workingDefinitions
+    .forEach(
+      definition => {
 
 
-      if (found) {
+        const found =
+          definition
+            .terms
+            .some(
+              term =>
+                raw.includes(
+                  term
+                )
+            );
 
-        result.push(
-          definition.label
-        );
+
+        if (found) {
+
+          result.push(
+            definition.label
+          );
+
+        }
 
       }
+    );
 
-    }
+
+  return unique(
+    result
   );
-
-
-  return unique(result);
 
 }
 
 
 
-/* =========================================
-   AVAILABLE FILTERS
-========================================= */
+/* AVAILABLE VALUES */
 
 function getAvailableCategories() {
 
-  const values = [];
+  const values =
+    [];
 
 
   insights.forEach(
     insight => {
 
-      getCategories(insight)
-        .forEach(
-          category =>
-            values.push(category)
-        );
+
+      getCategories(
+        insight
+      ).forEach(
+        category =>
+          values.push(
+            category
+          )
+      );
 
     }
   );
 
 
-  return unique(values);
+  return unique(
+    values
+  );
 
 }
 
@@ -905,85 +1075,110 @@ function getAvailableCategories() {
 
 function getAvailableWorkingTypes() {
 
-  const values = [];
+  const values =
+    [];
 
 
   insights.forEach(
     insight => {
 
-      getWorkingTypes(insight)
-        .forEach(
-          type =>
-            values.push(type)
-        );
+
+      getWorkingTypes(
+        insight
+      ).forEach(
+        type =>
+          values.push(
+            type
+          )
+      );
 
     }
   );
 
 
-  return unique(values);
+  return unique(
+    values
+  );
 
 }
 
 
 
-/* =========================================
-   COUNTS
-========================================= */
+/* FILTER COUNTS */
 
-function countCategory(category) {
+function countCategory(
+  category
+) {
 
-  if (category === "ALL") {
+  if (
+    category ===
+      "ALL"
+  ) {
+
     return insights.length;
+
   }
 
 
-  return insights.filter(
-    insight =>
-      getCategories(insight)
-        .some(
+  return insights
+    .filter(
+      insight =>
+        getCategories(
+          insight
+        ).some(
           item =>
             same(
               item,
               category
             )
         )
-  ).length;
+    )
+    .length;
 
 }
 
 
 
-function countWorking(type) {
+function countWorking(
+  type
+) {
 
-  if (type === "ALL") {
+  if (
+    type ===
+      "ALL"
+  ) {
+
     return insights.length;
+
   }
 
 
-  return insights.filter(
-    insight =>
-      getWorkingTypes(insight)
-        .some(
+  return insights
+    .filter(
+      insight =>
+        getWorkingTypes(
+          insight
+        ).some(
           item =>
             same(
               item,
               type
             )
         )
-  ).length;
+    )
+    .length;
 
 }
 
 
 
-/* =========================================
-   BUILD FILTERS
-========================================= */
+/* BUILD FILTERS */
 
 function createCategoryFilters() {
 
-  categoryFilters.innerHTML = "";
+  categoryFilters
+    .innerHTML =
+      "";
 
 
   addFilter({
@@ -1010,13 +1205,15 @@ function createCategoryFilters() {
     .forEach(
       category => {
 
+
         addFilter({
 
           container:
             categoryFilters,
 
           label:
-            category.toLowerCase(),
+            category
+              .toLowerCase(),
 
           value:
             category,
@@ -1025,7 +1222,9 @@ function createCategoryFilters() {
             "category",
 
           count:
-            countCategory(category)
+            countCategory(
+              category
+            )
 
         });
 
@@ -1042,10 +1241,13 @@ function createWorkingFilters() {
     getAvailableWorkingTypes();
 
 
-  if (!types.length) {
+  if (
+    !types.length
+  ) {
 
     workingFilterArea
-      .classList.add(
+      .classList
+      .add(
         "hidden"
       );
 
@@ -1055,12 +1257,15 @@ function createWorkingFilters() {
 
 
   workingFilterArea
-    .classList.remove(
+    .classList
+    .remove(
       "hidden"
     );
 
 
-  workingFilters.innerHTML = "";
+  workingFilters
+    .innerHTML =
+      "";
 
 
   addFilter({
@@ -1086,13 +1291,15 @@ function createWorkingFilters() {
   types.forEach(
     type => {
 
+
       addFilter({
 
         container:
           workingFilters,
 
         label:
-          type.toLowerCase(),
+          type
+            .toLowerCase(),
 
         value:
           type,
@@ -1101,7 +1308,9 @@ function createWorkingFilters() {
           "working",
 
         count:
-          countWorking(type)
+          countWorking(
+            type
+          )
 
       });
 
@@ -1111,6 +1320,8 @@ function createWorkingFilters() {
 }
 
 
+
+/* FILTER BUTTON */
 
 function addFilter({
   container,
@@ -1126,22 +1337,30 @@ function addFilter({
     );
 
 
-  button.type = "button";
+  button.type =
+    "button";
 
-  button.className = "filter";
+
+  button.className =
+    "filter";
 
 
   const active =
+
     (
-      type === "category" &&
+      type ===
+        "category" &&
       same(
         value,
         selectedCategory
       )
     )
+
     ||
+
     (
-      type === "working" &&
+      type ===
+        "working" &&
       same(
         value,
         selectedWorkingAs
@@ -1150,11 +1369,18 @@ function addFilter({
 
 
   if (active) {
-    button.classList.add("active");
+
+    button
+      .classList
+      .add(
+        "active"
+      );
+
   }
 
 
   button.innerHTML = `
+
     <span>
       ${escapeHTML(label)}
     </span>
@@ -1162,6 +1388,7 @@ function addFilter({
     <span class="filter-count">
       ${count}
     </span>
+
   `;
 
 
@@ -1169,13 +1396,26 @@ function addFilter({
     "click",
     () => {
 
-      if (type === "category") {
-        selectedCategory = value;
+
+      if (
+        type ===
+          "category"
+      ) {
+
+        selectedCategory =
+          value;
+
       }
 
 
-      if (type === "working") {
-        selectedWorkingAs = value;
+      if (
+        type ===
+          "working"
+      ) {
+
+        selectedWorkingAs =
+          value;
+
       }
 
 
@@ -1189,32 +1429,41 @@ function addFilter({
   );
 
 
-  container.appendChild(button);
+  container.appendChild(
+    button
+  );
 
 }
 
 
 
-/* =========================================
-   FILTER RESULTS
-========================================= */
+/* FILTER RESULTS */
 
 function getFilteredInsights() {
 
   return insights.filter(
     insight => {
 
+
       const categories =
-        getCategories(insight);
+        getCategories(
+          insight
+        );
 
 
       const workingTypes =
-        getWorkingTypes(insight);
+        getWorkingTypes(
+          insight
+        );
 
 
       const categoryMatch =
-        selectedCategory === "ALL"
+
+        selectedCategory ===
+          "ALL"
+
         ||
+
         categories.some(
           category =>
             same(
@@ -1225,8 +1474,12 @@ function getFilteredInsights() {
 
 
       const workingMatch =
-        selectedWorkingAs === "ALL"
+
+        selectedWorkingAs ===
+          "ALL"
+
         ||
+
         workingTypes.some(
           type =>
             same(
@@ -1248,35 +1501,7 @@ function getFilteredInsights() {
 
 
 
-/* =========================================
-   TEXT LENGTH
-========================================= */
-
-function getLengthClass(advice) {
-
-  const length =
-    clean(advice).length;
-
-
-  if (length > 390) {
-    return "very-long";
-  }
-
-
-  if (length > 220) {
-    return "long";
-  }
-
-
-  return "";
-
-}
-
-
-
-/* =========================================
-   LIBRARY
-========================================= */
+/* DISPLAY LIBRARY */
 
 function displayLibrary() {
 
@@ -1284,19 +1509,26 @@ function displayLibrary() {
     getFilteredInsights();
 
 
-  libraryGrid.innerHTML = "";
+  libraryGrid
+    .innerHTML =
+      "";
 
 
-  insightCount.textContent =
-    filtered.length;
+  insightCount
+    .textContent =
+      filtered.length;
 
 
-  if (!filtered.length) {
+  if (
+    !filtered.length
+  ) {
 
     libraryGrid.innerHTML = `
+
       <div class="empty-state">
         Nothing here yet.
       </div>
+
     `;
 
     return;
@@ -1314,69 +1546,70 @@ function displayLibrary() {
         );
 
 
-      const lengthClass =
-        getLengthClass(
-          insight.advice
-        );
-
-
       card.className =
-        "library-card" +
-        (
-          lengthClass
-            ? ` ${lengthClass}`
-            : ""
-        );
+        "library-card";
 
 
       const categories =
-        getCategories(insight);
+        getCategories(
+          insight
+        );
 
 
       const workingTypes =
-        getWorkingTypes(insight);
+        getWorkingTypes(
+          insight
+        );
 
 
       const categoryHTML =
         categories
           .map(
             category => `
+
               <span class="card-category">
                 ${escapeHTML(
-                  category.toLowerCase()
+                  category
+                    .toLowerCase()
                 )}
               </span>
+
             `
           )
           .join("");
 
 
       const role =
-        clean(insight.role);
+        clean(
+          insight.role
+        );
 
 
-      const working =
-        workingTypes.join(" / ");
+      const secondary =
+        [];
 
 
-      const experience =
-        clean(insight.experience);
+      if (
+        workingTypes.length
+      ) {
 
+        secondary.push(
+          workingTypes.join(
+            " / "
+          )
+        );
 
-      const salary =
-        clean(insight.salary);
-
-
-      const secondary = [];
-
-
-      if (working) {
-        secondary.push(working);
       }
 
 
-      if (experience) {
-        secondary.push(experience);
+      if (
+        insight.experience
+      ) {
+
+        secondary.push(
+          insight.experience
+        );
+
       }
 
 
@@ -1384,26 +1617,21 @@ function displayLibrary() {
 
         <div class="card-advice-area">
 
-          <p class="card-advice">
+          <p
+            class="card-advice"
+            tabindex="0"
+          >
             “${escapeHTML(
               insight.advice
             )}”
           </p>
-
-          <span
-            class="card-overflow-indicator"
-            aria-hidden="true"
-          >
-            …
-          </span>
 
         </div>
 
 
         <div class="card-info">
 
-
-          <div class="card-meta">
+          <div>
 
             ${
               role
@@ -1414,7 +1642,6 @@ function displayLibrary() {
                 `
                 : ""
             }
-
 
             ${
               secondary.length
@@ -1430,12 +1657,13 @@ function displayLibrary() {
                 : ""
             }
 
-
             ${
-              salary
+              insight.salary
                 ? `
                   <div class="card-salary">
-                    ${escapeHTML(salary)}
+                    ${escapeHTML(
+                      insight.salary
+                    )}
                   </div>
                 `
                 : ""
@@ -1448,13 +1676,14 @@ function displayLibrary() {
             ${categoryHTML}
           </div>
 
-
         </div>
 
       `;
 
 
-      libraryGrid.appendChild(card);
+      libraryGrid.appendChild(
+        card
+      );
 
     }
   );
@@ -1468,67 +1697,72 @@ function displayLibrary() {
 
 
 
-/* =========================================
-   CARD OVERFLOW
-========================================= */
+/* CARD OVERFLOW */
 
 function initialiseCardOverflow() {
 
-  const cards =
-    libraryGrid.querySelectorAll(
-      ".library-card"
+  const areas =
+    document.querySelectorAll(
+      ".card-advice-area"
     );
 
 
-  cards.forEach(
-    card => {
+  areas.forEach(
+    area => {
 
-      const area =
-        card.querySelector(
-          ".card-advice-area"
+
+      const advice =
+        area.querySelector(
+          ".card-advice"
         );
 
 
-      if (!area) return;
+      if (!advice) {
+
+        return;
+
+      }
 
 
-      const hasOverflow =
-        area.scrollHeight >
-        area.clientHeight + 2;
+      function update() {
+
+        const overflowing =
+          advice.scrollHeight >
+          advice.clientHeight +
+          2;
 
 
-      card.classList.toggle(
-        "has-overflow",
-        hasOverflow
-      );
+        area.classList.toggle(
+          "has-overflow",
+          overflowing
+        );
 
-
-      function updateIndicator() {
 
         const atBottom =
-          area.scrollTop +
-          area.clientHeight >=
-          area.scrollHeight - 3;
+          advice.scrollTop +
+          advice.clientHeight >=
+          advice.scrollHeight -
+          3;
 
 
-        card.classList.toggle(
-          "scrolled-to-bottom",
+        area.classList.toggle(
+          "at-bottom",
           atBottom
         );
 
       }
 
 
-      area.addEventListener(
+      advice.addEventListener(
         "scroll",
-        updateIndicator,
+        update,
         {
           passive: true
         }
       );
 
 
-      updateIndicator();
+      update();
 
     }
   );
@@ -1537,25 +1771,29 @@ function initialiseCardOverflow() {
 
 
 
-/* =========================================
-   CAROUSEL
-========================================= */
+/* CAROUSEL */
 
 function buildCarousel() {
 
-  carouselTrack.innerHTML = "";
+  carouselTrack
+    .innerHTML =
+      "";
 
 
-  if (!insights.length) {
+  if (
+    !insights.length
+  ) {
 
     carouselTrack.innerHTML = `
-      <div class="carousel-slide active">
+
+      <article class="carousel-slide active">
 
         <p class="carousel-advice">
           The library is currently empty.
         </p>
 
-      </div>
+      </article>
+
     `;
 
     return;
@@ -1564,18 +1802,15 @@ function buildCarousel() {
 
 
   insights.forEach(
-    (insight, index) => {
+    (
+      insight,
+      index
+    ) => {
 
 
       const slide =
         document.createElement(
           "article"
-        );
-
-
-      const lengthClass =
-        getLengthClass(
-          insight.advice
         );
 
 
@@ -1585,42 +1820,51 @@ function buildCarousel() {
           index === 0
             ? " active"
             : ""
-        ) +
-        (
-          lengthClass
-            ? ` ${lengthClass}`
-            : ""
         );
 
 
       const workingTypes =
-        getWorkingTypes(insight);
+        getWorkingTypes(
+          insight
+        );
 
 
-      const meta = [];
+      const meta =
+        [];
 
 
-      if (insight.role) {
-        meta.push(insight.role);
-      }
-
-
-      if (workingTypes.length) {
+      if (
+        insight.role
+      ) {
 
         meta.push(
-          workingTypes.join(" / ")
+          insight.role
         );
 
       }
 
 
-      if (insight.experience) {
-        meta.push(insight.experience);
+      if (
+        workingTypes.length
+      ) {
+
+        meta.push(
+          workingTypes.join(
+            " / "
+          )
+        );
+
       }
 
 
-      if (insight.salary) {
-        meta.push(insight.salary);
+      if (
+        insight.experience
+      ) {
+
+        meta.push(
+          insight.experience
+        );
+
       }
 
 
@@ -1631,7 +1875,6 @@ function buildCarousel() {
             insight.advice
           )}”
         </p>
-
 
         ${
           meta.length
@@ -1650,9 +1893,10 @@ function buildCarousel() {
       `;
 
 
-      carouselTrack.appendChild(
-        slide
-      );
+      carouselTrack
+        .appendChild(
+          slide
+        );
 
     }
   );
@@ -1661,24 +1905,11 @@ function buildCarousel() {
 
 
 
-/* =========================================
-   CAROUSEL MOVEMENT
-========================================= */
+/* CAROUSEL MOVEMENT */
 
-function moveCarousel(direction) {
-
-  if (
-    carouselLocked ||
-    insights.length < 2
-  ) {
-
-    return;
-
-  }
-
-
-  carouselLocked = true;
-
+function moveCarousel(
+  direction
+) {
 
   const slides =
     Array.from(
@@ -1689,16 +1920,37 @@ function moveCarousel(direction) {
     );
 
 
-  const oldIndex =
-    carouselIndex;
+  if (
+    carouselLocked ||
+    slides.length < 2
+  ) {
+
+    return;
+
+  }
 
 
-  if (direction === 1) {
+  carouselLocked =
+    true;
+
+
+  const current =
+    slides[
+      carouselIndex
+    ];
+
+
+  if (
+    direction === 1
+  ) {
 
     carouselIndex =
       (
-        carouselIndex + 1
-      ) % slides.length;
+        carouselIndex +
+        1
+      )
+      %
+      slides.length;
 
   }
 
@@ -1706,196 +1958,124 @@ function moveCarousel(direction) {
 
     carouselIndex =
       (
-        carouselIndex - 1 +
+        carouselIndex -
+        1 +
         slides.length
-      ) % slides.length;
+      )
+      %
+      slides.length;
 
   }
 
 
-  const current =
-    slides[oldIndex];
-
-
   const next =
-    slides[carouselIndex];
-
-
-  current.classList.remove(
-    "enter-right",
-    "enter-active"
-  );
+    slides[
+      carouselIndex
+    ];
 
 
   next.classList.remove(
     "active",
-    "exit-left",
-    "enter-active"
+    "exit-left"
   );
 
 
-  if (direction === 1) {
-
-    next.classList.add(
-      "enter-right"
-    );
+  next.style.transition =
+    "none";
 
 
-    requestAnimationFrame(
-      () => {
+  next.style.transform =
+    direction === 1
+      ? "translateX(110vw)"
+      : "translateX(-110vw)";
 
-        requestAnimationFrame(
-          () => {
 
+  next.style.opacity =
+    "0";
+
+
+  requestAnimationFrame(
+    () => {
+
+
+      requestAnimationFrame(
+        () => {
+
+
+          next.style.transition =
+            "";
+
+
+          next.style.transform =
+            "";
+
+
+          next.style.opacity =
+            "";
+
+
+          if (
+            direction === 1
+          ) {
 
             current.classList.add(
               "exit-left"
             );
 
-
-            current.classList.remove(
-              "active"
-            );
-
-
-            next.classList.remove(
-              "enter-right"
-            );
-
-
-            next.classList.add(
-              "enter-active"
-            );
-
-
-            setTimeout(
-              () => {
-
-
-                current.classList.remove(
-                  "exit-left"
-                );
-
-
-                next.classList.remove(
-                  "enter-active"
-                );
-
-
-                next.classList.add(
-                  "active"
-                );
-
-
-                carouselLocked = false;
-
-              },
-
-              800
-            );
-
           }
-        );
 
-      }
-    );
-
-  }
-
-  else {
-
-    next.style.transition =
-      "none";
-
-
-    next.style.transform =
-      "translateX(-75vw)";
-
-
-    next.style.opacity =
-      "0";
-
-
-    requestAnimationFrame(
-      () => {
-
-        requestAnimationFrame(
-          () => {
-
-
-            next.style.transition =
-              "transform 760ms cubic-bezier(0.72,0,0.28,1), opacity 350ms ease";
-
-
-            next.style.transform =
-              "translateX(0)";
-
-
-            next.style.opacity =
-              "1";
-
-
-            current.style.transition =
-              "transform 760ms cubic-bezier(0.72,0,0.28,1), opacity 500ms ease 160ms";
-
+          else {
 
             current.style.transform =
-              "translateX(75vw)";
+              "translateX(110vw)";
 
 
             current.style.opacity =
               "0";
 
-
-            setTimeout(
-              () => {
-
-
-                current.classList.remove(
-                  "active"
-                );
-
-
-                current.style.transition =
-                  "";
-
-                current.style.transform =
-                  "";
-
-                current.style.opacity =
-                  "";
-
-
-                next.style.transition =
-                  "";
-
-                next.style.transform =
-                  "";
-
-                next.style.opacity =
-                  "";
-
-
-                next.classList.add(
-                  "active"
-                );
-
-
-                carouselLocked =
-                  false;
-
-              },
-
-              800
-            );
-
           }
-        );
 
-      }
-    );
 
-  }
+          current.classList.remove(
+            "active"
+          );
+
+
+          next.classList.add(
+            "active"
+          );
+
+
+          setTimeout(
+            () => {
+
+
+              current.classList.remove(
+                "exit-left"
+              );
+
+
+              current.style.transform =
+                "";
+
+
+              current.style.opacity =
+                "";
+
+
+              carouselLocked =
+                false;
+
+            },
+
+            900
+          );
+
+        }
+      );
+
+    }
+  );
 
 }
 
@@ -1903,204 +2083,131 @@ function moveCarousel(direction) {
 
 nextButton.addEventListener(
   "click",
-  () => moveCarousel(1)
+  () =>
+    moveCarousel(
+      1
+    )
 );
 
 
 previousButton.addEventListener(
   "click",
-  () => moveCarousel(-1)
+  () =>
+    moveCarousel(
+      -1
+    )
 );
 
 
 
-document.addEventListener(
-  "keydown",
-  event => {
+/* HERO MENU TRANSITION */
 
-    if (event.key === "ArrowRight") {
-      moveCarousel(1);
-    }
+function initialiseHeroMenuTransition() {
 
-
-    if (event.key === "ArrowLeft") {
-      moveCarousel(-1);
-    }
-
-  }
-);
-
-
-
-/* =========================================
-   HERO GRADIENT
-========================================= */
-
-function initialiseAdviceGradient() {
-
-  if (!carouselWindow) {
-    return;
-  }
-
-
-  const canHover =
+  const isMobile =
     window.matchMedia(
-      "(hover: hover) and (pointer: fine)"
+      "(max-width: 600px)"
     ).matches;
 
 
-  if (!canHover) {
+  /*
+    On mobile the menu stays in place.
+  */
+
+  if (
+    isMobile
+  ) {
+
+    document.body
+      .classList
+      .add(
+        "menu-settled"
+      );
+
     return;
+
   }
 
 
-  carouselWindow.addEventListener(
-    "pointerenter",
-    event => {
+  function update() {
 
-      updateAdviceGradient(event);
+    const trigger =
+      hero.offsetHeight -
+      170;
 
 
-      carouselWindow.style.setProperty(
-        "--advice-opacity",
-        "1"
+    const settled =
+      window.scrollY >
+      trigger;
+
+
+    document.body
+      .classList
+      .toggle(
+        "menu-settled",
+        settled
       );
 
+  }
+
+
+  window.addEventListener(
+    "scroll",
+    update,
+    {
+      passive: true
     }
   );
 
 
-  carouselWindow.addEventListener(
-    "pointermove",
-    updateAdviceGradient
+  window.addEventListener(
+    "resize",
+    update
   );
 
 
-  carouselWindow.addEventListener(
-    "pointerleave",
-    () => {
-
-      carouselWindow.style.setProperty(
-        "--advice-opacity",
-        "0"
-      );
-
-    }
-  );
+  update();
 
 }
 
 
 
-function updateAdviceGradient(event) {
+/* MENU GRADIENT */
 
-  const rect =
-    carouselWindow
-      .getBoundingClientRect();
+function initialiseMenuGradient() {
 
-
-  carouselWindow.style.setProperty(
-    "--advice-x",
-    `${event.clientX - rect.left}px`
-  );
-
-
-  carouselWindow.style.setProperty(
-    "--advice-y",
-    `${event.clientY - rect.top}px`
-  );
-
-}
-
-
-
-/* =========================================
-   ARROW GRADIENT
-========================================= */
-
-function initialiseArrowGradient() {
-
-  if (!carouselStage) {
-    return;
-  }
-
-
-  const canHover =
-    window.matchMedia(
-      "(hover: hover) and (pointer: fine)"
-    ).matches;
-
-
-  if (!canHover) {
-    return;
-  }
-
-
-  function updateGradient(event) {
-
-    const rect =
-      carouselStage
-        .getBoundingClientRect();
-
-
-    carouselStage.style.setProperty(
-      "--arrow-x",
-      `${event.clientX - rect.left}px`
+  const buttons =
+    document.querySelectorAll(
+      ".menu-pill"
     );
 
 
-    carouselStage.style.setProperty(
-      "--arrow-y",
-      `${event.clientY - rect.top}px`
-    );
-
-  }
-
-
-  function showGradient(event) {
-
-    updateGradient(event);
-
-
-    carouselStage.style.setProperty(
-      "--arrow-opacity",
-      "1"
-    );
-
-  }
-
-
-  function hideGradient() {
-
-    carouselStage.style.setProperty(
-      "--arrow-opacity",
-      "0"
-    );
-
-  }
-
-
-  [
-    previousButton,
-    nextButton
-  ].forEach(
+  buttons.forEach(
     button => {
-
-      button.addEventListener(
-        "pointerenter",
-        showGradient
-      );
 
 
       button.addEventListener(
         "pointermove",
-        updateGradient
-      );
+        event => {
 
 
-      button.addEventListener(
-        "pointerleave",
-        hideGradient
+          const rect =
+            button
+              .getBoundingClientRect();
+
+
+          button.style.setProperty(
+            "--pill-x",
+            `${event.clientX - rect.left}px`
+          );
+
+
+          button.style.setProperty(
+            "--pill-y",
+            `${event.clientY - rect.top}px`
+          );
+
+        }
       );
 
     }
@@ -2110,16 +2217,9 @@ function initialiseArrowGradient() {
 
 
 
-/* =========================================
-   LIBRARY GRADIENT
-========================================= */
+/* LIBRARY SPOTLIGHT */
 
 function initialiseLibrarySpotlight() {
-
-  if (!libraryGrid) {
-    return;
-  }
-
 
   const canHover =
     window.matchMedia(
@@ -2127,8 +2227,13 @@ function initialiseLibrarySpotlight() {
     ).matches;
 
 
-  if (!canHover) {
+  if (
+    !canHover ||
+    !libraryGrid
+  ) {
+
     return;
+
   }
 
 
@@ -2136,7 +2241,10 @@ function initialiseLibrarySpotlight() {
     "pointerenter",
     event => {
 
-      updateLibrarySpotlight(event);
+
+      updateLibrarySpotlight(
+        event
+      );
 
 
       libraryGrid.style.setProperty(
@@ -2150,13 +2258,21 @@ function initialiseLibrarySpotlight() {
 
   libraryGrid.addEventListener(
     "pointermove",
-    updateLibrarySpotlight
+    event => {
+
+
+      updateLibrarySpotlight(
+        event
+      );
+
+    }
   );
 
 
   libraryGrid.addEventListener(
     "pointerleave",
     () => {
+
 
       libraryGrid.style.setProperty(
         "--spotlight-opacity",
@@ -2170,158 +2286,48 @@ function initialiseLibrarySpotlight() {
 
 
 
-function updateLibrarySpotlight(event) {
+/* SPOTLIGHT POSITION */
+
+function updateLibrarySpotlight(
+  event
+) {
 
   const rect =
     libraryGrid
       .getBoundingClientRect();
 
 
+  const x =
+    event.clientX -
+    rect.left;
+
+
+  const y =
+    event.clientY -
+    rect.top;
+
+
   libraryGrid.style.setProperty(
     "--mouse-x",
-    `${event.clientX - rect.left}px`
+    `${x}px`
   );
 
 
   libraryGrid.style.setProperty(
     "--mouse-y",
-    `${event.clientY - rect.top}px`
+    `${y}px`
   );
 
 }
 
 
 
-/* =========================================
-   MOVING NAVIGATION
-========================================= */
-
-function updateMovingNavigation() {
-
-  if (!movingNav) {
-    return;
-  }
-
-
-  const viewportHeight =
-    window.innerHeight;
-
-
-  const startY =
-    viewportHeight * 0.76;
-
-
-  const finalY =
-    22;
-
-
-  const travelDistance =
-    viewportHeight * 0.62;
-
-
-  const progress =
-    Math.min(
-      1,
-      Math.max(
-        0,
-        window.scrollY /
-        travelDistance
-      )
-    );
-
-
-  const currentY =
-    startY +
-    (
-      finalY -
-      startY
-    ) *
-    progress;
-
-
-  movingNav.style.setProperty(
-    "--nav-top",
-    `${currentY}px`
-  );
-
-}
-
-
-
-/* =========================================
-   NAV BACKGROUND
-========================================= */
-
-function updateNavigationBackgrounds() {
-
-  [
-    movingNav,
-    aboutNav
-  ].forEach(
-    nav => {
-
-
-      if (!nav) return;
-
-
-      const rect =
-        nav.getBoundingClientRect();
-
-
-      const x =
-        rect.left +
-        rect.width / 2;
-
-
-      const y =
-        Math.max(
-          1,
-          rect.top +
-          rect.height / 2
-        );
-
-
-      nav.style.pointerEvents =
-        "none";
-
-
-      const below =
-        document.elementFromPoint(
-          x,
-          y
-        );
-
-
-      nav.style.pointerEvents =
-        "";
-
-
-      const yellow =
-        below &&
-        below.closest(
-          ".library-section, .about-section"
-        );
-
-
-      nav.classList.toggle(
-        "on-yellow",
-        Boolean(yellow)
-      );
-
-    }
-  );
-
-}
-
-
-
-/* =========================================
-   CLEAR FILTERS
-========================================= */
+/* CLEAR FILTERS */
 
 clearFilters.addEventListener(
   "click",
   () => {
+
 
     selectedCategory =
       "ALL";
@@ -2342,39 +2348,40 @@ clearFilters.addEventListener(
 
 
 
-/* =========================================
-   ERROR
-========================================= */
+/* ERROR */
 
 function showError() {
 
   libraryGrid.innerHTML = `
+
     <div class="empty-state">
       The library is temporarily unavailable.
     </div>
+
   `;
 
 
   carouselTrack.innerHTML = `
-    <div class="carousel-slide active">
+
+    <article class="carousel-slide active">
 
       <p class="carousel-advice">
         The library is temporarily unavailable.
       </p>
 
-    </div>
+    </article>
+
   `;
 
 
-  insightCount.textContent = "0";
+  insightCount.textContent =
+    "0";
 
 }
 
 
 
-/* =========================================
-   HELPERS
-========================================= */
+/* UTILITIES */
 
 function containsTerm(
   text,
@@ -2388,111 +2395,111 @@ function containsTerm(
     );
 
 
-  return expression.test(text);
+  return expression.test(
+    text
+  );
 
 }
 
 
 
-function unique(values) {
+function unique(
+  values
+) {
 
-  const used = new Set();
+  const seen =
+    new Set();
 
-  const result = [];
 
-
-  values.forEach(
+  return values.filter(
     value => {
-
-      const cleaned =
-        clean(value);
 
 
       const normalized =
-        key(cleaned);
+        key(
+          value
+        );
 
 
       if (
-        cleaned &&
-        !used.has(normalized)
+        !normalized ||
+        seen.has(
+          normalized
+        )
       ) {
 
-        used.add(normalized);
-
-        result.push(cleaned);
+        return false;
 
       }
+
+
+      seen.add(
+        normalized
+      );
+
+
+      return true;
 
     }
   );
 
+}
 
-  return result;
+
+
+function escapeRegExp(
+  value
+) {
+
+  return String(
+    value
+  ).replace(
+    /[.*+?^${}()|[\]\\]/g,
+    "\\$&"
+  );
 
 }
 
 
 
-function splitFallback(value) {
-
-  return clean(value)
-    .split(
-      /\s*(?:,|;|\||&|\+|\band\b)\s*/i
-    )
-    .map(
-      item =>
-        clean(item)
-    )
-    .filter(Boolean);
-
-}
-
-
-
-function titleCase(value) {
-
-  return clean(value)
-    .toLowerCase()
-    .replace(
-      /\b\w/g,
-      letter =>
-        letter.toUpperCase()
-    );
-
-}
-
-
-
-function escapeRegExp(value) {
-
-  return String(value)
-    .replace(
-      /[.*+?^${}()|[\]\\]/g,
-      "\\$&"
-    );
-
-}
-
-
-
-function escapeHTML(value) {
+function escapeHTML(
+  value
+) {
 
   return String(
     value ?? ""
   )
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
 
 }
 
 
 
-/* =========================================
-   INITIALISE
-========================================= */
+/* INITIALISE */
 
 function initialiseLibrary() {
 
@@ -2508,52 +2515,12 @@ function initialiseLibrary() {
 
 
 
-/* =========================================
-   PAGE INTERACTIONS
-========================================= */
+/* START */
 
-function updatePageInteractions() {
+initialiseHeroMenuTransition();
 
-  updateMovingNavigation();
-
-  updateNavigationBackgrounds();
-
-}
-
-
-
-window.addEventListener(
-  "scroll",
-  updatePageInteractions,
-  {
-    passive: true
-  }
-);
-
-
-window.addEventListener(
-  "resize",
-  () => {
-
-    updatePageInteractions();
-
-    initialiseCardOverflow();
-
-  }
-);
-
-
-
-/* =========================================
-   START
-========================================= */
-
-initialiseAdviceGradient();
-
-initialiseArrowGradient();
+initialiseMenuGradient();
 
 initialiseLibrarySpotlight();
-
-updatePageInteractions();
 
 loadInsights();

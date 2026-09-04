@@ -183,9 +183,7 @@ function parseResponseText(
 
 
   if (!trimmed) {
-
     return null;
-
   }
 
 
@@ -198,7 +196,6 @@ function parseResponseText(
   }
 
   catch (error) {
-    /* continue */
   }
 
 
@@ -302,7 +299,7 @@ function extractArray(
 
 
 /* =========================================
-   JSONP FALLBACK
+   JSONP
 ========================================= */
 
 function loadWithJSONP() {
@@ -330,9 +327,7 @@ function loadWithJSONP() {
         );
 
 
-      let finished =
-        false;
-
+      let finished = false;
 
 
       function cleanup() {
@@ -361,25 +356,18 @@ function loadWithJSONP() {
       }
 
 
-
       const timeout =
         setTimeout(
           () => {
 
-
             if (finished) {
-
               return;
-
             }
 
 
-            finished =
-              true;
-
+            finished = true;
 
             cleanup();
-
 
             reject(
               new Error(
@@ -393,7 +381,6 @@ function loadWithJSONP() {
         );
 
 
-
       window[
         callbackName
       ] =
@@ -401,20 +388,15 @@ function loadWithJSONP() {
 
 
           if (finished) {
-
             return;
-
           }
 
 
-          finished =
-            true;
-
+          finished = true;
 
           clearTimeout(
             timeout
           );
-
 
           cleanup();
 
@@ -443,26 +425,20 @@ function loadWithJSONP() {
         };
 
 
-
       script.onerror =
         function() {
 
 
           if (finished) {
-
             return;
-
           }
 
 
-          finished =
-            true;
-
+          finished = true;
 
           clearTimeout(
             timeout
           );
-
 
           cleanup();
 
@@ -474,7 +450,6 @@ function loadWithJSONP() {
           );
 
         };
-
 
 
       const separator =
@@ -878,14 +853,11 @@ function getCategories(
 
 
   if (!raw) {
-
     return [];
-
   }
 
 
-  const result =
-    [];
+  const result = [];
 
 
   categoryDefinitions
@@ -1014,14 +986,11 @@ function getWorkingTypes(
 
 
   if (!raw) {
-
     return [];
-
   }
 
 
-  const result =
-    [];
+  const result = [];
 
 
   workingDefinitions
@@ -1061,13 +1030,12 @@ function getWorkingTypes(
 
 
 /* =========================================
-   AVAILABLE FILTER VALUES
+   AVAILABLE FILTERS
 ========================================= */
 
 function getAvailableCategories() {
 
-  const values =
-    [];
+  const values = [];
 
 
   insights.forEach(
@@ -1097,8 +1065,7 @@ function getAvailableCategories() {
 
 function getAvailableWorkingTypes() {
 
-  const values =
-    [];
+  const values = [];
 
 
   insights.forEach(
@@ -1127,7 +1094,7 @@ function getAvailableWorkingTypes() {
 
 
 /* =========================================
-   FILTER COUNTS
+   COUNTS
 ========================================= */
 
 function countCategory(
@@ -1197,14 +1164,13 @@ function countWorking(
 
 
 /* =========================================
-   BUILD FILTERS
+   FILTERS
 ========================================= */
 
 function createCategoryFilters() {
 
-  categoryFilters
-    .innerHTML =
-      "";
+  categoryFilters.innerHTML =
+    "";
 
 
   addFilter({
@@ -1238,8 +1204,7 @@ function createCategoryFilters() {
             categoryFilters,
 
           label:
-            category
-              .toLowerCase(),
+            category.toLowerCase(),
 
           value:
             category,
@@ -1267,9 +1232,7 @@ function createWorkingFilters() {
     getAvailableWorkingTypes();
 
 
-  if (
-    !types.length
-  ) {
+  if (!types.length) {
 
     workingFilterArea
       .classList
@@ -1289,9 +1252,8 @@ function createWorkingFilters() {
     );
 
 
-  workingFilters
-    .innerHTML =
-      "";
+  workingFilters.innerHTML =
+    "";
 
 
   addFilter({
@@ -1324,8 +1286,7 @@ function createWorkingFilters() {
           workingFilters,
 
         label:
-          type
-            .toLowerCase(),
+          type.toLowerCase(),
 
         value:
           type,
@@ -1346,10 +1307,6 @@ function createWorkingFilters() {
 }
 
 
-
-/* =========================================
-   FILTER BUTTON
-========================================= */
 
 function addFilter({
   container,
@@ -1398,11 +1355,9 @@ function addFilter({
 
   if (active) {
 
-    button
-      .classList
-      .add(
-        "active"
-      );
+    button.classList.add(
+      "active"
+    );
 
   }
 
@@ -1541,19 +1496,15 @@ function displayLibrary() {
     getFilteredInsights();
 
 
-  libraryGrid
-    .innerHTML =
-      "";
+  libraryGrid.innerHTML =
+    "";
 
 
-  insightCount
-    .textContent =
-      filtered.length;
+  insightCount.textContent =
+    filtered.length;
 
 
-  if (
-    !filtered.length
-  ) {
+  if (!filtered.length) {
 
     libraryGrid.innerHTML = `
 
@@ -1601,8 +1552,7 @@ function displayLibrary() {
 
               <span class="card-category">
                 ${escapeHTML(
-                  category
-                    .toLowerCase()
+                  category.toLowerCase()
                 )}
               </span>
 
@@ -1617,8 +1567,7 @@ function displayLibrary() {
         );
 
 
-      const secondary =
-        [];
+      const secondary = [];
 
 
       if (
@@ -1750,9 +1699,7 @@ function initialiseCardOverflow() {
 
 
       if (!advice) {
-
         return;
-
       }
 
 
@@ -1809,14 +1756,11 @@ function initialiseCardOverflow() {
 
 function buildCarousel() {
 
-  carouselTrack
-    .innerHTML =
-      "";
+  carouselTrack.innerHTML =
+    "";
 
 
-  if (
-    !insights.length
-  ) {
+  if (!insights.length) {
 
     carouselTrack.innerHTML = `
 
@@ -1863,8 +1807,7 @@ function buildCarousel() {
         );
 
 
-      const meta =
-        [];
+      const meta = [];
 
 
       if (
@@ -2136,33 +2079,31 @@ previousButton.addEventListener(
 
 
 /* =========================================
-   HERO MENU TRANSITION
+   MENU TRANSITION
 ========================================= */
 
 function initialiseHeroMenuTransition() {
 
-  const isMobile =
-    window.matchMedia(
-      "(max-width: 600px)"
-    ).matches;
-
-
-  if (
-    isMobile
-  ) {
-
-    document.body
-      .classList
-      .add(
-        "menu-settled"
-      );
-
-    return;
-
-  }
-
-
   function update() {
+
+    const isMobile =
+      window.matchMedia(
+        "(max-width: 600px)"
+      ).matches;
+
+
+    if (isMobile) {
+
+      document.body
+        .classList
+        .add(
+          "menu-settled"
+        );
+
+      return;
+
+    }
+
 
     const trigger =
       hero.offsetHeight -
@@ -2200,53 +2141,6 @@ function initialiseHeroMenuTransition() {
 
 
   update();
-
-}
-
-
-
-/* =========================================
-   MENU GRADIENT
-========================================= */
-
-function initialiseMenuGradient() {
-
-  const buttons =
-    document.querySelectorAll(
-      ".menu-pill"
-    );
-
-
-  buttons.forEach(
-    button => {
-
-
-      button.addEventListener(
-        "pointermove",
-        event => {
-
-
-          const rect =
-            button
-              .getBoundingClientRect();
-
-
-          button.style.setProperty(
-            "--pill-x",
-            `${event.clientX - rect.left}px`
-          );
-
-
-          button.style.setProperty(
-            "--pill-y",
-            `${event.clientY - rect.top}px`
-          );
-
-        }
-      );
-
-    }
-  );
 
 }
 
@@ -2322,10 +2216,6 @@ function initialiseLibrarySpotlight() {
 }
 
 
-
-/* =========================================
-   SPOTLIGHT POSITION
-========================================= */
 
 function updateLibrarySpotlight(
   event
@@ -2567,8 +2457,6 @@ function initialiseLibrary() {
 ========================================= */
 
 initialiseHeroMenuTransition();
-
-initialiseMenuGradient();
 
 initialiseLibrarySpotlight();
 

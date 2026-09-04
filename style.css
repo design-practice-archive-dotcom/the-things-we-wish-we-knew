@@ -23,7 +23,9 @@
 }
 
 
-/* GLOBAL */
+/* =========================================
+   GLOBAL
+========================================= */
 
 * {
   box-sizing: border-box;
@@ -73,7 +75,9 @@ button {
 }
 
 
-/* SECTION DIVIDERS */
+/* =========================================
+   SECTION DIVIDERS
+========================================= */
 
 .section-divider {
 
@@ -87,7 +91,9 @@ button {
 }
 
 
-/* FIXED MENU */
+/* =========================================
+   FIXED MENU
+========================================= */
 
 .top-menu {
 
@@ -154,7 +160,9 @@ body.menu-settled
 }
 
 
-/* MENU BUTTONS */
+/* =========================================
+   MENU BUTTONS
+========================================= */
 
 .menu-pill {
 
@@ -237,7 +245,9 @@ body.menu-settled
 }
 
 
-/* HERO */
+/* =========================================
+   HERO BASE
+========================================= */
 
 .hero {
 
@@ -256,7 +266,9 @@ body.menu-settled
 }
 
 
-/* TITLE */
+/* =========================================
+   TITLE
+========================================= */
 
 .hero-title {
 
@@ -300,7 +312,9 @@ body.menu-settled
 }
 
 
-/* HERO DESCRIPTION */
+/* =========================================
+   HERO DESCRIPTION
+========================================= */
 
 .hero-description {
 
@@ -330,7 +344,9 @@ body.menu-settled
 }
 
 
-/* HERO FEATURE */
+/* =========================================
+   HERO FEATURE
+========================================= */
 
 .hero-feature {
 
@@ -349,7 +365,9 @@ body.menu-settled
 }
 
 
-/* SOFT HERO GRADIENT */
+/* =========================================
+   HERO GRADIENT
+========================================= */
 
 .hero-feature::before {
 
@@ -381,7 +399,9 @@ body.menu-settled
 }
 
 
-/* FEATURE LABEL */
+/* =========================================
+   FEATURE LABEL
+========================================= */
 
 .feature-label {
 
@@ -400,7 +420,9 @@ body.menu-settled
 }
 
 
-/* CAROUSEL */
+/* =========================================
+   CAROUSEL
+========================================= */
 
 .carousel-track {
 
@@ -474,7 +496,9 @@ body.menu-settled
 }
 
 
-/* HERO ADVICE */
+/* =========================================
+   HERO ADVICE
+========================================= */
 
 .carousel-advice {
 
@@ -496,7 +520,9 @@ body.menu-settled
 }
 
 
-/* ADVICE GIVER INFO */
+/* =========================================
+   HERO META
+========================================= */
 
 .carousel-meta {
 
@@ -519,7 +545,9 @@ body.menu-settled
 }
 
 
-/* ARROWS */
+/* =========================================
+   ARROWS
+========================================= */
 
 .carousel-controls {
 
@@ -577,7 +605,9 @@ body.menu-settled
 }
 
 
-/* HERO MENU LINKS */
+/* =========================================
+   HERO MENU LINKS
+========================================= */
 
 .hero-menu-links {
 
@@ -608,7 +638,9 @@ body.menu-settled
 }
 
 
-/* LABELS */
+/* =========================================
+   LABELS
+========================================= */
 
 .section-label {
 
@@ -624,7 +656,9 @@ body.menu-settled
 }
 
 
-/* LIBRARY */
+/* =========================================
+   LIBRARY
+========================================= */
 
 .library-section {
 
@@ -692,7 +726,9 @@ body.menu-settled
 }
 
 
-/* FILTERS */
+/* =========================================
+   FILTERS
+========================================= */
 
 .library-filters {
 
@@ -804,7 +840,9 @@ body.menu-settled
 }
 
 
-/* CLEAR FILTERS */
+/* =========================================
+   CLEAR FILTERS
+========================================= */
 
 .library-controls {
 
@@ -837,7 +875,9 @@ body.menu-settled
 }
 
 
-/* LIBRARY GRID */
+/* =========================================
+   LIBRARY GRID
+========================================= */
 
 .library-grid {
 
@@ -876,7 +916,9 @@ body.menu-settled
 }
 
 
-/* MOVING LIBRARY GRADIENT */
+/* =========================================
+   MOVING LIBRARY GRADIENT
+========================================= */
 
 .library-grid::before {
 
@@ -913,7 +955,9 @@ body.menu-settled
 }
 
 
-/* LIBRARY CARD */
+/* =========================================
+   LIBRARY CARD
+========================================= */
 
 .library-card {
 
@@ -944,7 +988,9 @@ body.menu-settled
 }
 
 
-/* CARD ADVICE */
+/* =========================================
+   CARD ADVICE
+========================================= */
 
 .card-advice-area {
 
@@ -1014,7 +1060,9 @@ body.menu-settled
 }
 
 
-/* OVERFLOW ELLIPSIS */
+/* =========================================
+   OVERFLOW ELLIPSIS
+========================================= */
 
 .card-advice-area.has-overflow::after {
 
@@ -1049,7 +1097,9 @@ body.menu-settled
 }
 
 
-/* CARD INFO */
+/* =========================================
+   CARD INFO
+========================================= */
 
 .card-info {
 
@@ -1152,7 +1202,9 @@ body.menu-settled
 }
 
 
-/* CONTRIBUTE */
+/* =========================================
+   CONTRIBUTE
+========================================= */
 
 .contribute-section {
 
@@ -1290,7 +1342,9 @@ body.menu-settled
 }
 
 
-/* ABOUT */
+/* =========================================
+   ABOUT
+========================================= */
 
 .about-section {
 
@@ -1350,7 +1404,9 @@ body.menu-settled
 }
 
 
-/* FOOTER */
+/* =========================================
+   FOOTER
+========================================= */
 
 footer {
 
@@ -1372,7 +1428,9 @@ footer {
 }
 
 
-/* EMPTY */
+/* =========================================
+   EMPTY STATE
+========================================= */
 
 .empty-state {
 
@@ -1398,14 +1456,509 @@ footer {
 }
 
 
-/* MEDIUM */
+/* =========================================================
+   CLEAN DESKTOP HERO
+========================================================= */
 
-@media (max-width: 1100px) {
+@media (min-width: 601px) {
 
-  .hero-feature {
-    left: 38%;
+  .hero {
+
+    position: relative;
+
+    min-height:
+      100vh;
+
+    padding:
+      var(--menu-height)
+      4vw
+      5vh;
+
+    display: grid;
+
+    grid-template-columns:
+      minmax(300px, 0.8fr)
+      minmax(500px, 1.2fr);
+
+    grid-template-rows:
+      auto
+      1fr
+      auto;
+
+    column-gap:
+      7vw;
+
+    background:
+      var(--green);
+
+    overflow:
+      hidden;
+
   }
 
+
+  /* TITLE */
+
+  .hero-title {
+
+    position:
+      static;
+
+    grid-column:
+      1;
+
+    grid-row:
+      1;
+
+    align-self:
+      start;
+
+    margin-top:
+      34px;
+
+    width:
+      min(650px, 100%);
+
+    font-size:
+      clamp(
+        2.5rem,
+        3.8vw,
+        4.6rem
+      );
+
+    line-height:
+      1.03;
+
+    letter-spacing:
+      -0.025em;
+
+  }
+
+
+  /* DESCRIPTION */
+
+  .hero-description {
+
+    position:
+      static;
+
+    grid-column:
+      1;
+
+    grid-row:
+      3;
+
+    align-self:
+      end;
+
+    width:
+      min(520px, 100%);
+
+    margin:
+      0 0 1vh;
+
+    font-size:
+      clamp(
+        1.35rem,
+        1.75vw,
+        1.9rem
+      );
+
+    line-height:
+      1.3;
+
+  }
+
+
+  /* ADVICE AREA */
+
+  .hero-feature {
+
+    position:
+      relative;
+
+    top:
+      auto;
+
+    left:
+      auto;
+
+    right:
+      auto;
+
+    grid-column:
+      2;
+
+    grid-row:
+      1 / 4;
+
+    align-self:
+      center;
+
+    width:
+      100%;
+
+    transform:
+      translateY(7vh);
+
+    isolation:
+      isolate;
+
+    overflow:
+      visible;
+
+  }
+
+
+  /* SMALLER SOFT GRADIENT */
+
+  .hero-feature::before {
+
+    content: "";
+
+    position:
+      absolute;
+
+    width:
+      620px;
+
+    height:
+      620px;
+
+    left:
+      -150px;
+
+    top:
+      -195px;
+
+    z-index:
+      -1;
+
+    pointer-events:
+      none;
+
+    background:
+      radial-gradient(
+        circle at center,
+
+        rgba(247, 241, 220, 0.74) 0%,
+        rgba(247, 241, 220, 0.50) 19%,
+        rgba(247, 241, 220, 0.27) 35%,
+        rgba(247, 241, 220, 0.11) 50%,
+        rgba(247, 241, 220, 0.035) 63%,
+        rgba(247, 241, 220, 0) 75%
+      );
+
+  }
+
+
+  /* ALIGN EVERYTHING */
+
+  .feature-label {
+
+    width:
+      calc(100% - 120px);
+
+    margin:
+      0 60px 30px;
+
+    font-size:
+      0.86rem;
+
+    line-height:
+      1;
+
+    font-weight:
+      700;
+
+  }
+
+
+  .carousel-track {
+
+    position:
+      relative;
+
+    width:
+      calc(100% - 120px);
+
+    min-height:
+      255px;
+
+    margin:
+      0 60px;
+
+    overflow:
+      visible;
+
+  }
+
+
+  .carousel-slide {
+
+    width:
+      100%;
+
+  }
+
+
+  .carousel-advice {
+
+    width:
+      100%;
+
+    margin:
+      0;
+
+    font-size:
+      clamp(
+        1.35rem,
+        1.75vw,
+        1.9rem
+      );
+
+    line-height:
+      1.3;
+
+  }
+
+
+  .carousel-meta {
+
+    width:
+      100%;
+
+    margin-top:
+      34px;
+
+    font-size:
+      clamp(
+        0.9rem,
+        0.95vw,
+        1.05rem
+      );
+
+    line-height:
+      1.4;
+
+  }
+
+
+  /* ARROWS */
+
+  .carousel-controls {
+
+    position:
+      absolute;
+
+    left:
+      0;
+
+    right:
+      0;
+
+    top:
+      135px;
+
+    margin:
+      0;
+
+    display:
+      flex;
+
+    align-items:
+      center;
+
+    justify-content:
+      space-between;
+
+    pointer-events:
+      none;
+
+  }
+
+
+  .carousel-arrow {
+
+    position:
+      relative;
+
+    z-index:
+      5;
+
+    width:
+      42px;
+
+    height:
+      42px;
+
+    padding:
+      0;
+
+    display:
+      flex;
+
+    align-items:
+      center;
+
+    justify-content:
+      center;
+
+    border:
+      0;
+
+    border-radius:
+      0;
+
+    background:
+      transparent;
+
+    pointer-events:
+      auto;
+
+    cursor:
+      pointer;
+
+    font-size:
+      1.35rem;
+
+    line-height:
+      1;
+
+  }
+
+
+  .carousel-arrow:hover {
+
+    background:
+      transparent;
+
+    opacity:
+      0.5;
+
+  }
+
+
+  /* MENU LINKS UNDER ADVICE */
+
+  .hero-menu-links {
+
+    width:
+      calc(100% - 120px);
+
+    margin:
+      24px 60px 0;
+
+    display:
+      flex;
+
+    gap:
+      12px;
+
+  }
+
+
+  .carousel-slide.exit-left {
+
+    opacity:
+      0;
+
+    transform:
+      translateX(-110vw);
+
+  }
+
+}
+
+
+/* =========================================================
+   MEDIUM BROWSER WIDTHS
+========================================================= */
+
+@media (min-width: 601px) and (max-width: 1050px) {
+
+  .hero {
+
+    grid-template-columns:
+      minmax(260px, 0.72fr)
+      minmax(430px, 1.28fr);
+
+    column-gap:
+      4vw;
+
+    padding-left:
+      3.5vw;
+
+    padding-right:
+      3.5vw;
+
+  }
+
+
+  .hero-title {
+
+    font-size:
+      clamp(
+        2.15rem,
+        4.3vw,
+        3.25rem
+      );
+
+  }
+
+
+  .hero-feature {
+
+    transform:
+      translateY(5vh);
+
+  }
+
+
+  .feature-label,
+  .carousel-track,
+  .hero-menu-links {
+
+    width:
+      calc(100% - 90px);
+
+    margin-left:
+      45px;
+
+    margin-right:
+      45px;
+
+  }
+
+
+  .carousel-advice,
+  .hero-description {
+
+    font-size:
+      clamp(
+        1.2rem,
+        2vw,
+        1.55rem
+      );
+
+  }
+
+
+  .carousel-controls {
+
+    top:
+      135px;
+
+  }
+
+}
+
+
+/* =========================================
+   LIBRARY GRID BREAKPOINT
+========================================= */
+
+@media (max-width: 1100px) {
 
   .library-grid {
 
@@ -1420,53 +1973,11 @@ footer {
 }
 
 
-/* TABLET */
+/* =========================================
+   TABLET
+========================================= */
 
-@media (max-width: 800px) {
-
-  .hero {
-    min-height: 940px;
-  }
-
-
-  .hero-title {
-
-    left:
-      5vw;
-
-    right:
-      5vw;
-
-    font-size:
-      2.8rem;
-
-  }
-
-
-  .hero-feature {
-
-    left:
-      5vw;
-
-    right:
-      5vw;
-
-    top:
-      39%;
-
-  }
-
-
-  .hero-description {
-
-    left:
-      5vw;
-
-    width:
-      65%;
-
-  }
-
+@media (min-width: 601px) and (max-width: 800px) {
 
   .library-filters {
     grid-template-columns: 1fr;
@@ -1491,7 +2002,9 @@ footer {
 }
 
 
-/* MOBILE */
+/* =========================================================
+   MOBILE
+========================================================= */
 
 @media (max-width: 600px) {
 
@@ -1522,13 +2035,20 @@ footer {
 
   .top-menu {
 
-    position: fixed;
+    position:
+      fixed;
 
-    top: 0;
-    left: 0;
-    right: 0;
+    top:
+      0;
 
-    width: 100%;
+    left:
+      0;
+
+    right:
+      0;
+
+    width:
+      100%;
 
     height:
       var(--menu-height);
@@ -1542,31 +2062,39 @@ footer {
     border-bottom:
       1px solid var(--line);
 
-    z-index: 1000;
+    z-index:
+      1000;
 
   }
 
 
   .menu-left {
 
-    display: flex;
+    display:
+      flex;
 
-    gap: 5px;
+    gap:
+      5px;
 
-    opacity: 1;
+    opacity:
+      1;
 
-    transform: none;
+    transform:
+      none;
 
-    pointer-events: auto;
+    pointer-events:
+      auto;
 
-    transition: none;
+    transition:
+      none;
 
   }
 
 
   .menu-pill {
 
-    min-width: auto;
+    min-width:
+      auto;
 
     padding:
       7px 10px;
@@ -1587,7 +2115,8 @@ footer {
 
   .hero {
 
-    position: relative;
+    position:
+      relative;
 
     min-height:
       100svh;
@@ -1599,7 +2128,8 @@ footer {
       5vw
       40px;
 
-    display: flex;
+    display:
+      flex;
 
     flex-direction:
       column;
@@ -1615,11 +2145,14 @@ footer {
 
   .hero-title {
 
-    position: static;
+    position:
+      static;
 
-    width: 100%;
+    width:
+      100%;
 
-    margin: 0;
+    margin:
+      0;
 
     font-size:
       clamp(
@@ -1636,16 +2169,26 @@ footer {
 
   .hero-feature {
 
-    position: relative;
+    position:
+      relative;
 
-    top: auto;
-    left: auto;
-    right: auto;
+    top:
+      auto;
 
-    width: 100%;
+    left:
+      auto;
+
+    right:
+      auto;
+
+    width:
+      100%;
 
     margin-top:
       14vh;
+
+    transform:
+      none;
 
     isolation:
       isolate;
@@ -1682,8 +2225,11 @@ footer {
 
   .feature-label {
 
-    margin-bottom:
-      24px;
+    width:
+      100%;
+
+    margin:
+      0 0 24px;
 
     font-size:
       0.72rem;
@@ -1693,8 +2239,14 @@ footer {
 
   .carousel-track {
 
+    width:
+      100%;
+
     min-height:
       260px;
+
+    margin:
+      0;
 
   }
 
@@ -1732,7 +2284,8 @@ footer {
 
   .carousel-controls {
 
-    position: absolute;
+    position:
+      absolute;
 
     left:
       -1vw;
@@ -1743,7 +2296,8 @@ footer {
     top:
       47%;
 
-    margin: 0;
+    margin:
+      0;
 
     display:
       flex;
@@ -1759,10 +2313,14 @@ footer {
 
   .carousel-arrow {
 
-    width: auto;
-    height: auto;
+    width:
+      auto;
 
-    border: 0;
+    height:
+      auto;
+
+    border:
+      0;
 
     background:
       transparent;
@@ -1785,9 +2343,7 @@ footer {
       100%;
 
     margin:
-      auto
-      0
-      0;
+      auto 0 0;
 
     padding-top:
       60px;
@@ -1806,12 +2362,14 @@ footer {
 
   .library-section {
 
-    width: 100%;
+    width:
+      100%;
 
     min-width:
       100%;
 
-    margin: 0;
+    margin:
+      0;
 
     padding:
       58px

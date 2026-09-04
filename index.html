@@ -38,121 +38,116 @@
   >
 </head>
 
-
 <body>
 
-
-  <!-- MOVING LIBRARY + CONTRIBUTE NAV -->
+  <!-- FIXED MENU -->
 
   <nav
-    id="moving-nav"
-    class="moving-nav"
+    id="top-menu"
+    class="top-menu"
   >
 
-    <a href="#library">
-      library
-    </a>
+    <div
+      id="menu-left"
+      class="menu-left"
+    >
+      <a
+        href="#library"
+        class="menu-pill"
+      >
+        LIBRARY
+      </a>
+
+      <a
+        href="#contribute"
+        class="menu-pill"
+      >
+        CONTRIBUTE
+      </a>
+    </div>
+
 
     <a
-      href="https://docs.google.com/forms/d/e/1FAIpQLScjiItmC0lLiyAeuG68L-sKDdghVBmpc2iqTyt22s_fOLPhBw/viewform?usp=header"
-      target="_blank"
-      rel="noopener"
+      href="#about"
+      class="menu-pill"
     >
-      contribute
-    </a>
-
-  </nav>
-
-
-  <!-- ABOUT -->
-
-  <nav
-    id="about-nav"
-    class="about-nav"
-  >
-
-    <a href="#about">
-      about
+      ABOUT
     </a>
 
   </nav>
 
 
 
-  <!-- =====================================
-       HERO
-  ====================================== -->
+  <!-- HERO -->
 
   <header
     id="top"
     class="hero"
   >
 
-
     <a
       href="#top"
       class="hero-title"
     >
-      things we<br>
-      wish we'd<br>
-      known about<br>
-      <strong>design</strong>
+      things we wish we'd<br>
+      known about <strong>design</strong>
     </a>
 
 
+    <div class="hero-feature">
 
-    <div class="hero-carousel">
-
-
-      <div class="carousel-content">
-
-        <div class="carousel-label">
-          FROM THE LIBRARY
-        </div>
+      <div class="feature-label">
+        FROM THE LIBRARY
+      </div>
 
 
-        <div
-          id="carousel-stage"
-          class="carousel-stage"
+      <div
+        id="carousel-track"
+        class="carousel-track"
+      ></div>
+
+
+      <div class="carousel-controls">
+
+        <button
+          id="previous-button"
+          class="carousel-arrow"
+          type="button"
+          aria-label="Previous advice"
         >
+          ←
+        </button>
+
+        <button
+          id="next-button"
+          class="carousel-arrow"
+          type="button"
+          aria-label="Next advice"
+        >
+          →
+        </button>
+
+      </div>
 
 
-          <button
-            id="previous-button"
-            class="carousel-arrow carousel-arrow-left"
-            type="button"
-            aria-label="Previous advice"
-          >
-            ←
-          </button>
+      <div
+        id="hero-menu-links"
+        class="hero-menu-links"
+      >
 
+        <a
+          href="#library"
+          class="menu-pill"
+        >
+          LIBRARY
+        </a>
 
-
-          <div
-            id="carousel-window"
-            class="carousel-window"
-          >
-
-            <div
-              id="carousel-track"
-              class="carousel-track"
-            ></div>
-
-          </div>
-
-
-
-          <button
-            id="next-button"
-            class="carousel-arrow carousel-arrow-right"
-            type="button"
-            aria-label="Next advice"
-          >
-            →
-          </button>
-
-
-        </div>
+        <a
+          href="#contribute"
+          class="menu-pill"
+        >
+          CONTRIBUTE
+        </a>
 
       </div>
 
@@ -165,34 +160,31 @@
       from people working in design
     </p>
 
-
   </header>
+
+
+  <div class="section-divider"></div>
 
 
 
   <main>
 
-
-    <!-- =====================================
-         LIBRARY
-    ====================================== -->
+    <!-- LIBRARY -->
 
     <section
       id="library"
       class="library-section"
     >
 
-
-      <div class="library-heading">
-
+      <div class="library-intro">
 
         <div>
 
-          <div class="eyebrow">
+          <div class="section-label">
             LIBRARY
           </div>
 
-          <p>
+          <p class="library-description">
             Advice from people working in design.
           </p>
 
@@ -200,17 +192,20 @@
 
 
         <div class="library-count">
-          <span id="insight-count">0</span>
-          entries
-        </div>
 
+          <span id="insight-count">
+            0
+          </span>
+
+          entries
+
+        </div>
 
       </div>
 
 
 
       <div class="library-filters">
-
 
         <div class="filter-block">
 
@@ -243,7 +238,6 @@
 
         </div>
 
-
       </div>
 
 
@@ -267,47 +261,45 @@
         class="library-grid"
       ></div>
 
-
     </section>
 
 
+    <div class="section-divider"></div>
 
-    <!-- =====================================
-         CONTRIBUTE
-    ====================================== -->
+
+
+    <!-- CONTRIBUTE -->
 
     <section
       id="contribute"
       class="contribute-section"
     >
 
-
       <div class="contribute-copy">
 
-
-        <div class="eyebrow">
+        <div class="section-label">
           CONTRIBUTE
         </div>
 
 
         <h2>
-          what’s one thing<br>
+          what's one thing<br>
           you wish someone<br>
-          had told you?
+          had told you
         </h2>
 
 
         <p>
-          It can be about work, money, clients, careers,
-          collaboration, education — or anything else
-          you learned along the way.
+          It can be about work, money, clients,
+          careers, collaboration, education —
+          or anything else you learned along
+          the way.
         </p>
 
 
         <p class="anonymous-note">
           Every contribution is anonymous.
         </p>
-
 
       </div>
 
@@ -321,33 +313,31 @@
           target="_blank"
           rel="noopener"
         >
-          leave yours
+          LEAVE YOURS
         </a>
 
       </div>
 
-
     </section>
 
 
+    <div class="section-divider"></div>
 
-    <!-- =====================================
-         ABOUT
-    ====================================== -->
+
+
+    <!-- ABOUT -->
 
     <section
       id="about"
       class="about-section"
     >
 
-
-      <div class="eyebrow">
+      <div class="section-label">
         ABOUT THE LIBRARY
       </div>
 
 
       <div class="about-copy">
-
 
         <p class="about-credit">
           Collected from many,<br>
@@ -358,8 +348,8 @@
         <p>
           Design education teaches us how to design.
           Working in the profession teaches us how to
-          navigate clients, money, collaboration, careers
-          and everything in between.
+          navigate clients, money, collaboration,
+          careers and everything in between.
         </p>
 
 
@@ -368,15 +358,14 @@
           This library collects some of it.
         </p>
 
-
       </div>
-
 
     </section>
 
-
   </main>
 
+
+  <div class="section-divider"></div>
 
 
   <footer>
@@ -390,7 +379,6 @@
     </a>
 
   </footer>
-
 
 
   <script src="script.js"></script>

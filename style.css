@@ -14,6 +14,12 @@
 
   --menu-height: 72px;
 
+  /*
+    JS updates this to match the exact
+    left edge of FROM THE LIBRARY.
+  */
+  --hero-menu-left: 50vw;
+
   --mono:
     "Courier Prime",
     "Courier New",
@@ -108,7 +114,7 @@ button {
 
   align-items: center;
 
-  justify-content: space-between;
+  justify-content: flex-end;
 
   background: transparent;
 
@@ -120,34 +126,17 @@ button {
 
 
 /*
-  top left buttons only become visible
-  after the travelling pair reaches the menu
+  Desktop doesn't use this duplicate pair.
+  Mobile does.
 */
 
 .menu-left {
-
-  display: flex;
-
-  gap: 12px;
-
-  opacity: 0;
-
-  pointer-events: none;
-
-}
-
-
-body.menu-settled .menu-left {
-
-  opacity: 1;
-
-  pointer-events: auto;
-
+  display: none;
 }
 
 
 /*
-  ABOUT is always visible on the right
+  ABOUT always stays on the right.
 */
 
 .about-pill {
@@ -190,6 +179,8 @@ body.menu-settled .menu-left {
   font-size: 0.82rem;
 
   line-height: 1;
+
+  white-space: nowrap;
 
   transition:
     opacity 160ms ease;
@@ -410,7 +401,7 @@ body.menu-settled .menu-left {
 
 
 /* =========================================
-   CAROUSEL
+   HERO CAROUSEL
 ========================================= */
 
 .carousel-track {
@@ -457,7 +448,7 @@ body.menu-settled .menu-left {
 
   pointer-events: none;
 
-  overscroll-behavior: contain;
+  overscroll-behavior: auto;
 
   scrollbar-width: thin;
 
@@ -630,23 +621,44 @@ body.menu-settled .menu-left {
    TRAVELLING DESKTOP BUTTONS
 ========================================= */
 
+/*
+  The same two buttons exist throughout.
+
+  JS aligns their left edge precisely with
+  FROM THE LIBRARY.
+
+  They begin close to the bottom of the hero,
+  then move vertically upward to the menu.
+*/
+
 .hero-menu-links {
 
   position: fixed;
 
-  right: 3vw;
+  top: 18px;
 
-  bottom: 28px;
+  left:
+    var(--hero-menu-left);
 
-  z-index: 1001;
+  z-index: 1002;
 
   display: flex;
 
   gap: 12px;
 
+  /*
+    Slightly higher than before.
+  */
+  transform:
+    translateY(
+      calc(
+        100vh - 116px
+      )
+    );
+
   transition:
-    bottom
-    600ms
+    transform
+    650ms
     cubic-bezier(
       0.76,
       0,
@@ -657,58 +669,17 @@ body.menu-settled .menu-left {
 }
 
 
-/*
-  Straight upward movement only.
-  Same right alignment the whole time.
-*/
-
 body.menu-settled
 .hero-menu-links {
 
-  bottom:
-    calc(
-      100vh -
-      var(--menu-height) +
-      18px
-    );
-
-}
-
-
-/*
-  once they reach top, hide travelling pair
-  and reveal identical fixed menu pair
-*/
-
-body.menu-settled
-.hero-menu-links {
-
-  opacity: 0;
-
-  pointer-events: none;
-
-}
-
-
-body.menu-settled
-.menu-left {
-
-  position: fixed;
-
-  top: 18px;
-
-  right:
-    calc(
-      3vw + 132px
-    );
-
-  left: auto;
+  transform:
+    translateY(0);
 
 }
 
 
 /* =========================================
-   SECTION LABELS
+   SECTION LABEL
 ========================================= */
 
 .section-label {
@@ -1041,6 +1012,17 @@ body.menu-settled
 }
 
 
+/*
+  IMPORTANT:
+
+  Normal page scrolling no longer gets caught
+  by every card.
+
+  The card itself stays clipped by default.
+  Click / tab into a long quote if you want
+  to scroll that individual text.
+*/
+
 .card-advice {
 
   height: 100%;
@@ -1049,9 +1031,7 @@ body.menu-settled
 
   padding-right: 7px;
 
-  overflow-y: auto;
-
-  overscroll-behavior: contain;
+  overflow-y: hidden;
 
   font-size:
     clamp(
@@ -1062,11 +1042,22 @@ body.menu-settled
 
   line-height: 1.35;
 
+  outline: none;
+
   scrollbar-width: thin;
 
   scrollbar-color:
     var(--line)
     transparent;
+
+}
+
+
+.card-advice:focus {
+
+  overflow-y: auto;
+
+  overscroll-behavior: auto;
 
 }
 
@@ -1087,7 +1078,7 @@ body.menu-settled
 
 
 /* =========================================
-   CARD OVERFLOW
+   OVERFLOW ELLIPSIS
 ========================================= */
 
 .card-advice-area.has-overflow::after {
@@ -1100,7 +1091,8 @@ body.menu-settled
 
   bottom: 11px;
 
-  padding: 1px 4px;
+  padding:
+    1px 4px;
 
   background: var(--green);
 
@@ -1108,6 +1100,13 @@ body.menu-settled
 
   line-height: 1;
 
+  pointer-events: none;
+
+}
+
+
+.card-advice-area.has-overflow:focus-within::after {
+  opacity: 0.35;
 }
 
 
@@ -1614,6 +1613,10 @@ footer {
     padding:
       0 4vw;
 
+    display: flex;
+
+    justify-content: space-between;
+
     background: transparent;
 
     z-index: 1000;
@@ -1632,14 +1635,6 @@ footer {
     opacity: 1;
 
     pointer-events: auto;
-
-  }
-
-
-  body.menu-settled
-  .menu-left {
-
-    position: static;
 
   }
 
@@ -2036,7 +2031,15 @@ footer {
   }
 
 
+  /*
+    Keep mobile text scrollable as before.
+  */
+
   .card-advice {
+
+    overflow-y: auto;
+
+    overscroll-behavior: auto;
 
     font-size: 1.08rem;
 

@@ -66,6 +66,11 @@ const hero =
     "top"
   );
 
+const featureLabel =
+  document.querySelector(
+    ".feature-label"
+  );
+
 
 
 /* =========================================
@@ -394,9 +399,11 @@ function loadWithJSONP() {
 
           finished = true;
 
+
           clearTimeout(
             timeout
           );
+
 
           cleanup();
 
@@ -436,9 +443,11 @@ function loadWithJSONP() {
 
           finished = true;
 
+
           clearTimeout(
             timeout
           );
+
 
           cleanup();
 
@@ -2079,6 +2088,50 @@ previousButton.addEventListener(
 
 
 /* =========================================
+   ALIGN TRAVELLING MENU
+========================================= */
+
+/*
+  This makes LIBRARY / CONTRIBUTE align
+  exactly with FROM THE LIBRARY and the
+  featured advice, regardless of browser width.
+*/
+
+function updateHeroMenuAlignment() {
+
+  const isMobile =
+    window.matchMedia(
+      "(max-width: 600px)"
+    ).matches;
+
+
+  if (
+    isMobile ||
+    !featureLabel
+  ) {
+
+    return;
+
+  }
+
+
+  const rect =
+    featureLabel
+      .getBoundingClientRect();
+
+
+  document.documentElement
+    .style
+    .setProperty(
+      "--hero-menu-left",
+      `${rect.left}px`
+    );
+
+}
+
+
+
+/* =========================================
    MENU TRANSITION
 ========================================= */
 
@@ -2090,6 +2143,9 @@ function initialiseHeroMenuTransition() {
       window.matchMedia(
         "(max-width: 600px)"
       ).matches;
+
+
+    updateHeroMenuAlignment();
 
 
     if (isMobile) {
@@ -2456,8 +2512,21 @@ function initialiseLibrary() {
    START
 ========================================= */
 
+updateHeroMenuAlignment();
+
 initialiseHeroMenuTransition();
 
 initialiseLibrarySpotlight();
 
 loadInsights();
+
+
+/*
+  Fonts can slightly change measurements after
+  first render, so align again once loaded.
+*/
+
+window.addEventListener(
+  "load",
+  updateHeroMenuAlignment
+);

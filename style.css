@@ -14,10 +14,6 @@
 
   --menu-height: 72px;
 
-  /*
-    JS updates this to match the exact
-    left edge of FROM THE LIBRARY.
-  */
   --hero-menu-left: 50vw;
 
   --mono:
@@ -126,7 +122,7 @@ button {
 
 
 /*
-  Desktop doesn't use this duplicate pair.
+  Desktop does not use the duplicate left pair.
   Mobile does.
 */
 
@@ -134,10 +130,6 @@ button {
   display: none;
 }
 
-
-/*
-  ABOUT always stays on the right.
-*/
 
 .about-pill {
 
@@ -295,7 +287,7 @@ button {
   margin:
     0
     0
-    65px;
+    28px;
 
   font-size:
     clamp(
@@ -332,7 +324,7 @@ button {
   width: 100%;
 
   transform:
-    translateY(4vh);
+    translateY(1vh);
 
   isolation: isolate;
 
@@ -541,7 +533,7 @@ button {
 
   margin-top: 32px;
 
-  padding-bottom: 8px;
+  padding-bottom: 6px;
 
   font-size:
     clamp(
@@ -618,19 +610,45 @@ button {
 
 
 /* =========================================
-   TRAVELLING DESKTOP BUTTONS
+   HERO BUTTONS
 ========================================= */
 
 /*
-  The same two buttons exist throughout.
+  Default state:
+  buttons live with the hero content.
 
-  JS aligns their left edge precisely with
-  FROM THE LIBRARY.
-
-  They begin close to the bottom of the hero,
-  then move vertically upward to the menu.
+  Their top position is set by JS so they sit
+  directly underneath the current carousel meta.
 */
 
+.hero-menu-links {
+
+  position: absolute;
+
+  left:
+    var(--hero-menu-left);
+
+  top:
+    var(--hero-menu-top, 78vh);
+
+  z-index: 1002;
+
+  display: flex;
+
+  gap: 12px;
+
+}
+
+
+/*
+  Once that actual row reaches the top menu,
+  it becomes fixed in exactly the same x position.
+
+  No animation / jump is needed because its
+  fixed coordinates match where it already was.
+*/
+
+body.menu-settled
 .hero-menu-links {
 
   position: fixed;
@@ -639,41 +657,6 @@ button {
 
   left:
     var(--hero-menu-left);
-
-  z-index: 1002;
-
-  display: flex;
-
-  gap: 12px;
-
-  /*
-    Slightly higher than before.
-  */
-  transform:
-    translateY(
-      calc(
-        100vh - 116px
-      )
-    );
-
-  transition:
-    transform
-    650ms
-    cubic-bezier(
-      0.76,
-      0,
-      0.24,
-      1
-    );
-
-}
-
-
-body.menu-settled
-.hero-menu-links {
-
-  transform:
-    translateY(0);
 
 }
 
@@ -1012,17 +995,6 @@ body.menu-settled
 }
 
 
-/*
-  IMPORTANT:
-
-  Normal page scrolling no longer gets caught
-  by every card.
-
-  The card itself stays clipped by default.
-  Click / tab into a long quote if you want
-  to scroll that individual text.
-*/
-
 .card-advice {
 
   height: 100%;
@@ -1052,6 +1024,11 @@ body.menu-settled
 
 }
 
+
+/*
+  Only scroll the card after clicking / focusing it.
+  Normal page scrolling goes straight past.
+*/
 
 .card-advice:focus {
 
@@ -1465,7 +1442,7 @@ footer {
 
 
   .hero-feature {
-    transform: translateY(3vh);
+    transform: translateY(0);
   }
 
 
@@ -2030,10 +2007,6 @@ footer {
 
   }
 
-
-  /*
-    Keep mobile text scrollable as before.
-  */
 
   .card-advice {
 

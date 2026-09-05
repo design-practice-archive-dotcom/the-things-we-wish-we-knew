@@ -240,11 +240,16 @@ button {
 
   text-decoration: none;
 
+  /*
+    Slightly smaller than before for a
+    quieter, more editorial hierarchy.
+  */
+
   font-size:
     clamp(
-      2.5rem,
-      3.8vw,
-      4.6rem
+      2.25rem,
+      3.25vw,
+      3.9rem
     );
 
   line-height: 1.03;
@@ -613,14 +618,6 @@ button {
    HERO BUTTONS
 ========================================= */
 
-/*
-  Default state:
-  buttons live with the hero content.
-
-  Their top position is set by JS so they sit
-  directly underneath the current carousel meta.
-*/
-
 .hero-menu-links {
 
   position: absolute;
@@ -640,14 +637,6 @@ button {
 }
 
 
-/*
-  Once that actual row reaches the top menu,
-  it becomes fixed in exactly the same x position.
-
-  No animation / jump is needed because its
-  fixed coordinates match where it already was.
-*/
-
 body.menu-settled
 .hero-menu-links {
 
@@ -662,12 +651,17 @@ body.menu-settled
 
 
 /* =========================================
-   SECTION LABEL
+   SMALL SECTION LABELS
 ========================================= */
+
+/*
+  These stay restrained rather than becoming
+  miniature versions of the large headings.
+*/
 
 .section-label {
 
-  font-size: 0.9rem;
+  font-size: 0.86rem;
 
   line-height: 1;
 
@@ -709,27 +703,32 @@ body.menu-settled
 }
 
 
+/*
+  Reduced from the previous large scale.
+  Still clearly works as the section heading.
+*/
+
 .library-description {
 
   width:
     min(
-      850px,
-      80vw
+      760px,
+      76vw
     );
 
   margin:
-    25px 0 0;
+    22px 0 0;
 
   font-size:
     clamp(
-      2rem,
-      3.2vw,
-      3.8rem
+      1.75rem,
+      2.65vw,
+      3.1rem
     );
 
-  line-height: 1.08;
+  line-height: 1.1;
 
-  letter-spacing: -0.025em;
+  letter-spacing: -0.02em;
 
 }
 
@@ -761,7 +760,7 @@ body.menu-settled
 
   margin-bottom: 20px;
 
-  font-size: 0.9rem;
+  font-size: 0.86rem;
 
   font-weight: 700;
 
@@ -1025,11 +1024,6 @@ body.menu-settled
 }
 
 
-/*
-  Only scroll the card after clicking / focusing it.
-  Normal page scrolling goes straight past.
-*/
-
 .card-advice:focus {
 
   overflow-y: auto;
@@ -1205,21 +1199,26 @@ body.menu-settled
 }
 
 
+/*
+  Also slightly reduced so it feels like a
+  section heading rather than another hero.
+*/
+
 .contribute-copy h2 {
 
   margin:
     30px 0;
 
-  max-width: 950px;
+  max-width: 850px;
 
   font-size:
     clamp(
-      2.9rem,
-      4.7vw,
-      5.3rem
+      2.45rem,
+      4vw,
+      4.5rem
     );
 
-  line-height: 1;
+  line-height: 1.02;
 
   letter-spacing: -0.025em;
 
@@ -1429,13 +1428,17 @@ footer {
   }
 
 
+  /*
+    Reduced medium-desktop title as well.
+  */
+
   .hero-title {
 
     font-size:
       clamp(
-        2.05rem,
-        4.3vw,
-        3.15rem
+        1.9rem,
+        3.8vw,
+        2.8rem
       );
 
   }
@@ -1666,6 +1669,10 @@ footer {
   }
 
 
+  /*
+    MOBILE REMAINS UNCHANGED.
+  */
+
   .hero-title {
 
     width: 100%;
@@ -1860,6 +1867,10 @@ footer {
 
   }
 
+
+  /*
+    Keep mobile section heading unchanged.
+  */
 
   .library-description {
 
@@ -2081,6 +2092,10 @@ footer {
 
   }
 
+
+  /*
+    Keep mobile heading unchanged.
+  */
 
   .contribute-copy h2 {
 

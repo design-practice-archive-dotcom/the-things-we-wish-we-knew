@@ -311,6 +311,12 @@ button {
 }
 
 
+.description-mobile,
+.mobile-hero-cta {
+  display: none;
+}
+
+
 /* =========================================
    HERO FEATURE
 ========================================= */
@@ -1656,7 +1662,7 @@ footer {
         var(--menu-height) + 30px
       )
       5vw
-      40px;
+      38px;
 
     display: flex;
 
@@ -1668,10 +1674,6 @@ footer {
 
   }
 
-
-  /*
-    MOBILE REMAINS UNCHANGED.
-  */
 
   .hero-title {
 
@@ -1695,7 +1697,12 @@ footer {
 
     width: 100%;
 
-    margin-top: 14vh;
+    margin-top:
+      clamp(
+        50px,
+        8vh,
+        78px
+      );
 
     transform: none;
 
@@ -1722,34 +1729,86 @@ footer {
     margin:
       0
       0
-      24px;
+      22px;
 
     font-size: 0.72rem;
 
   }
 
 
+  /*
+    The track now has a stable mobile height.
+    Long advice scrolls inside its own reading
+    window instead of stretching the whole hero.
+  */
+
   .carousel-track {
 
     width: 100%;
 
-    height: auto;
+    height: 230px;
 
-    min-height: 260px;
+    min-height: 230px;
 
     margin: 0;
+
+    overflow: visible;
 
   }
 
 
   .carousel-slide {
 
+    height: 100%;
+
     max-height: none;
 
     padding-right: 0;
 
-    overflow-y: visible;
+    overflow: visible;
 
+    display: flex;
+
+    flex-direction: column;
+
+  }
+
+
+  .carousel-advice-window {
+
+    width: 100%;
+
+    max-height: 148px;
+
+    padding-right: 10px;
+
+    overflow-y: auto;
+
+    overscroll-behavior: contain;
+
+    -webkit-overflow-scrolling: touch;
+
+    scrollbar-width: thin;
+
+    scrollbar-color:
+      var(--line)
+      transparent;
+
+  }
+
+
+  .carousel-advice-window::-webkit-scrollbar {
+    width: 3px;
+  }
+
+
+  .carousel-advice-window::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+
+  .carousel-advice-window::-webkit-scrollbar-thumb {
+    background: var(--line);
   }
 
 
@@ -1757,7 +1816,9 @@ footer {
 
     width: 100%;
 
-    font-size: 1.22rem;
+    margin: 0;
+
+    font-size: 1.17rem;
 
     line-height: 1.34;
 
@@ -1768,11 +1829,13 @@ footer {
 
     width: 100%;
 
-    margin-top: 28px;
+    margin-top: 18px;
 
-    font-size: 0.82rem;
+    padding-bottom: 0;
 
-    line-height: 1.4;
+    font-size: 0.79rem;
+
+    line-height: 1.38;
 
   }
 
@@ -1784,7 +1847,7 @@ footer {
     left: -1vw;
     right: -1vw;
 
-    top: 47%;
+    top: 46%;
 
   }
 
@@ -1800,6 +1863,49 @@ footer {
   }
 
 
+  /*
+    Extra mobile-only action. The desktop travelling
+    menu and desktop contribution button are untouched.
+  */
+
+  .mobile-hero-cta {
+
+    width: fit-content;
+
+    margin-top: 22px;
+
+    padding:
+      10px
+      16px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    align-self: flex-start;
+
+    border:
+      1px solid var(--text);
+
+    border-radius: 999px;
+
+    background: var(--yellow);
+
+    color: var(--text);
+
+    text-decoration: none;
+
+    font-size: 0.72rem;
+
+    line-height: 1;
+
+    white-space: nowrap;
+
+  }
+
+
   .hero-description {
 
     width: 100%;
@@ -1809,22 +1915,111 @@ footer {
       0
       0;
 
-    padding-top: 60px;
+    padding-top:
+      clamp(
+        30px,
+        5vh,
+        48px
+      );
 
-    font-size: 1.22rem;
+    font-size: 1.17rem;
 
     line-height: 1.32;
 
   }
 
 
-  .description-wide {
+  .description-wide,
+  .description-medium {
+    display: none;
+  }
+
+
+  .description-mobile {
     display: inline;
   }
 
 
-  .description-medium {
-    display: none;
+  /*
+    A little extra compression on short phones so the
+    full hero still feels composed rather than crowded.
+  */
+
+  @media (max-height: 740px) {
+
+    .hero {
+
+      padding-top:
+        calc(
+          var(--menu-height) + 20px
+        );
+
+      padding-bottom: 30px;
+
+    }
+
+
+    .hero-feature {
+
+      margin-top: 40px;
+
+    }
+
+
+    .feature-label {
+
+      margin-bottom: 18px;
+
+    }
+
+
+    .carousel-track {
+
+      height: 205px;
+
+      min-height: 205px;
+
+    }
+
+
+    .carousel-advice-window {
+
+      max-height: 128px;
+
+    }
+
+
+    .carousel-advice {
+
+      font-size: 1.08rem;
+
+    }
+
+
+    .carousel-meta {
+
+      margin-top: 14px;
+
+      font-size: 0.75rem;
+
+    }
+
+
+    .mobile-hero-cta {
+
+      margin-top: 18px;
+
+    }
+
+
+    .hero-description {
+
+      padding-top: 26px;
+
+      font-size: 1.08rem;
+
+    }
+
   }
 
 

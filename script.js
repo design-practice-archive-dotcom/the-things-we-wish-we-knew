@@ -10,6 +10,14 @@ let selectedWorkingAs = "ALL";
 let carouselIndex = 0;
 let carouselLocked = false;
 
+let mobileCarouselTimer = null;
+let mobileCarouselHasAdvanced = false;
+let mobileCarouselPaused = false;
+let mobileCarouselScrollResumeTimer = null;
+
+const MOBILE_FIRST_DELAY = 3000;
+const MOBILE_REPEAT_DELAY = 6500;
+
 
 
 /* =========================================
@@ -769,9 +777,6 @@ function same(
   );
 
 }
-
-
-
 /* =========================================
    CATEGORIES
 ========================================= */
@@ -1012,7 +1017,8 @@ function getWorkingTypes(
             .terms
             .some(
               term =>
-                raw.includes(
+                containsTerm(
+                  raw,
                   term
                 )
             );
@@ -1039,141 +1045,158 @@ function getWorkingTypes(
 
 
 /* =========================================
-   AVAILABLE FILTERS
+   TERM MATCHING
+========================================= */
+
+function containsTerm(
+  source,
+  term
+) {
+
+  const cleanSource =
+    key(source);
+
+  const cleanTerm =
+    key(term);
+
+
+  if (
+    !cleanSource ||
+    !cleanTerm
+  ) {
+
+    return false;
+
+  }
+
+
+  return cleanSource
+    .includes(
+      cleanTerm
+    );
+
+}
+
+
+
+/* =========================================
+   UNIQUE VALUES
+========================================= */
+
+function unique(
+  values
+) {
+
+  return [
+    ...new Set(
+      values.filter(
+        Boolean
+      )
+    )
+  ];
+
+}
+
+
+
+/* =========================================
+   AVAILABLE CATEGORIES
 ========================================= */
 
 function getAvailableCategories() {
 
-  const values = [];
+  const result = [];
 
 
-  insights.forEach(
-    insight => {
+  categoryDefinitions
+    .forEach(
+      definition => {
 
 
-      getCategories(
-        insight
-      ).forEach(
-        category =>
-          values.push(
-            category
-          )
-      );
+        const count =
+          insights.filter(
+            insight =>
+              getCategories(
+                insight
+              )
+                .includes(
+                  definition.label
+                )
+          ).length;
 
-    }
-  );
+
+        if (count > 0) {
+
+          result.push({
+            label:
+              definition.label,
+
+            count:
+              count
+          });
+
+        }
+
+      }
+    );
 
 
-  return unique(
-    values
-  );
+  return result;
 
 }
 
 
+
+/* =========================================
+   AVAILABLE WORKING TYPES
+========================================= */
 
 function getAvailableWorkingTypes() {
 
-  const values = [];
+  const result = [];
 
 
-  insights.forEach(
-    insight => {
+  workingDefinitions
+    .forEach(
+      definition => {
 
 
-      getWorkingTypes(
-        insight
-      ).forEach(
-        type =>
-          values.push(
-            type
-          )
-      );
-
-    }
-  );
-
-
-  return unique(
-    values
-  );
-
-}
+        const count =
+          insights.filter(
+            insight =>
+              getWorkingTypes(
+                insight
+              )
+                .includes(
+                  definition.label
+                )
+          ).length;
 
 
+        if (count > 0) {
 
-/* =========================================
-   COUNTS
-========================================= */
+          result.push({
+            label:
+              definition.label,
 
-function countCategory(
-  category
-) {
+            count:
+              count
+          });
 
-  if (
-    category ===
-      "ALL"
-  ) {
+        }
 
-    return insights.length;
-
-  }
+      }
+    );
 
 
-  return insights
-    .filter(
-      insight =>
-        getCategories(
-          insight
-        ).some(
-          item =>
-            same(
-              item,
-              category
-            )
-        )
-    )
-    .length;
-
-}
-
-
-
-function countWorking(
-  type
-) {
-
-  if (
-    type ===
-      "ALL"
-  ) {
-
-    return insights.length;
-
-  }
-
-
-  return insights
-    .filter(
-      insight =>
-        getWorkingTypes(
-          insight
-        ).some(
-          item =>
-            same(
-              item,
-              type
-            )
-        )
-    )
-    .length;
+  return result;
 
 }
 
 
 
 /* =========================================
-   FILTERS
+   CATEGORY FILTERS
 ========================================= */
 
 function createCategoryFilters() {
@@ -1182,66 +1205,94 @@ function createCategoryFilters() {
     "";
 
 
-  addFilter({
-
-    container:
-      categoryFilters,
-
-    label:
-      "all",
-
-    value:
-      "ALL",
-
-    type:
-      "category",
-
-    count:
-      insights.length
-
-  });
+  const available =
+    getAvailableCategories();
 
 
-  getAvailableCategories()
-    .forEach(
-      category => {
+  if (
+    available.length === 0
+  ) {
+
+    categoryFilters
+      .parentElement
+      .classList
+      .add(
+        "hidden"
+      );
+
+    return;
+
+  }
 
 
-        addFilter({
-
-          container:
-            categoryFilters,
-
-          label:
-            category.toLowerCase(),
-
-          value:
-            category,
-
-          type:
-            "category",
-
-          count:
-            countCategory(
-              category
-            )
-
-        });
-
-      }
+  categoryFilters
+    .parentElement
+    .classList
+    .remove(
+      "hidden"
     );
+
+
+  createFilterButton(
+    categoryFilters,
+    "ALL",
+    insights.length,
+    selectedCategory ===
+      "ALL",
+    () => {
+
+      selectedCategory =
+        "ALL";
+
+      refreshLibrary();
+
+    }
+  );
+
+
+  available.forEach(
+    item => {
+
+      createFilterButton(
+        categoryFilters,
+        item.label,
+        item.count,
+        selectedCategory ===
+          item.label,
+        () => {
+
+          selectedCategory =
+            item.label;
+
+          refreshLibrary();
+
+        }
+      );
+
+    }
+  );
 
 }
 
 
 
+/* =========================================
+   WORKING FILTERS
+========================================= */
+
 function createWorkingFilters() {
 
-  const types =
+  workingFilters.innerHTML =
+    "";
+
+
+  const available =
     getAvailableWorkingTypes();
 
 
-  if (!types.length) {
+  if (
+    available.length === 0
+  ) {
 
     workingFilterArea
       .classList
@@ -1261,54 +1312,41 @@ function createWorkingFilters() {
     );
 
 
-  workingFilters.innerHTML =
-    "";
-
-
-  addFilter({
-
-    container:
-      workingFilters,
-
-    label:
-      "all",
-
-    value:
+  createFilterButton(
+    workingFilters,
+    "ALL",
+    insights.length,
+    selectedWorkingAs ===
       "ALL",
+    () => {
 
-    type:
-      "working",
+      selectedWorkingAs =
+        "ALL";
 
-    count:
-      insights.length
+      refreshLibrary();
 
-  });
-
-
-  types.forEach(
-    type => {
+    }
+  );
 
 
-      addFilter({
+  available.forEach(
+    item => {
 
-        container:
-          workingFilters,
+      createFilterButton(
+        workingFilters,
+        item.label,
+        item.count,
+        selectedWorkingAs ===
+          item.label,
+        () => {
 
-        label:
-          type.toLowerCase(),
+          selectedWorkingAs =
+            item.label;
 
-        value:
-          type,
+          refreshLibrary();
 
-        type:
-          "working",
-
-        count:
-          countWorking(
-            type
-          )
-
-      });
+        }
+      );
 
     }
   );
@@ -1317,13 +1355,17 @@ function createWorkingFilters() {
 
 
 
-function addFilter({
+/* =========================================
+   CREATE FILTER BUTTON
+========================================= */
+
+function createFilterButton(
   container,
   label,
-  value,
-  type,
-  count
-}) {
+  count,
+  active,
+  onClick
+) {
 
   const button =
     document.createElement(
@@ -1339,29 +1381,6 @@ function addFilter({
     "filter";
 
 
-  const active =
-
-    (
-      type ===
-        "category" &&
-      same(
-        value,
-        selectedCategory
-      )
-    )
-
-    ||
-
-    (
-      type ===
-        "working" &&
-      same(
-        value,
-        selectedWorkingAs
-      )
-    );
-
-
   if (active) {
 
     button.classList.add(
@@ -1371,53 +1390,43 @@ function addFilter({
   }
 
 
-  button.innerHTML = `
+  const labelSpan =
+    document.createElement(
+      "span"
+    );
 
-    <span>
-      ${escapeHTML(label)}
-    </span>
 
-    <span class="filter-count">
-      ${count}
-    </span>
+  labelSpan.textContent =
+    label;
 
-  `;
+
+  const countSpan =
+    document.createElement(
+      "span"
+    );
+
+
+  countSpan.className =
+    "filter-count";
+
+
+  countSpan.textContent =
+    `(${count})`;
+
+
+  button.appendChild(
+    labelSpan
+  );
+
+
+  button.appendChild(
+    countSpan
+  );
 
 
   button.addEventListener(
     "click",
-    () => {
-
-
-      if (
-        type ===
-          "category"
-      ) {
-
-        selectedCategory =
-          value;
-
-      }
-
-
-      if (
-        type ===
-          "working"
-      ) {
-
-        selectedWorkingAs =
-          value;
-
-      }
-
-
-      createCategoryFilters();
-
-      createWorkingFilters();
-
-      displayLibrary();
-
-    }
+    onClick
   );
 
 
@@ -1430,7 +1439,7 @@ function addFilter({
 
 
 /* =========================================
-   FILTER RESULTS
+   FILTER INSIGHTS
 ========================================= */
 
 function getFilteredInsights() {
@@ -1452,34 +1461,18 @@ function getFilteredInsights() {
 
 
       const categoryMatch =
-
         selectedCategory ===
-          "ALL"
-
-        ||
-
-        categories.some(
-          category =>
-            same(
-              category,
-              selectedCategory
-            )
+          "ALL" ||
+        categories.includes(
+          selectedCategory
         );
 
 
       const workingMatch =
-
         selectedWorkingAs ===
-          "ALL"
-
-        ||
-
-        workingTypes.some(
-          type =>
-            same(
-              type,
-              selectedWorkingAs
-            )
+          "ALL" ||
+        workingTypes.includes(
+          selectedWorkingAs
         );
 
 
@@ -1492,6 +1485,43 @@ function getFilteredInsights() {
   );
 
 }
+
+
+
+/* =========================================
+   REFRESH LIBRARY
+========================================= */
+
+function refreshLibrary() {
+
+  createCategoryFilters();
+
+  createWorkingFilters();
+
+  displayLibrary();
+
+}
+
+
+
+/* =========================================
+   CLEAR FILTERS
+========================================= */
+
+clearFilters.addEventListener(
+  "click",
+  () => {
+
+    selectedCategory =
+      "ALL";
+
+    selectedWorkingAs =
+      "ALL";
+
+    refreshLibrary();
+
+  }
+);
 
 
 
@@ -1513,15 +1543,28 @@ function displayLibrary() {
     filtered.length;
 
 
-  if (!filtered.length) {
+  if (
+    filtered.length === 0
+  ) {
 
-    libraryGrid.innerHTML = `
+    const empty =
+      document.createElement(
+        "div"
+      );
 
-      <div class="empty-state">
-        Nothing here yet.
-      </div>
 
-    `;
+    empty.className =
+      "empty-state";
+
+
+    empty.textContent =
+      "No entries match these filters yet.";
+
+
+    libraryGrid.appendChild(
+      empty
+    );
+
 
     return;
 
@@ -1531,142 +1574,10 @@ function displayLibrary() {
   filtered.forEach(
     insight => {
 
-
       const card =
-        document.createElement(
-          "article"
-        );
-
-
-      card.className =
-        "library-card";
-
-
-      const categories =
-        getCategories(
+        createLibraryCard(
           insight
         );
-
-
-      const workingTypes =
-        getWorkingTypes(
-          insight
-        );
-
-
-      const categoryHTML =
-        categories
-          .map(
-            category => `
-
-              <span class="card-category">
-                ${escapeHTML(
-                  category.toLowerCase()
-                )}
-              </span>
-
-            `
-          )
-          .join("");
-
-
-      const role =
-        clean(
-          insight.role
-        );
-
-
-      const secondary = [];
-
-
-      if (
-        workingTypes.length
-      ) {
-
-        secondary.push(
-          workingTypes.join(
-            " / "
-          )
-        );
-
-      }
-
-
-      if (
-        insight.experience
-      ) {
-
-        secondary.push(
-          insight.experience
-        );
-
-      }
-
-
-      card.innerHTML = `
-
-        <div class="card-advice-area">
-
-          <p
-            class="card-advice"
-            tabindex="0"
-          >
-            “${escapeHTML(
-              insight.advice
-            )}”
-          </p>
-
-        </div>
-
-
-        <div class="card-info">
-
-          ${
-            role
-              ? `
-                <div class="card-role">
-                  ${escapeHTML(role)}
-                </div>
-              `
-              : ""
-          }
-
-
-          ${
-            secondary.length
-              ? `
-                <div class="card-working">
-                  ${escapeHTML(
-                    secondary.join(
-                      " · "
-                    )
-                  )}
-                </div>
-              `
-              : ""
-          }
-
-
-          ${
-            insight.salary
-              ? `
-                <div class="card-salary">
-                  ${escapeHTML(
-                    insight.salary
-                  )}
-                </div>
-              `
-              : ""
-          }
-
-
-          <div class="card-category-list">
-            ${categoryHTML}
-          </div>
-
-        </div>
-
-      `;
 
 
       libraryGrid.appendChild(
@@ -1677,9 +1588,252 @@ function displayLibrary() {
   );
 
 
-  requestAnimationFrame(
-    initialiseCardOverflow
+  initialiseCardOverflow();
+
+}
+
+
+
+/* =========================================
+   CREATE LIBRARY CARD
+========================================= */
+
+function createLibraryCard(
+  insight
+) {
+
+  const card =
+    document.createElement(
+      "article"
+    );
+
+
+  card.className =
+    "library-card";
+
+
+  const adviceArea =
+    document.createElement(
+      "div"
+    );
+
+
+  adviceArea.className =
+    "card-advice-area";
+
+
+  const advice =
+    document.createElement(
+      "p"
+    );
+
+
+  advice.className =
+    "card-advice";
+
+
+  advice.tabIndex = 0;
+
+
+  advice.textContent =
+    `“${clean(
+      insight.advice
+    )}”`;
+
+
+  adviceArea.appendChild(
+    advice
   );
+
+
+  const info =
+    document.createElement(
+      "div"
+    );
+
+
+  info.className =
+    "card-info";
+
+
+  const role =
+    document.createElement(
+      "div"
+    );
+
+
+  role.className =
+    "card-role";
+
+
+  role.textContent =
+    clean(
+      insight.role
+    ) ||
+    "Designer";
+
+
+  info.appendChild(
+    role
+  );
+
+
+  const workingTypes =
+    getWorkingTypes(
+      insight
+    );
+
+
+  const metaParts = [];
+
+
+  if (
+    workingTypes.length
+  ) {
+
+    metaParts.push(
+      workingTypes.join(
+        " / "
+      )
+    );
+
+  }
+
+
+  if (
+    clean(
+      insight.experience
+    )
+  ) {
+
+    metaParts.push(
+      clean(
+        insight.experience
+      )
+    );
+
+  }
+
+
+  if (
+    metaParts.length
+  ) {
+
+    const working =
+      document.createElement(
+        "div"
+      );
+
+
+    working.className =
+      "card-working";
+
+
+    working.textContent =
+      metaParts.join(
+        " · "
+      );
+
+
+    info.appendChild(
+      working
+    );
+
+  }
+
+
+  if (
+    clean(
+      insight.salary
+    )
+  ) {
+
+    const salary =
+      document.createElement(
+        "div"
+      );
+
+
+    salary.className =
+      "card-salary";
+
+
+    salary.textContent =
+      clean(
+        insight.salary
+      );
+
+
+    info.appendChild(
+      salary
+    );
+
+  }
+
+
+  const categories =
+    getCategories(
+      insight
+    );
+
+
+  if (
+    categories.length
+  ) {
+
+    const categoryList =
+      document.createElement(
+        "div"
+      );
+
+
+    categoryList.className =
+      "card-category-list";
+
+
+    categories.forEach(
+      category => {
+
+        const item =
+          document.createElement(
+            "span"
+          );
+
+
+        item.className =
+          "card-category";
+
+
+        item.textContent =
+          category;
+
+
+        categoryList.appendChild(
+          item
+        );
+
+      }
+    );
+
+
+    info.appendChild(
+      categoryList
+    );
+
+  }
+
+
+  card.appendChild(
+    adviceArea
+  );
+
+
+  card.appendChild(
+    info
+  );
+
+
+  return card;
 
 }
 
@@ -1691,15 +1845,14 @@ function displayLibrary() {
 
 function initialiseCardOverflow() {
 
-  const areas =
+  const adviceAreas =
     document.querySelectorAll(
       ".card-advice-area"
     );
 
 
-  areas.forEach(
+  adviceAreas.forEach(
     area => {
-
 
       const advice =
         area.querySelector(
@@ -1712,9 +1865,9 @@ function initialiseCardOverflow() {
       }
 
 
-      function update() {
+      function updateOverflow() {
 
-        const overflowing =
+        const hasOverflow =
           advice.scrollHeight >
           advice.clientHeight +
           2;
@@ -1722,7 +1875,7 @@ function initialiseCardOverflow() {
 
         area.classList.toggle(
           "has-overflow",
-          overflowing
+          hasOverflow
         );
 
 
@@ -1730,7 +1883,7 @@ function initialiseCardOverflow() {
           advice.scrollTop +
           advice.clientHeight >=
           advice.scrollHeight -
-          3;
+          2;
 
 
         area.classList.toggle(
@@ -1743,14 +1896,14 @@ function initialiseCardOverflow() {
 
       advice.addEventListener(
         "scroll",
-        update,
+        updateOverflow,
         {
           passive: true
         }
       );
 
 
-      update();
+      updateOverflow();
 
     }
   );
@@ -1760,6 +1913,36 @@ function initialiseCardOverflow() {
 
 
 /* =========================================
+   ESCAPE HTML
+========================================= */
+
+function escapeHTML(
+  value
+) {
+
+  return clean(value)
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}/* =========================================
    CAROUSEL
 ========================================= */
 
@@ -1769,15 +1952,22 @@ function buildCarousel() {
     "";
 
 
+  carouselIndex = 0;
+
+
   if (!insights.length) {
 
     carouselTrack.innerHTML = `
 
       <article class="carousel-slide active">
 
-        <p class="carousel-advice">
-          The library is currently empty.
-        </p>
+        <div class="carousel-advice-window">
+
+          <p class="carousel-advice">
+            The library is currently empty.
+          </p>
+
+        </div>
 
       </article>
 
@@ -1856,11 +2046,15 @@ function buildCarousel() {
 
       slide.innerHTML = `
 
-        <p class="carousel-advice">
-          “${escapeHTML(
-            insight.advice
-          )}”
-        </p>
+        <div class="carousel-advice-window">
+
+          <p class="carousel-advice">
+            “${escapeHTML(
+              insight.advice
+            )}”
+          </p>
+
+        </div>
 
         ${
           meta.length
@@ -1885,6 +2079,9 @@ function buildCarousel() {
 
     }
   );
+
+
+  initialiseMobileCarouselInteractionPause();
 
 }
 
@@ -1940,6 +2137,7 @@ function moveCarousel(
       slides.length;
 
   }
+
 
   else {
 
@@ -2011,6 +2209,7 @@ function moveCarousel(
 
           }
 
+
           else {
 
             current.style.transform =
@@ -2068,21 +2267,460 @@ function moveCarousel(
 
 
 
+/* =========================================
+   MOBILE CAROUSEL AUTOPLAY
+========================================= */
+
+function isMobileCarousel() {
+
+  return window.matchMedia(
+    "(max-width: 600px)"
+  ).matches;
+
+}
+
+
+
+function clearMobileCarouselTimer() {
+
+  if (
+    mobileCarouselTimer
+  ) {
+
+    clearTimeout(
+      mobileCarouselTimer
+    );
+
+
+    mobileCarouselTimer =
+      null;
+
+  }
+
+}
+
+
+
+function getCarouselSlideCount() {
+
+  return carouselTrack
+    .querySelectorAll(
+      ".carousel-slide"
+    )
+    .length;
+
+}
+
+
+
+function scheduleMobileCarousel(
+  delay
+) {
+
+  clearMobileCarouselTimer();
+
+
+  if (
+    !isMobileCarousel() ||
+    mobileCarouselPaused ||
+    document.hidden ||
+    getCarouselSlideCount() < 2
+  ) {
+
+    return;
+
+  }
+
+
+  mobileCarouselTimer =
+    setTimeout(
+      () => {
+
+
+        if (
+          !isMobileCarousel() ||
+          mobileCarouselPaused ||
+          document.hidden
+        ) {
+
+          return;
+
+        }
+
+
+        /*
+          If an existing slide animation has not
+          quite finished yet, wait briefly instead
+          of trying to start another transition.
+        */
+
+        if (
+          carouselLocked
+        ) {
+
+          scheduleMobileCarousel(
+            1000
+          );
+
+          return;
+
+        }
+
+
+        moveCarousel(
+          1
+        );
+
+
+        mobileCarouselHasAdvanced =
+          true;
+
+
+        scheduleMobileCarousel(
+          MOBILE_REPEAT_DELAY
+        );
+
+      },
+
+      delay
+    );
+
+}
+
+
+
+function startMobileCarouselAutoplay() {
+
+  clearMobileCarouselTimer();
+
+
+  mobileCarouselPaused =
+    false;
+
+
+  mobileCarouselHasAdvanced =
+    false;
+
+
+  if (
+    !isMobileCarousel()
+  ) {
+
+    return;
+
+  }
+
+
+  scheduleMobileCarousel(
+    MOBILE_FIRST_DELAY
+  );
+
+}
+
+
+
+function resetMobileCarouselAfterManualMove() {
+
+  if (
+    !isMobileCarousel()
+  ) {
+
+    return;
+
+  }
+
+
+  mobileCarouselHasAdvanced =
+    true;
+
+
+  mobileCarouselPaused =
+    false;
+
+
+  scheduleMobileCarousel(
+    MOBILE_REPEAT_DELAY
+  );
+
+}
+
+
+
+function pauseMobileCarouselAutoplay() {
+
+  if (
+    !isMobileCarousel()
+  ) {
+
+    return;
+
+  }
+
+
+  mobileCarouselPaused =
+    true;
+
+
+  clearMobileCarouselTimer();
+
+}
+
+
+
+function resumeMobileCarouselAutoplay() {
+
+  if (
+    !isMobileCarousel()
+  ) {
+
+    return;
+
+  }
+
+
+  mobileCarouselPaused =
+    false;
+
+
+  scheduleMobileCarousel(
+    MOBILE_REPEAT_DELAY
+  );
+
+}
+
+
+
+/* =========================================
+   PAUSE WHILE READING / SCROLLING
+========================================= */
+
+function initialiseMobileCarouselInteractionPause() {
+
+  const adviceWindows =
+    carouselTrack
+      .querySelectorAll(
+        ".carousel-advice-window"
+      );
+
+
+  adviceWindows.forEach(
+    adviceWindow => {
+
+
+      /*
+        buildCarousel can run more than once.
+        This prevents duplicate listeners.
+      */
+
+      if (
+        adviceWindow.dataset
+          .carouselPauseReady ===
+        "true"
+      ) {
+
+        return;
+
+      }
+
+
+      adviceWindow.dataset
+        .carouselPauseReady =
+        "true";
+
+
+      adviceWindow.addEventListener(
+        "touchstart",
+        pauseMobileCarouselAutoplay,
+        {
+          passive: true
+        }
+      );
+
+
+      adviceWindow.addEventListener(
+        "touchend",
+        resumeMobileCarouselAutoplay,
+        {
+          passive: true
+        }
+      );
+
+
+      adviceWindow.addEventListener(
+        "touchcancel",
+        resumeMobileCarouselAutoplay,
+        {
+          passive: true
+        }
+      );
+
+
+      adviceWindow.addEventListener(
+        "scroll",
+        () => {
+
+
+          if (
+            !isMobileCarousel()
+          ) {
+
+            return;
+
+          }
+
+
+          pauseMobileCarouselAutoplay();
+
+
+          if (
+            mobileCarouselScrollResumeTimer
+          ) {
+
+            clearTimeout(
+              mobileCarouselScrollResumeTimer
+            );
+
+          }
+
+
+          mobileCarouselScrollResumeTimer =
+            setTimeout(
+              () => {
+
+                resumeMobileCarouselAutoplay();
+
+              },
+
+              1200
+            );
+
+        },
+        {
+          passive: true
+        }
+      );
+
+    }
+  );
+
+}
+
+
+
+/* =========================================
+   CAROUSEL ARROWS
+========================================= */
+
 nextButton.addEventListener(
   "click",
-  () =>
+  () => {
+
     moveCarousel(
       1
-    )
+    );
+
+
+    resetMobileCarouselAfterManualMove();
+
+  }
 );
+
 
 
 previousButton.addEventListener(
   "click",
-  () =>
+  () => {
+
     moveCarousel(
       -1
-    )
+    );
+
+
+    resetMobileCarouselAfterManualMove();
+
+  }
+);
+
+
+
+/* =========================================
+   PAGE VISIBILITY
+========================================= */
+
+document.addEventListener(
+  "visibilitychange",
+  () => {
+
+
+    if (
+      document.hidden
+    ) {
+
+      clearMobileCarouselTimer();
+
+      return;
+
+    }
+
+
+    if (
+      isMobileCarousel() &&
+      !mobileCarouselPaused
+    ) {
+
+      scheduleMobileCarousel(
+        MOBILE_REPEAT_DELAY
+      );
+
+    }
+
+  }
+);
+
+
+
+/* =========================================
+   MOBILE / DESKTOP SWITCH
+========================================= */
+
+window.addEventListener(
+  "resize",
+  () => {
+
+
+    if (
+      isMobileCarousel()
+    ) {
+
+
+      if (
+        getCarouselSlideCount() > 1 &&
+        !mobileCarouselTimer &&
+        !mobileCarouselPaused
+      ) {
+
+        scheduleMobileCarousel(
+          mobileCarouselHasAdvanced
+            ? MOBILE_REPEAT_DELAY
+            : MOBILE_FIRST_DELAY
+        );
+
+      }
+
+    }
+
+
+    else {
+
+      clearMobileCarouselTimer();
+
+
+      mobileCarouselPaused =
+        false;
+
+    }
+
+  }
 );
 
 
@@ -2090,12 +2728,6 @@ previousButton.addEventListener(
 /* =========================================
    ALIGN TRAVELLING MENU
 ========================================= */
-
-/*
-  This makes LIBRARY / CONTRIBUTE align
-  exactly with FROM THE LIBRARY and the
-  featured advice, regardless of browser width.
-*/
 
 function updateHeroMenuAlignment() {
 
@@ -2148,13 +2780,16 @@ function initialiseHeroMenuTransition() {
     updateHeroMenuAlignment();
 
 
-    if (isMobile) {
+    if (
+      isMobile
+    ) {
 
       document.body
         .classList
         .add(
           "menu-settled"
         );
+
 
       return;
 
@@ -2234,10 +2869,11 @@ function initialiseLibrarySpotlight() {
       );
 
 
-      libraryGrid.style.setProperty(
-        "--spotlight-opacity",
-        "1"
-      );
+      libraryGrid.style
+        .setProperty(
+          "--spotlight-opacity",
+          "1"
+        );
 
     }
   );
@@ -2246,7 +2882,6 @@ function initialiseLibrarySpotlight() {
   libraryGrid.addEventListener(
     "pointermove",
     event => {
-
 
       updateLibrarySpotlight(
         event
@@ -2261,10 +2896,11 @@ function initialiseLibrarySpotlight() {
     () => {
 
 
-      libraryGrid.style.setProperty(
-        "--spotlight-opacity",
-        "0"
-      );
+      libraryGrid.style
+        .setProperty(
+          "--spotlight-opacity",
+          "0"
+        );
 
     }
   );
@@ -2292,46 +2928,20 @@ function updateLibrarySpotlight(
     rect.top;
 
 
-  libraryGrid.style.setProperty(
-    "--mouse-x",
-    `${x}px`
-  );
+  libraryGrid.style
+    .setProperty(
+      "--mouse-x",
+      `${x}px`
+    );
 
 
-  libraryGrid.style.setProperty(
-    "--mouse-y",
-    `${y}px`
-  );
+  libraryGrid.style
+    .setProperty(
+      "--mouse-y",
+      `${y}px`
+    );
 
 }
-
-
-
-/* =========================================
-   CLEAR FILTERS
-========================================= */
-
-clearFilters.addEventListener(
-  "click",
-  () => {
-
-
-    selectedCategory =
-      "ALL";
-
-
-    selectedWorkingAs =
-      "ALL";
-
-
-    createCategoryFilters();
-
-    createWorkingFilters();
-
-    displayLibrary();
-
-  }
-);
 
 
 
@@ -2354,9 +2964,13 @@ function showError() {
 
     <article class="carousel-slide active">
 
-      <p class="carousel-advice">
-        The library is temporarily unavailable.
-      </p>
+      <div class="carousel-advice-window">
+
+        <p class="carousel-advice">
+          The library is temporarily unavailable.
+        </p>
+
+      </div>
 
     </article>
 
@@ -2366,125 +2980,8 @@ function showError() {
   insightCount.textContent =
     "0";
 
-}
 
-
-
-/* =========================================
-   UTILITIES
-========================================= */
-
-function containsTerm(
-  text,
-  term
-) {
-
-  const expression =
-    new RegExp(
-      `(^|[\\s,;|/&+])${escapeRegExp(term)}(?=$|[\\s,;|/&+])`,
-      "i"
-    );
-
-
-  return expression.test(
-    text
-  );
-
-}
-
-
-
-function unique(
-  values
-) {
-
-  const seen =
-    new Set();
-
-
-  return values.filter(
-    value => {
-
-
-      const normalized =
-        key(
-          value
-        );
-
-
-      if (
-        !normalized ||
-        seen.has(
-          normalized
-        )
-      ) {
-
-        return false;
-
-      }
-
-
-      seen.add(
-        normalized
-      );
-
-
-      return true;
-
-    }
-  );
-
-}
-
-
-
-function escapeRegExp(
-  value
-) {
-
-  return String(
-    value
-  ).replace(
-    /[.*+?^${}()|[\]\\]/g,
-    "\\$&"
-  );
-
-}
-
-
-
-function escapeHTML(
-  value
-) {
-
-  return String(
-    value ?? ""
-  )
-
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-
-    .replace(
-      /</g,
-      "&lt;"
-    )
-
-    .replace(
-      />/g,
-      "&gt;"
-    )
-
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-
-    .replace(
-      /'/g,
-      "&#039;"
-    );
+  clearMobileCarouselTimer();
 
 }
 
@@ -2504,6 +3001,8 @@ function initialiseLibrary() {
 
   buildCarousel();
 
+  startMobileCarouselAutoplay();
+
 }
 
 
@@ -2519,6 +3018,7 @@ initialiseHeroMenuTransition();
 initialiseLibrarySpotlight();
 
 loadInsights();
+
 
 
 /*
